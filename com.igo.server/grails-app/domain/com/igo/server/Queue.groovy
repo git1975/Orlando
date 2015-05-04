@@ -1,7 +1,5 @@
 package com.igo.server
 
-import java.sql.Timestamp;
-
 class Queue {
 	Date startdate = new Date()
 	Date enddate
