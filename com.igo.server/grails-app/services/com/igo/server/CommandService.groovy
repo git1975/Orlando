@@ -12,9 +12,10 @@ class CommandService {
 		print sdf.format(new Date()) + " processNext..."
 		List list = Queue.findAll("from Queue as q where q.finished = ?", [false])
 		for(Queue item : list){
-		//list.each{item ->
 			if("StartProcess".equals(item.getType())){
 				processStartProcess(item)
+			} else if("Task".equals(item.getType())){
+				processTask(item)
 			}
 		}
 	}
@@ -25,5 +26,9 @@ class CommandService {
 		ProcessInstanceFactory.createInstance(item.getIdprocess())
 		item.setFinished(true)
 		item.save(failOnError: true)
+	}
+	
+	def processTask(Queue item) {
+		
 	}
 }
