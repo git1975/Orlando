@@ -8,7 +8,7 @@ class Queue {
 	String description
 	
 	static constraints = {
-		type blank: false, unique : false
+		type blank: false, unique: false
 		startdate blank: false
 	}
 }
