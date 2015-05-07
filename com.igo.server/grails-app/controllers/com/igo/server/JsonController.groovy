@@ -21,6 +21,9 @@ class JsonController {
 		task2.name = "task2";
 		tasks.add(task);
 		tasks.add(task2);
-		render tasks as JSON;
+		
+		List list = Queue.findAll("from Queue as q where q.finished = ? and q.type = 'Task'", [false])
+		
+		render list as JSON;
 	}
 }
