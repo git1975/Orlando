@@ -15,6 +15,10 @@ class BootStrap {
 			task = new com.igo.server.Task(name: 'finish', description: 'завершение').save(failOnError: true)
 			proc.addToTasks(task).save(failOnError: true)
 		}
+		if(!com.igo.server.Queue.count) {
+			com.igo.server.Queue queue = new com.igo.server.Queue(type: 'StartProcess', finished: false, description: 'description', idprocess: 1)
+			.save(failOnError: true)
+		}
 	}
 	def destroy = {
 	}

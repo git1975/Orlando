@@ -19,12 +19,10 @@ class CommandJob {
 
 	def group = "Job Group"
 	def description = "Auto job Trigger"
+	
+	def commandService
 
 	def execute(){
-		print new Date() + "-Job run"
-		List unprocessed = Queue.executeQuery("from Queue where completed = 0")
-//		for(Object item : unprocessed){
-//			print item.toString()
-//		}
+		commandService.processNext()
 	}
 }
