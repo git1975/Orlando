@@ -81,6 +81,7 @@ public class JsonConnector extends AsyncTask<String, String, String> {
 			byte[] result = out.toByteArray();
 			
 			data = new String(result); 
+			con.disconnect();
 			//Base64.decode(input, flags)
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -105,7 +106,7 @@ public class JsonConnector extends AsyncTask<String, String, String> {
 				JSONObject jObj = jArr.getJSONObject(i);
 				Task task = new Task();
 				task.setId(jObj.getString("id"));
-				task.setName(jObj.getString("name"));
+				task.setName(jObj.getString("type"));
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

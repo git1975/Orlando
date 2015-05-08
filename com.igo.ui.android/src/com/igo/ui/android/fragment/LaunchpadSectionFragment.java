@@ -1,5 +1,7 @@
 package com.igo.ui.android.fragment;
 
+import java.util.Timer;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,8 +11,10 @@ import android.widget.GridView;
 
 import com.igo.ui.android.R;
 import com.igo.ui.android.adapter.TaskViewAdapter;
+import com.igo.ui.android.timer.MessageTimerTask;
 
 public class LaunchpadSectionFragment extends Fragment {
+	private Timer timer = null; 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,10 +42,12 @@ public class LaunchpadSectionFragment extends Fragment {
                     }
                 });*/
  
-        GridView gridView = (GridView) rootView.findViewById(R.id.grid_view);
-
-		// устанавливаем адаптер через экземпляр класса ImageAdapter
-		gridView.setAdapter(new TaskViewAdapter(container.getContext()));
+        GridView gridView = (GridView) rootView.findViewById(R.id.grid_view);        
+        TaskViewAdapter tva = new TaskViewAdapter(container.getContext());
+		gridView.setAdapter(tva);	
+		MessageTimerTask mtt = MessageTimerTask.getInstance(tva);
+		timer = new Timer("JsonTimer");
+		timer.schedule(mtt, 0, 5000);
 
         return rootView;
     }

@@ -29,7 +29,7 @@ public class TaskViewAdapter extends BaseAdapter implements ListAdapter {
 		if(tasks == null){
 			return 0;
 		}
-		return tasks.length; // ����� �������
+		return tasks.length; 
 	}
 
 	public Object getItem(int position) {
@@ -49,8 +49,8 @@ public class TaskViewAdapter extends BaseAdapter implements ListAdapter {
 	}
 	
 	public void beginRefresh(){
-		JsonConnector conn = new JsonConnector(this);
-		conn.execute("http://172.25.101.160:8080/com.igo.server/json/show");
+		//JsonConnector conn = new JsonConnector(this);
+		//conn.execute("http://172.25.101.160:8080/com.igo.server/json/show");
 		//conn.execute("http://192.168.0.100:8080/com.igo.server/json/show");
 	}
 	
