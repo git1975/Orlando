@@ -12,15 +12,7 @@ class JsonController {
 //	]
 	
     def show() { 
-		ArrayList<Task> tasks = new ArrayList<Task>(2);
-		Task task = new Task();
-		task.id = 1;
-		task.name = "task1";
-		Task task2 = new Task();
-		task2.id = 2;
-		task2.name = "task2";
-		tasks.add(task);
-		tasks.add(task2);
+		print "JsonController.show"
 		
 		List list = Queue.findAll("from Queue as q where q.finished = ? and q.type = 'Task'", [false])
 		

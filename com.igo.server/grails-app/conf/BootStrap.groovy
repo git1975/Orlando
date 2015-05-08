@@ -19,6 +19,9 @@ class BootStrap {
 			com.igo.server.Queue queue = new com.igo.server.Queue(type: 'StartProcess', finished: false, description: 'description', idprocess: 1)
 			.save(failOnError: true)
 		}
+		if(!com.igo.server.Deviation.count) {
+			com.igo.server.Deviation queue = new com.igo.server.Deviation(name: 'Отказ').save(failOnError: true)
+		}
 	}
 	def destroy = {
 	}
