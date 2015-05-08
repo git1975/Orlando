@@ -3,6 +3,7 @@ package com.igo.ui.android.adapter;
 import com.igo.ui.android.R;
 import com.igo.ui.android.domain.Task;
 import com.igo.ui.android.remote.JsonConnector;
+import com.igo.ui.android.widget.MessageView;
 
 import android.content.Context;
 import android.view.View;
@@ -41,11 +42,13 @@ public class TaskViewAdapter extends BaseAdapter implements ListAdapter {
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {			
-		ImageView imageView = new ImageView(mContext);
+		/*ImageView imageView = new ImageView(mContext);
 		imageView.setImageResource(R.drawable.ic_launcher);
 		imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
 		imageView.setLayoutParams(new GridView.LayoutParams(120, 110));
-		return imageView;
+		return imageView;*/
+		View msgView = new MessageView(mContext);
+		return msgView;
 	}
 	
 	public void beginRefresh(){
