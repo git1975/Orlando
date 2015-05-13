@@ -6,8 +6,8 @@ class Task {
 	String name
 	String description
 	boolean autostart
-	Date startdate
-	Date enddate
+	Date startdate = new Date()
+	Date enddate = new Date()
 	
 	static hasMany = [deviations: Deviation]
 	
