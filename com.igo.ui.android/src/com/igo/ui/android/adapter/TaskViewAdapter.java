@@ -14,11 +14,15 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 
 public class TaskViewAdapter extends BaseAdapter implements ListAdapter {
-	private Context mContext;
+	private Context context;
+	public Context getContext() {
+		return context;
+	}
+
 	private Task[] tasks = null;
 
 	public TaskViewAdapter(Context c) {
-		mContext = c;
+		context = c;
 	}
 
 	public int getCount() {
@@ -50,7 +54,7 @@ public class TaskViewAdapter extends BaseAdapter implements ListAdapter {
 		 * return imageView;
 		 */
 		
-		MessageView view = new MessageView(mContext);
+		MessageView view = new MessageView(context);
 		if (tasks[position] != null) {
 			view.setText(tasks[position].getName());
 		}
