@@ -14,7 +14,7 @@ package com.igo.server
 class CommandJob {
 	static triggers = {
 		//cron name: 'myTrigger', cronExpression: "*/5 * * * * ?"
-		simple name:'simpleTrigger', startDelay:1000, repeatInterval: 3000, repeatCount: -1
+		simple name:'simpleTrigger', startDelay:1000, repeatInterval: 5000, repeatCount: -1
 	}
 
 	def group = "Job Group"

@@ -16,21 +16,21 @@ import android.widget.ListAdapter;
 public class TaskViewAdapter extends BaseAdapter implements ListAdapter {
 	private Context mContext;
 	private Task[] tasks = null;
-	
+
 	public TaskViewAdapter(Context c) {
 		mContext = c;
 	}
 
 	public int getCount() {
-		if(tasks != null){
+		if (tasks != null) {
 			return tasks.length;
 		}
-		
+
 		beginRefresh();
-		if(tasks == null){
+		if (tasks == null) {
 			return 0;
 		}
-		return tasks.length; 
+		return tasks.length;
 	}
 
 	public Object getItem(int position) {
@@ -41,24 +41,31 @@ public class TaskViewAdapter extends BaseAdapter implements ListAdapter {
 		return 0;
 	}
 
-	public View getView(int position, View convertView, ViewGroup parent) {			
-		/*ImageView imageView = new ImageView(mContext);
-		imageView.setImageResource(R.drawable.ic_launcher);
-		imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-		imageView.setLayoutParams(new GridView.LayoutParams(120, 110));
-		return imageView;*/
-		View msgView = new MessageView(mContext);
-		return msgView;
+	public View getView(int position, View convertView, ViewGroup parent) {
+		/*
+		 * ImageView imageView = new ImageView(mContext);
+		 * imageView.setImageResource(R.drawable.ic_launcher);
+		 * imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+		 * imageView.setLayoutParams(new GridView.LayoutParams(120, 110));
+		 * return imageView;
+		 */
+		
+		MessageView view = new MessageView(mContext);
+		if (tasks[position] != null) {
+			view.setText(tasks[position].getName());
+		}
+		return view;
 	}
-	
-	public void beginRefresh(){
-		//JsonConnector conn = new JsonConnector(this);
-		//conn.execute("http://172.25.101.160:8080/com.igo.server/json/show");
-		//conn.execute("http://192.168.0.100:8080/com.igo.server/json/show");
+
+	public void beginRefresh() {
+		// JsonConnector conn = new JsonConnector(this);
+		// conn.execute("http://172.25.101.160:8080/com.igo.server/json/show");
+		// conn.execute("http://192.168.0.100:8080/com.igo.server/json/show");
 	}
-	
-	public void endRefresh(Task[] tasks){
+
+	public void endRefresh(Task[] tasks) {
 		this.tasks = tasks;
+		
 		this.notifyDataSetChanged();
 	}
 }

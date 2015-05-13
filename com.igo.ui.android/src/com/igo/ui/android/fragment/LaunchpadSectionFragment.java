@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.ListView;
 
 import com.igo.ui.android.R;
 import com.igo.ui.android.adapter.TaskViewAdapter;
@@ -19,10 +20,10 @@ public class LaunchpadSectionFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_section_launchpad, container, false);
+//        View rootView = inflater.inflate(R.layout.fragment_section_launchpad, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_listview, container, false); 
+//        View rootView = inflater.inflate(R.layout.message_object_view, container, false);
         
-        //rootView.
-
         /*rootView.findViewById(R.id.demo_collection_button)
                 .setOnClickListener(new View.OnClickListener() {
 					public void onClick(View v) {
@@ -42,9 +43,13 @@ public class LaunchpadSectionFragment extends Fragment {
                     }
                 });*/
  
-        GridView gridView = (GridView) rootView.findViewById(R.id.grid_view);        
+        //GridView gridView = (GridView) rootView.findViewById(R.id.grid_view);        
+        //TaskViewAdapter tva = new TaskViewAdapter(container.getContext());
+		//gridView.setAdapter(tva);	
+        ListView view = (ListView) rootView.findViewById(R.id.list_view);        
         TaskViewAdapter tva = new TaskViewAdapter(container.getContext());
-		gridView.setAdapter(tva);	
+        view.setAdapter(tva);	
+        
 		MessageTimerTask mtt = MessageTimerTask.getInstance(tva);
 		timer = new Timer("JsonTimer");
 		timer.schedule(mtt, 0, 5000);

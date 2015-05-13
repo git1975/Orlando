@@ -7,10 +7,18 @@ import grails.transaction.Transactional
 @Transactional
 class CommandService {
 	private SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+	
+	def autoStartProcess() {
+		print sdf.format(new Date()) + " CommandService.autoStartProcess..."
+		List list = Queue.findAll("from process as a where a.autostart = ?", [true])
+		for(Process item : list){
+			
+		}
+	}
 
 	def processNext() {
-		print sdf.format(new Date()) + " processNext..."
-		List list = Queue.findAll("from Queue as q where q.finished = ?", [false])
+		print sdf.format(new Date()) + " CommandService.processNext..."
+		List list = Queue.findAll("from Queue as a where a.finished = ?", [false])
 		for(Queue item : list){
 			if("StartProcess".equals(item.getType())){
 				processStartProcess(item)
@@ -21,7 +29,7 @@ class CommandService {
 	}
 
 	def processStartProcess(Queue item) {
-		print "processStartProcess." + item.getType() + "." + item.getFinished()
+		print "CommandService.processStartProcess." + item.getType() + "." + item.getFinished()
 
 		ProcessInstanceFactory.createInstance(item.getIdprocess())
 		item.setFinished(true)

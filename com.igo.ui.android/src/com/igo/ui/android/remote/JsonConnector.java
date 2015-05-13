@@ -106,7 +106,8 @@ public class JsonConnector extends AsyncTask<String, String, String> {
 				JSONObject jObj = jArr.getJSONObject(i);
 				Task task = new Task();
 				task.setId(jObj.getString("id"));
-				task.setName(jObj.getString("type"));
+				task.setName(jObj.getString("description"));
+				tasks[i] = task;
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
