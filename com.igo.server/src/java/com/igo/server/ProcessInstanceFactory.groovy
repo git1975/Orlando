@@ -7,10 +7,10 @@ class ProcessInstanceFactory {
 		List process = Process.findAll("from Process as p where p.id = ?", [idprocess])
 		for(Process item : process){
 		//process.each{item -> 
-			Task[] tasks = item.getTasks()
+			Task[] tasks = item.tasks
 			print tasks.toString()
 			tasks.each{t -> 
-				Queue msg = new Queue(type: 'Task', finished: false, description: t.getDescription(), idprocess: idprocess)
+				Queue msg = new Queue(type: 'Task', finished: false, description: t.description, idprocess: idprocess, ord: t.ord)
 				.save(failOnError: true)
 			}
 		}

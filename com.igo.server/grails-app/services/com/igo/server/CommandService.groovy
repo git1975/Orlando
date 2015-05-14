@@ -29,7 +29,7 @@ class CommandService {
 	}
 
 	def processStartProcess(Queue item) {
-		print "CommandService.processStartProcess." + item.getType() + "." + item.getFinished()
+		print "CommandService.processStartProcess." + item.type + "." + item.finished
 
 		ProcessInstanceFactory.createInstance(item.getIdprocess())
 		item.setFinished(true)

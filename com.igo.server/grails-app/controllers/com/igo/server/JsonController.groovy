@@ -14,7 +14,7 @@ class JsonController {
     def show() { 
 		print "JsonController.show"
 		
-		List list = Queue.findAll("from Queue as q where q.finished = ? and q.type = 'Task'", [false])
+		List list = Queue.findAll("from Queue as q where q.finished = ? and q.type = 'Task' order by ord", [false])
 		
 		render list as JSON;
 	}

@@ -28,15 +28,15 @@ class BootStrap {
 			User usr2 = User.find("from User as a where a.login = ?", ['user2'])
 			User usr3 = User.find("from User as a where a.login = ?", ['user3'])
 			
-			Task task = new Task(name: 'start', description: 'старт', user: usr1).save(failOnError: true)
+			Task task = new Task(name: 'start', description: 'старт', user: usr1, ord: 1).save(failOnError: true)
 			proc.addToTasks(task).save(failOnError: true)
-			task = new Task(name: 'verify', description: 'верификация', user: usr2).save(failOnError: true)
+			task = new Task(name: 'verify', description: 'верификация', user: usr2, ord: 2).save(failOnError: true)
 			proc.addToTasks(task).save(failOnError: true)
-			task = new Task(name: 'prepare', description: 'подготовка', user: usr2).save(failOnError: true)
+			task = new Task(name: 'prepare', description: 'подготовка', user: usr2, ord: 3).save(failOnError: true)
 			proc.addToTasks(task).save(failOnError: true)
-			task = new Task(name: 'running', description: 'исполнение', user: usr3).save(failOnError: true)
+			task = new Task(name: 'running', description: 'исполнение', user: usr3, ord: 4).save(failOnError: true)
 			proc.addToTasks(task).save(failOnError: true)
-			task = new Task(name: 'finish', description: 'завершение', user: usr3).save(failOnError: true)
+			task = new Task(name: 'finish', description: 'завершение', user: usr3, ord: 5).save(failOnError: true)
 			proc.addToTasks(task).save(failOnError: true)
 		}
 		if(!Queue.count) {

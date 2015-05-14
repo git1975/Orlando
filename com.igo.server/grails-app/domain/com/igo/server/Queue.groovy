@@ -9,6 +9,7 @@ class Queue {
 	String type
 	String description
 	long idprocess
+	int ord
 	
 	static constraints = {
 		type blank: false, unique: false
