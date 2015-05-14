@@ -3,13 +3,8 @@ package com.igo.ui.android.remote;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.net.Authenticator;
 import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
-import java.net.PasswordAuthentication;
-import java.net.Proxy;
 import java.net.URL;
-import java.util.Arrays;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,7 +14,6 @@ import com.igo.ui.android.adapter.TaskViewAdapter;
 import com.igo.ui.android.domain.Task;
 
 import android.os.AsyncTask;
-import android.util.Base64;
 
 public class JsonConnector extends AsyncTask<String, String, String> {
 	private TaskViewAdapter adapter = null;

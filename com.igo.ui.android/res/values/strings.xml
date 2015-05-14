@@ -2,7 +2,7 @@
 <resources>
 
     <string name="hello">Hello World, MasterActivity!</string>
-    <string name="app_name">Com.igo.ui.android</string>
+    <string name="app_name">SOLITY</string>
 
     <string name="dummy_section_text">Section %1d is just a dummy section.</string>
 
@@ -10,5 +10,8 @@
     <string name="demo_collection">Demo Collection</string>
     <string name="mi_server_address">Server Address</string>
     <string name="mi_edit_settings">mi_edit_settings</string>
+    <string name="str_login">Логин</string>
+    <string name="str_password">Пароль</string>
+    <string name="srt_enter">Вход</string>
 
 </resources>

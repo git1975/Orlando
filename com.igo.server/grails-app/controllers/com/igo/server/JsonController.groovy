@@ -18,4 +18,12 @@ class JsonController {
 		
 		render list as JSON;
 	}
+	
+	def login() {
+		print "JsonController.login." + params.login
+		
+		com.igo.server.User item = com.igo.server.User.find("from User as a where a.login = ? and password = ?", [params.login, params.password])
+		
+		render item as JSON;
+	}
 }
