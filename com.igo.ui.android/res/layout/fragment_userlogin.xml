@@ -10,7 +10,7 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/str_login"
@@ -39,6 +39,14 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPassword" />
+
+        <TextView
+            android:id="@+id/tv_loginmsg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/srt_login_failed"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:visibility="invisible" />
 
         <Button
             android:id="@+id/btnLogin"

@@ -1,47 +1,65 @@
 package com.igo.ui.android.widget;
 
 import com.igo.ui.android.R;
+import com.igo.ui.android.remote.Command;
+import com.igo.ui.android.remote.CommandConnector;
+import com.igo.ui.android.remote.OnCommandEndListener;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.widget.GridView;
-import android.widget.ImageView;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class MessageView extends LinearLayout {
-
-	private TextView textView = null;
-	private ImageView imageView = null;
-
+public class MessageView extends LinearLayout implements OnClickListener, OnCommandEndListener{
+	private String taskId = null;
+	
 	public MessageView(Context context) {
 		super(context);
-
+		
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		inflater.inflate(R.layout.message_object_view, this, true);
+		
+		LinearLayout msgView = (LinearLayout) findViewById(R.id.msg_view);
+		msgView.setOnClickListener(this);
 
-		init();
+		//init();
 
-		addView(imageView);
-		addView(textView);
+		//addView(imageView);
+		//addView(textView);
 	}
 	
 	public void setText(String text){
-		textView.setText(text);
+		TextView tvTask = (TextView) findViewById(R.id.tv_task);
+		tvTask.setText(text);
 	}
 
-	private void init() {
-		if (imageView == null) {
-			imageView = new ImageView(getContext());
-			imageView.setImageResource(R.drawable.ic_launcher);
-			imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-			imageView.setLayoutParams(new GridView.LayoutParams(120, 110));
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.msg_view:
+			Command command = new Command(Command.TASK_COMMIT);
+			command.putParam("id", getTaskId());
+			CommandConnector con = new CommandConnector(getContext(), command);
+			con.setOnCommandEndListener(this);
+			con.execute("");
+			break;
+		case 2:			
+			break;
 		}
-		if (textView == null) {
-			textView = new TextView(getContext());
-			//textView.setLayoutParams(new GridView.LayoutParams(120, 110));
-			textView.setText("test text");
-		}
+	}
+
+	public String getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
+	}
+
+	public void OnCommandEnd(Command command, Object result) {
+		Toast.makeText(getContext(), result.toString(), Toast.LENGTH_LONG).show();
 	}
 }

@@ -10,7 +10,7 @@ class ProcessInstanceFactory {
 			Task[] tasks = item.tasks
 			print tasks.toString()
 			tasks.each{t -> 
-				Queue msg = new Queue(type: 'Task', finished: false, description: t.description, idprocess: idprocess, ord: t.ord)
+				Queue msg = new Queue(type: 'Task', finished: false, description: t.description, idprocess: idprocess, ord: t.ord, user: t.getUser())
 				.save(failOnError: true)
 			}
 		}

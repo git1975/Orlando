@@ -2,40 +2,38 @@ package com.igo.ui.android.timer;
 
 import java.util.TimerTask;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
+import android.content.Context;
 
-import com.igo.ui.android.SettingsActivity;
-import com.igo.ui.android.adapter.TaskViewAdapter;
-import com.igo.ui.android.remote.JsonConnector;
+import com.igo.ui.android.remote.Command;
+import com.igo.ui.android.remote.CommandConnector;
+import com.igo.ui.android.remote.OnCommandEndListener;
 
-public class MessageTimerTask extends TimerTask {	
+public class MessageTimerTask extends TimerTask{	
 	private static MessageTimerTask mt = null;
 	
-	private TaskViewAdapter view = null;
+	private OnCommandEndListener onCommandEndListener = null;
+	private Context context = null;
 	
-	public static MessageTimerTask getInstance(TaskViewAdapter view){
+	public static MessageTimerTask getInstance(Context context, OnCommandEndListener onCommandEndListener){
 		if(mt == null){
-			mt = new MessageTimerTask(view);
+			mt = new MessageTimerTask(context, onCommandEndListener);
 		}
 		return mt;
 	}
 
-	private MessageTimerTask(TaskViewAdapter view) {
+	private MessageTimerTask(Context context, OnCommandEndListener onCommandEndListener) {
 		super();
-		this.view = view;
+		this.context = context;
+		this.onCommandEndListener = onCommandEndListener;
 	}
 
 	@Override
 	public void run() {
 		System.out.println("MessageTimerTask.run");
 		
-		SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(view.getContext());
-		String prefServerAddress = sharedPref.getString("prefServerAddress", "192.168.0.101:8080");
-		
-		JsonConnector conn = new JsonConnector(view);
-		//conn.execute("http://172.25.101.160:8080/com.igo.server/json/show");
-		conn.execute("http://" + prefServerAddress + "/com.igo.server/json/show");
+		Command command = new Command(Command.SHOW);
+		CommandConnector con = new CommandConnector(context, command);
+		con.setOnCommandEndListener(onCommandEndListener);
+		con.execute("");
 	}
-
 }

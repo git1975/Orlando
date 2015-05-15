@@ -17,6 +17,7 @@
 package com.igo.ui.android;
 
 import com.igo.ui.android.SettingsActivity.SettingsFragment;
+import com.igo.ui.android.domain.Login;
 import com.igo.ui.android.fragment.LaunchpadSectionFragment;
 
 import android.app.ActionBar;
@@ -71,7 +72,12 @@ public class WorkActivity extends FragmentActivity implements
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_main);
-
+		
+		DataStorage ds = (DataStorage)getApplicationContext();
+		Login login = (Login)ds.getData("login");
+		TextView tvTitle = (TextView) findViewById(R.id.tv_title);
+		tvTitle.setText(login.getName());
+		
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections
 		// of the app.

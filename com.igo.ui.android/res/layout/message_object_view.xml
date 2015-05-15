@@ -5,24 +5,25 @@
     <LinearLayout
         android:id="@+id/msg_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:clickable="true" >
 
         <ImageView
             android:id="@+id/imageView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/ic_launcher" />
+            android:src="@drawable/ic_alert" />
 
-        <EditText
-            android:id="@+id/editText1"
+        <TextView
+            android:id="@+id/tv_task"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10" >
 
             <requestFocus />
-        </EditText>
+        </TextView>
 
     </LinearLayout>
 

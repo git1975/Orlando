@@ -13,5 +13,5 @@
     <string name="str_login">Логин</string>
     <string name="str_password">Пароль</string>
     <string name="srt_enter">Вход</string>
-
+	<string name="srt_login_failed">Неверное имя или пароль</string>
 </resources>

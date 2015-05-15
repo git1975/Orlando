@@ -2,18 +2,17 @@ package com.igo.ui.android.adapter;
 
 import com.igo.ui.android.R;
 import com.igo.ui.android.domain.Task;
-import com.igo.ui.android.remote.JsonConnector;
+import com.igo.ui.android.remote.Command;
+import com.igo.ui.android.remote.OnCommandEndListener;
 import com.igo.ui.android.widget.MessageView;
 
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.ListAdapter;
 
-public class TaskViewAdapter extends BaseAdapter implements ListAdapter {
+public class TaskViewAdapter extends BaseAdapter implements ListAdapter, OnCommandEndListener {
 	private Context context;
 	public Context getContext() {
 		return context;
@@ -30,7 +29,6 @@ public class TaskViewAdapter extends BaseAdapter implements ListAdapter {
 			return tasks.length;
 		}
 
-		beginRefresh();
 		if (tasks == null) {
 			return 0;
 		}
@@ -46,29 +44,16 @@ public class TaskViewAdapter extends BaseAdapter implements ListAdapter {
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
-		/*
-		 * ImageView imageView = new ImageView(mContext);
-		 * imageView.setImageResource(R.drawable.ic_launcher);
-		 * imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-		 * imageView.setLayoutParams(new GridView.LayoutParams(120, 110));
-		 * return imageView;
-		 */
-		
 		MessageView view = new MessageView(context);
 		if (tasks[position] != null) {
 			view.setText(tasks[position].getName());
+			view.setTaskId(tasks[position].getId());
 		}
 		return view;
 	}
 
-	public void beginRefresh() {
-		// JsonConnector conn = new JsonConnector(this);
-		// conn.execute("http://172.25.101.160:8080/com.igo.server/json/show");
-		// conn.execute("http://192.168.0.100:8080/com.igo.server/json/show");
-	}
-
-	public void endRefresh(Task[] tasks) {
-		this.tasks = tasks;
+	public void OnCommandEnd(Command command, Object result) {
+		this.tasks = (Task[]) result;
 		
 		this.notifyDataSetChanged();
 	}

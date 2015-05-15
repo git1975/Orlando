@@ -39,4 +39,15 @@ class CommandService {
 	def processTask(Queue item) {
 		
 	}
+	
+	def Queue commitQueue(long id) {
+		Queue queue = Queue.find("from Queue as q where q.id = ?", [id])
+		if(queue == null){
+			return null;
+		}
+		queue.finished = true;
+		queue.save(failOnError: true)
+		
+		return queue
+	}	
 }

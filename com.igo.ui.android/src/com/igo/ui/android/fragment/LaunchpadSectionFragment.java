@@ -50,7 +50,7 @@ public class LaunchpadSectionFragment extends Fragment {
         TaskViewAdapter tva = new TaskViewAdapter(container.getContext());
         view.setAdapter(tva);	
         
-		MessageTimerTask mtt = MessageTimerTask.getInstance(tva);
+		MessageTimerTask mtt = MessageTimerTask.getInstance(container.getContext(), tva);
 		timer = new Timer("JsonTimer");
 		timer.schedule(mtt, 0, 5000);
 

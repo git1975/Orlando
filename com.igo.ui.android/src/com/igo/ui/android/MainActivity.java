@@ -17,7 +17,9 @@
 package com.igo.ui.android;
 
 import com.igo.ui.android.domain.Login;
-import com.igo.ui.android.remote.LoginConnector;
+import com.igo.ui.android.remote.Command;
+import com.igo.ui.android.remote.CommandConnector;
+import com.igo.ui.android.remote.OnCommandEndListener;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -28,25 +30,30 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends Activity implements OnClickListener {
+/**
+ * Login main form
+ * @author U_M059R
+ *
+ */
+public class MainActivity extends Activity implements OnClickListener, OnCommandEndListener {
 	Button btnLogin;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		SharedPreferences sharedPref = PreferenceManager
-				.getDefaultSharedPreferences(this.getApplicationContext());
-		String login = sharedPref.getString("login", "-");
+				.getDefaultSharedPreferences(getApplicationContext());
+		String login = sharedPref.getString("login", "");
 
-		if ("-".equals(login)) {
-			setContentView(R.layout.fragment_userlogin);
-			btnLogin = (Button) findViewById(R.id.btnLogin);
-			btnLogin.setOnClickListener(this);
-			return;
-		}
-
-		startActivity(new Intent(this, WorkActivity.class));
+		setContentView(R.layout.fragment_userlogin);
+		btnLogin = (Button) findViewById(R.id.btnLogin);
+		btnLogin.setOnClickListener(this);
+		
+		EditText etLogin = (EditText) findViewById(R.id.et_login);
+		etLogin.setText(login);
 	}
 
 	public void onClick(View v) {
@@ -63,26 +70,51 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 	}
 
+	/**
+	 * Server login method invocation
+	 * @param login
+	 * @param password
+	 * @return
+	 */
 	private boolean processLogin(String login, String password) {
-		SharedPreferences sharedPref = PreferenceManager
-				.getDefaultSharedPreferences(getApplicationContext());
-		String prefServerAddress = sharedPref.getString("prefServerAddress",
-				"192.168.0.101:8080");
-
-		LoginConnector con = new LoginConnector(this);
-		con.execute("http://" + prefServerAddress
-				+ "/com.igo.server/json/login?login=" + login + "&password="
-				+ password);
+		Command command = new Command(Command.LOGIN);
+		command.putParam("login", login);
+		command.putParam("password", password);
+		CommandConnector con = new CommandConnector(getApplicationContext(), command);
+		con.setOnCommandEndListener(this);
+		con.execute("");
 
 		return true;
 	}
-
-	public void endLogin(Login login) {
-		System.out.println("endLogin." + login);
+	
+	/**
+	 * When server response ends
+	 */
+	public void OnCommandEnd(Command command, Object result){
+		Login login = (Login)result;
+		System.out.println("endLogin."
+				+ ((login != null) ? login.getName() : "login failed"));
+		TextView tvLoginmsg = (TextView) findViewById(R.id.tv_loginmsg);
 		if (login == null) {
+			Toast.makeText(getApplicationContext(),
+					tvLoginmsg.getText().toString(), Toast.LENGTH_LONG).show();
+			tvLoginmsg.setVisibility(View.VISIBLE);
 			return;
 		}
+		
+		//Persist login info
+		DataStorage ds = (DataStorage) getApplicationContext();
+		ds.setData("login", login);
+		
+		SharedPreferences sharedPref = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+		SharedPreferences.Editor editor = sharedPref.edit();
+		editor.putString("login", login.getLogin());
+		editor.commit();
+
+		tvLoginmsg.setVisibility(View.INVISIBLE);
 		Intent i = new Intent(this, WorkActivity.class);
 		startActivity(i);
 	}
+
 }
