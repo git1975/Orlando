@@ -9,6 +9,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,6 +46,10 @@ public class MessageView extends LinearLayout implements OnClickListener, OnComm
 			CommandConnector con = new CommandConnector(getContext(), command);
 			con.setOnCommandEndListener(this);
 			con.execute("");
+			
+			ImageView imgTaskStatus = (ImageView) findViewById(R.id.img_task_status);
+			imgTaskStatus.setImageResource(R.drawable.ic_wait);
+			
 			break;
 		case 2:			
 			break;
@@ -60,6 +65,9 @@ public class MessageView extends LinearLayout implements OnClickListener, OnComm
 	}
 
 	public void OnCommandEnd(Command command, Object result) {
+		ImageView imgTaskStatus = (ImageView) findViewById(R.id.img_task_status);
+		imgTaskStatus.setImageResource(R.drawable.ic_alert);
+		
 		Toast.makeText(getContext(), result.toString(), Toast.LENGTH_LONG).show();
 	}
 }

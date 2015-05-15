@@ -86,10 +86,12 @@ public class CommandConnector extends AsyncTask<String, String, String> {
 			Object objResult = null;
 			if (Command.LOGIN.equals(command.getCommand())) {
 				JSONObject jObj = new JSONObject(result);
-				Login login = new Login();
-				login.setLogin(jObj.getString("login"));
-				login.setName(jObj.getString("username"));
-				objResult = login;
+				if (jObj.has("login")) {
+					Login login = new Login();
+					login.setLogin(jObj.getString("login"));
+					login.setName(jObj.getString("username"));
+					objResult = login;
+				}
 			} else if (Command.TASK_COMMIT.equals(command.getCommand())) {
 				JSONObject jObj = new JSONObject(result);
 				objResult = jObj.getString("result");
@@ -109,8 +111,8 @@ public class CommandConnector extends AsyncTask<String, String, String> {
 
 			doCommandEnd(objResult);
 		} catch (JSONException e) {
-			// e.printStackTrace();
-			doCommandEnd("error:" + e.getMessage());
+			e.printStackTrace();
+			doCommandEnd(null);
 		}
 	}
 
