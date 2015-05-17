@@ -26,6 +26,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -115,6 +118,23 @@ public class MainActivity extends Activity implements OnClickListener, OnCommand
 		tvLoginmsg.setVisibility(View.INVISIBLE);
 		Intent i = new Intent(this, WorkActivity.class);
 		startActivity(i);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.mi_edit_settings:
+			startActivity(new Intent(this, SettingsActivity.class));
+			return true;
+		}
+		return false;
 	}
 
 }
