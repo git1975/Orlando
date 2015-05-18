@@ -104,6 +104,8 @@ public class CommandConnector extends AsyncTask<String, String, String> {
 					Task task = new Task();
 					task.setId(jObj.getString("id"));
 					task.setName(jObj.getString("description"));
+					task.setStartDate(jObj.getString("startdate"));
+					task.setEndDate(jObj.getString("enddate"));
 					tasks[i] = task;
 				}
 				objResult = tasks;

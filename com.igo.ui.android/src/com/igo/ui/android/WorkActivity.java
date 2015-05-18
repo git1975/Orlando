@@ -140,14 +140,9 @@ public class WorkActivity extends FragmentActivity implements
 		public Fragment getItem(int i) {
 			switch (i) {
 			case 0:
-				// The first section of the app is the most interesting -- it
-				// offers
-				// a launchpad into the other demonstrations in this example
-				// application.
 				return new LaunchpadSectionFragment();
 
 			default:
-				// The other sections of the app are dummy placeholders.
 				Fragment fragment = new DummySectionFragment();
 				Bundle args = new Bundle();
 				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, i + 1);

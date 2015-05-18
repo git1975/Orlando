@@ -2,41 +2,29 @@ package com.igo.ui.android.widget;
 
 import com.igo.ui.android.R;
 import com.igo.ui.android.remote.Command;
-import com.igo.ui.android.remote.CommandConnector;
-import com.igo.ui.android.remote.OnCommandEndListener;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MessageView extends RelativeLayout /*implements OnClickListener, OnCommandEndListener*/{
+public class MessageDetailsView extends RelativeLayout /*implements OnClickListener, OnCommandEndListener*/{
 	private String taskId = null;
+	private String startDate = "-";
+	private String endDate = "-";
 	
-	public MessageView(Context context) {
+	public MessageDetailsView(Context context) {
 		super(context);
 		
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		inflater.inflate(R.layout.message_object_view, this, true);
+		inflater.inflate(R.layout.message_details_view, this, true);
 		
 		//LinearLayout msgView = (LinearLayout) findViewById(R.id.msg_view);
 		//msgView.setOnClickListener(this);
-
-		//init();
-
-		//addView(imageView);
-		//addView(textView);
-	}
-	
-	public void setText(String text){
-		TextView tvTask = (TextView) findViewById(R.id.tv_task);
-		tvTask.setText(text);
 	}
 
 	public void onClick(View v) {
@@ -70,5 +58,25 @@ public class MessageView extends RelativeLayout /*implements OnClickListener, On
 		imgTaskStatus.setImageResource(R.drawable.ic_alert);
 		
 		Toast.makeText(getContext(), result.toString(), Toast.LENGTH_LONG).show();
+	}
+
+	public String getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(String startDate) {
+		this.startDate = startDate;
+		TextView text = (TextView) findViewById(R.id.dt_start);
+		text.setText(startDate);
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
+		TextView text = (TextView) findViewById(R.id.dt_end);
+		text.setText(endDate);
 	}
 }

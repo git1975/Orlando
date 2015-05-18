@@ -1,0 +1,16 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <ExpandableListView
+        android:id="@+id/explist_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:childDivider="@android:color/transparent"
+        android:childIndicator="@drawable/ic_launcher"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp"
+        android:groupIndicator="@drawable/ic_launcher" />
+
+</RelativeLayout>
