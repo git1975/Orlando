@@ -10,6 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.igo.ui.android.DataStorage;
 import com.igo.ui.android.domain.Login;
 import com.igo.ui.android.domain.Task;
 
@@ -35,7 +36,16 @@ public class CommandConnector extends AsyncTask<String, String, String> {
 				.getDefaultSharedPreferences(context);
 		String prefServerAddress = sharedPref.getString("prefServerAddress",
 				"192.168.0.101:8080");
+		DataStorage ds = (DataStorage) context;
+		Login login = (Login) ds.getData("login");
+		String username = "nouser";
+		if (login != null) {
+			username = login.getLogin();
+		} else {
+			username = sharedPref.getString("login", "nouser");
+		}
 
+		command.putParam("login", username);
 		String paramsUrl = command.getParamsUrl();
 		String urlString = "http://" + prefServerAddress
 				+ "/com.igo.server/json/" + command.getCommand() + "?"
@@ -102,10 +112,13 @@ public class CommandConnector extends AsyncTask<String, String, String> {
 				for (int i = 0; i < jArr.length(); i++) {
 					JSONObject jObj = jArr.getJSONObject(i);
 					Task task = new Task();
-					task.setId(jObj.getString("id"));
-					task.setName(jObj.getString("description"));
-					task.setStartDate(jObj.getString("startdate"));
-					task.setEndDate(jObj.getString("enddate"));
+					task.setId(getJsonValue(jObj, "id"));
+					task.setName(getJsonValue(jObj, "name"));
+					task.setStartDate(getJsonValue(jObj, "startdate"));
+					task.setEndDate(getJsonValue(jObj, "enddate"));
+					task.setType(getJsonValue(jObj, "type"));
+					task.setReplyVariants(getJsonValue(jObj, "replyVariants"));
+					task.setBody(getJsonValue(jObj, "body"));
 					tasks[i] = task;
 				}
 				objResult = tasks;
@@ -115,6 +128,14 @@ public class CommandConnector extends AsyncTask<String, String, String> {
 		} catch (JSONException e) {
 			e.printStackTrace();
 			doCommandEnd(null);
+		}
+	}
+
+	private String getJsonValue(JSONObject obj, String name) {
+		try {
+			return obj.getString(name);
+		} catch (JSONException e) {
+			return "";
 		}
 	}
 

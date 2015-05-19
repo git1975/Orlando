@@ -14,4 +14,6 @@
     <string name="str_password">Пароль</string>
     <string name="srt_enter">Вход</string>
 	<string name="srt_login_failed">Неверное имя или пароль</string>
+	<string name="str_no">No</string>
+	<string name="str_yes">Yes</string>
 </resources>

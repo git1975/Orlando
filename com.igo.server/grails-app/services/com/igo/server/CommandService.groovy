@@ -50,4 +50,15 @@ class CommandService {
 		
 		return queue
 	}	
+	
+	def Queue replyQueue(long id, String reply) {
+		Queue queue = Queue.find("from Queue as q where q.id = ?", [id])
+		if(queue == null){
+			return null;
+		}		
+		queue.status = reply;
+		queue.save(failOnError: true)
+		
+		return queue
+	}
 }

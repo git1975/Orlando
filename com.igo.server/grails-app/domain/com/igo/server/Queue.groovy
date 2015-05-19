@@ -11,6 +11,7 @@ class Queue {
 	long idprocess
 	int ord
 	User user
+	String status
 	
 	static constraints = {
 		type blank: false, unique: false

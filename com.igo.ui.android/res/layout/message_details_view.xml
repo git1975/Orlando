@@ -14,6 +14,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
+             <TextView
+                android:id="@+id/txt_taskbody"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.46"
+                android:ems="10" />
             <TextView
                 android:id="@+id/dt_start"
                 android:layout_width="wrap_content"
@@ -27,6 +33,20 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.46"
                 android:ems="10" />
+
+            <Button
+                android:id="@+id/btnYes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.46"
+                android:text="@string/str_yes" />
+
+            <Button
+                android:id="@+id/btnNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.46"
+                android:text="@string/str_no" />
 
         </LinearLayout>
     </RelativeLayout >

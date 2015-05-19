@@ -8,6 +8,7 @@ public class Command {
 	public static final String TASK_COMMIT = "taskCommit";
 	public static final String LOGIN = "login";
 	public static final String SHOW = "show";
+	public static final String REPLY = "reply";
 	
 	private String command = null;
 	private Map<String, String> params = new HashMap<String, String>(0);

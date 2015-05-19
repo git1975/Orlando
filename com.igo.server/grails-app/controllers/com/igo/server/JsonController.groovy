@@ -19,9 +19,27 @@ class JsonController {
 
 		//print list.toString();
 		list = 	getTopTask(list)
-		
 
-		render list as JSON;
+		def messages = new ArrayList();
+		for(Queue q: list){
+			if(q.status == "INIT"){
+				def mes = new MessageCommand()
+				mes.setQueue(q)
+				mes.body = "Вам необходимо подтвердить задачу"
+				mes.type = MessageCommand.TYPE_CMD
+				mes.replyVariants = MessageCommand.REPLY_YESNO
+				messages.add(mes)
+			} else if(q.status == "N"){
+				def mes = new MessageCommand()
+				mes.setQueue(q)
+				mes.body = "назначь управляющего производством на сегодня – ФИО"
+				mes.type = MessageCommand.TYPE_CMD
+				mes.replyVariants = MessageCommand.REPLY_YESNO
+				messages.add(mes)
+			}
+		}
+
+		render messages as JSON;
 	}
 
 	def login() {
@@ -31,18 +49,31 @@ class JsonController {
 
 		render item as JSON;
 	}
-	
+
 	def taskCommit() {
 		print "JsonController.taskCommit." + params.id
-		
+
 		Queue queue = commandService.commitQueue(java.lang.Long.parseLong(params.id))
-		
+
 		if(queue != null){
 			render "{'result':'Task commited'}";
 		} else {
 			render "{'result':'Task not found'}";
 		}
-		
+
+	}
+
+	def reply() {
+		print "JsonController.reply." + params.id + "." + params.reply
+
+		Queue queue = commandService.replyQueue(java.lang.Long.parseLong(params.id), params.reply)
+
+		if(queue != null){
+			render "{'result':'OK'}";
+		} else {
+			render "{'result':'queue is null'}";
+		}
+
 	}
 
 	def List<Queue> getTopTask(List<Queue> list){
