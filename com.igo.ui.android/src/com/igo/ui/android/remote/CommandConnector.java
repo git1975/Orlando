@@ -36,16 +36,17 @@ public class CommandConnector extends AsyncTask<String, String, String> {
 				.getDefaultSharedPreferences(context);
 		String prefServerAddress = sharedPref.getString("prefServerAddress",
 				"192.168.0.101:8080");
-		DataStorage ds = (DataStorage) context;
-		Login login = (Login) ds.getData("login");
-		String username = "nouser";
-		if (login != null) {
-			username = login.getLogin();
-		} else {
-			username = sharedPref.getString("login", "nouser");
+		if (command.getParam("login") == null) {
+			DataStorage ds = (DataStorage) context;
+			Login login = (Login) ds.getData("login");
+			String username = "nouser";
+			if (login != null) {
+				username = login.getLogin();
+			} else {
+				username = sharedPref.getString("login", "nouser");
+			}
+			command.putParam("login", username);
 		}
-
-		command.putParam("login", username);
 		String paramsUrl = command.getParamsUrl();
 		String urlString = "http://" + prefServerAddress
 				+ "/com.igo.server/json/" + command.getCommand() + "?"
