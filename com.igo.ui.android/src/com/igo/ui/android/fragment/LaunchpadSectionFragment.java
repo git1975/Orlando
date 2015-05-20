@@ -9,12 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupExpandListener;
-import android.widget.GridView;
-import android.widget.ListView;
 
 import com.igo.ui.android.R;
 import com.igo.ui.android.adapter.TaskExpViewAdapter;
-import com.igo.ui.android.adapter.TaskViewAdapter;
 import com.igo.ui.android.timer.MessageTimerTask;
 
 public class LaunchpadSectionFragment extends Fragment {
@@ -51,9 +48,8 @@ public class LaunchpadSectionFragment extends Fragment {
 		// GridView gridView = (GridView) rootView.findViewById(R.id.grid_view);
 		// TaskViewAdapter tva = new TaskViewAdapter(container.getContext());
 		// gridView.setAdapter(tva);
-		view = (ExpandableListView) rootView
-				.findViewById(R.id.explist_view);
-		tva = new TaskExpViewAdapter(container.getContext());
+		view = (ExpandableListView) rootView.findViewById(R.id.explist_view);
+		tva = new TaskExpViewAdapter(getActivity().getApplicationContext());
 		view.setAdapter(tva);
 		view.setOnGroupExpandListener(new OnGroupExpandListener() {
 			public void onGroupExpand(int groupPosition) {
@@ -66,8 +62,8 @@ public class LaunchpadSectionFragment extends Fragment {
 			}
 		});
 
-		MessageTimerTask mtt = MessageTimerTask.getInstance(
-				container.getContext(), tva);
+		MessageTimerTask mtt = MessageTimerTask.getInstance(getActivity()
+				.getApplicationContext(), tva);
 		timer = new Timer("JsonTimer");
 		timer.schedule(mtt, 0, 5000);
 

@@ -16,7 +16,6 @@
 
 package com.igo.ui.android;
 
-import com.igo.ui.android.SettingsActivity.SettingsFragment;
 import com.igo.ui.android.domain.Login;
 import com.igo.ui.android.fragment.LaunchpadSectionFragment;
 
@@ -24,9 +23,7 @@ import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;

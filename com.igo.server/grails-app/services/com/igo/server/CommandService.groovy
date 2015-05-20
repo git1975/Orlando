@@ -46,10 +46,22 @@ class CommandService {
 			return null;
 		}
 		queue.finished = true;
+		queue.status = "FINISH";
 		queue.save(failOnError: true)
 		
 		return queue
 	}	
+	
+	def Queue statusQueue(long id, String status) {
+		Queue queue = Queue.find("from Queue as q where q.id = ?", [id])
+		if(queue == null){
+			return null;
+		}
+		queue.status = status;
+		queue.save(failOnError: true)
+		
+		return queue
+	}
 	
 	def Queue replyQueue(long id, String reply) {
 		Queue queue = Queue.find("from Queue as q where q.id = ?", [id])

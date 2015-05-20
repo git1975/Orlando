@@ -5,6 +5,8 @@ import java.util.Date;
 public class MessageCommand {
 	public static final TYPE_CMD = "CMD"
 	public static final REPLY_YESNO = "YESNO"
+	public static final REPLY_HAND = "HAND"
+	public static final REPLY_INFO = "REPLY_INFO"
 	
 	String id
 	String name

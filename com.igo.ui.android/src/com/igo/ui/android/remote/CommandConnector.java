@@ -37,8 +37,9 @@ public class CommandConnector extends AsyncTask<String, String, String> {
 		String prefServerAddress = sharedPref.getString("prefServerAddress",
 				"192.168.0.101:8080");
 		if (command.getParam("login") == null) {
+			Login login = null;
 			DataStorage ds = (DataStorage) context;
-			Login login = (Login) ds.getData("login");
+			login = (Login) ds.getData("login");
 			String username = "nouser";
 			if (login != null) {
 				username = login.getLogin();

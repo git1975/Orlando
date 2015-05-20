@@ -116,10 +116,9 @@ public class MessageDetailsView extends RelativeLayout /*
 			btnYes.setOnClickListener(new OnClickListener() {
 			    public void onClick(View v)
 			    {
-			    	Toast.makeText(getContext(), "Yes clicked", Toast.LENGTH_SHORT).show();
 			    	Command command = new Command(Command.REPLY);
 			    	command.putParam("id", taskId);
-			    	command.putParam("reply", "Y");
+			    	command.putParam("reply", "REPLY_YES");
 					CommandConnector con = new CommandConnector(getContext(), command);
 					con.execute("");
 			    } 
@@ -127,14 +126,43 @@ public class MessageDetailsView extends RelativeLayout /*
 			btnNo.setOnClickListener(new OnClickListener() {
 			    public void onClick(View v)
 			    {
-			    	Toast.makeText(getContext(), "No clicked", Toast.LENGTH_SHORT).show();
 			    	Command command = new Command(Command.REPLY);
 			    	command.putParam("id", taskId);
-			    	command.putParam("reply", "N");
+			    	command.putParam("reply", "REPLY_NO");
 					CommandConnector con = new CommandConnector(getContext(), command);
 					con.execute("");
 			    } 
 			});
+		}
+		if ("HAND".equals(task.getReplyVariants())) {
+			btnYes.setText("Ручной");
+			btnYes.setVisibility(View.VISIBLE);
+			btnNo.setVisibility(View.VISIBLE);
+			
+			btnYes.setOnClickListener(new OnClickListener() {
+			    public void onClick(View v)
+			    {
+			    	Command command = new Command(Command.REPLY);
+			    	command.putParam("id", taskId);
+			    	command.putParam("reply", "REPLY_HAND");
+					CommandConnector con = new CommandConnector(getContext(), command);
+					con.execute("");
+			    } 
+			});
+			btnNo.setOnClickListener(new OnClickListener() {
+			    public void onClick(View v)
+			    {
+			    	Command command = new Command(Command.REPLY);
+			    	command.putParam("id", taskId);
+			    	command.putParam("reply", "REPLY_NO");
+					CommandConnector con = new CommandConnector(getContext(), command);
+					con.execute("");
+			    } 
+			});
+		}
+		if ("INFO".equals(task.getReplyVariants())) {
+			btnYes.setVisibility(View.INVISIBLE);
+			btnNo.setVisibility(View.INVISIBLE);
 		}
 	}
 }

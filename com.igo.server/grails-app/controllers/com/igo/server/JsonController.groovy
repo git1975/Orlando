@@ -17,27 +17,65 @@ class JsonController {
 
 		List<Queue> list = Queue.findAll("from Queue as q where q.finished = ? and q.type = 'Task' order by ord", [false])
 
-		//print list.toString();
-		list = 	getTopTask(list)
+		print list.toString();
+		//list = 	getTopTask(list)
 
 		def messages = new ArrayList();
+
+		//Ветка стартовой задачи
+		Queue qInit = null
+		//Находим стартовый таск в статусе INIT
 		for(Queue q: list){
-			if(q.status == "INIT"){
+			//Если найден, то проинформировать менеджера, сообщением YES_NO
+			if(q.ord == 1 && q.status == "INIT"){
 				def mes = new MessageCommand()
 				mes.setQueue(q)
-				mes.body = "Вам необходимо подтвердить задачу"
-				mes.type = MessageCommand.TYPE_CMD
-				mes.replyVariants = MessageCommand.REPLY_YESNO
-				messages.add(mes)
-			} else if(q.status == "N"){
-				def mes = new MessageCommand()
-				mes.setQueue(q)
-				mes.body = "назначь управляющего производством на сегодня – ФИО"
+				mes.body = "Подтвердите контроль производства"
 				mes.type = MessageCommand.TYPE_CMD
 				mes.replyVariants = MessageCommand.REPLY_YESNO
 				messages.add(mes)
 			}
+			//владелец таска отвечает Да
+			if(q.ord == 1 && q.status == "REPLY_YES"){
+				//commandService.commitQueue(java.lang.Long.parseLong(q.id))
+			}
+			//владелец таска отвечает Нет
+			if(q.ord == 1 && q.status == "REPLY_NO"){
+				def mes = new MessageCommand()
+				mes.setQueue(q)
+				mes.body = "Назначь управляющего производством на сегодня"
+				mes.type = MessageCommand.TYPE_CMD
+				mes.replyVariants = MessageCommand.REPLY_HAND
+				messages.add(mes)
+			}
+			//Если перевели в ручной режим, то всем отвечаем 
+			if(q.ord == 1 && q.status == "REPLY_HAND"){
+				def mes = new MessageCommand()
+				mes.setQueue(q)
+				mes.body = "Управление производством находится в ручном режиме"
+				mes.type = MessageCommand.TYPE_CMD
+				mes.replyVariants = MessageCommand.REPLY_INFO
+				messages.add(mes)
+			}
 		}
+
+		/*for(Queue q: list){
+		 if(q.status == "INIT"){
+		 def mes = new MessageCommand()
+		 mes.setQueue(q)
+		 mes.body = "Вам необходимо подтвердить задачу"
+		 mes.type = MessageCommand.TYPE_CMD
+		 mes.replyVariants = MessageCommand.REPLY_YESNO
+		 messages.add(mes)
+		 } else if(q.status == "N"){
+		 def mes = new MessageCommand()
+		 mes.setQueue(q)
+		 mes.body = "назначь управляющего производством на сегодня – ФИО"
+		 mes.type = MessageCommand.TYPE_CMD
+		 mes.replyVariants = MessageCommand.REPLY_YESNO
+		 messages.add(mes)
+		 }
+		 }*/
 
 		render messages as JSON;
 	}
