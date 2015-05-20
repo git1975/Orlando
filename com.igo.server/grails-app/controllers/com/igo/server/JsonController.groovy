@@ -23,38 +23,20 @@ class JsonController {
 		def messages = new ArrayList();
 
 		//Ветка стартовой задачи
-		Queue qInit = null
 		//Находим стартовый таск в статусе INIT
 		for(Queue q: list){
-			//Если найден, то проинформировать менеджера, сообщением YES_NO
-			if(q.ord == 1 && q.status == "INIT"){
+			//int id = q.ord
+			Task t = Task.find("from Task as a where a.id = ?", [1L])
+			TaskStatus ts = TaskStatus.find("from TaskStatus as a where a.task = ? and a.status = ?", [t, q.status])
+			if(ts != null){
 				def mes = new MessageCommand()
 				mes.setQueue(q)
-				mes.body = "Подтвердите контроль производства"
-				mes.type = MessageCommand.TYPE_CMD
-				mes.replyVariants = MessageCommand.REPLY_YESNO
-				messages.add(mes)
-			}
-			//владелец таска отвечает Да
-			if(q.ord == 1 && q.status == "REPLY_YES"){
-				//commandService.commitQueue(java.lang.Long.parseLong(q.id))
-			}
-			//владелец таска отвечает Нет
-			if(q.ord == 1 && q.status == "REPLY_NO"){
-				def mes = new MessageCommand()
-				mes.setQueue(q)
-				mes.body = "Назначь управляющего производством на сегодня"
-				mes.type = MessageCommand.TYPE_CMD
-				mes.replyVariants = MessageCommand.REPLY_HAND
-				messages.add(mes)
-			}
-			//Если перевели в ручной режим, то всем отвечаем 
-			if(q.ord == 1 && q.status == "REPLY_HAND"){
-				def mes = new MessageCommand()
-				mes.setQueue(q)
-				mes.body = "Управление производством находится в ручном режиме"
-				mes.type = MessageCommand.TYPE_CMD
-				mes.replyVariants = MessageCommand.REPLY_INFO
+				mes.body = ts.msgtext
+				mes.type = ts.msgtype
+				mes.buttons = new Button[ts.buttons.size()]
+				for(int i = 0; i < ts.buttons.size(); i++){
+					mes.buttons[i] = ts.buttons[i]
+				}
 				messages.add(mes)
 			}
 		}

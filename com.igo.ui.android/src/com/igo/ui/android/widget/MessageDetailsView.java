@@ -101,7 +101,7 @@ public class MessageDetailsView extends RelativeLayout /*
 		setTaskId(task.getId());
 		setStartDate(task.getStartDate());
 		setEndDate(task.getEndDate());
-		
+
 		TextView text = (TextView) findViewById(R.id.txt_taskbody);
 		text.setText(task.getName() + " - " + task.getBody());
 
@@ -109,57 +109,35 @@ public class MessageDetailsView extends RelativeLayout /*
 		Button btnNo = (Button) findViewById(R.id.btnNo);
 		btnYes.setVisibility(View.INVISIBLE);
 		btnNo.setVisibility(View.INVISIBLE);
-		if ("YESNO".equals(task.getReplyVariants())) {
-			btnYes.setVisibility(View.VISIBLE);
-			btnNo.setVisibility(View.VISIBLE);
-			
-			btnYes.setOnClickListener(new OnClickListener() {
-			    public void onClick(View v)
-			    {
-			    	Command command = new Command(Command.REPLY);
-			    	command.putParam("id", taskId);
-			    	command.putParam("reply", "REPLY_YES");
-					CommandConnector con = new CommandConnector(getContext(), command);
-					con.execute("");
-			    } 
-			});
-			btnNo.setOnClickListener(new OnClickListener() {
-			    public void onClick(View v)
-			    {
-			    	Command command = new Command(Command.REPLY);
-			    	command.putParam("id", taskId);
-			    	command.putParam("reply", "REPLY_NO");
-					CommandConnector con = new CommandConnector(getContext(), command);
-					con.execute("");
-			    } 
-			});
+		com.igo.ui.android.domain.Button[] buttons = task.getButtons();
+		if (buttons != null) {
+			for (com.igo.ui.android.domain.Button btn : buttons) {
+				if (btn != null) {
+					Button btnC = btnYes;
+					if ("YES".equals(btn.getCode())) {
+						btnC = btnYes;
+					} else if ("NO".equals(btn.getCode())) {
+						btnC = btnNo;
+					} else if ("HAND".equals(btn.getCode())) {
+						btnC = btnYes;
+					}
+					btnC.setVisibility(View.VISIBLE);
+					btnC.setText(btn.getName());
+					btnC.setTag(btn.getReplystatus());
+					btnC.setOnClickListener(new OnClickListener() {
+						public void onClick(View v) {
+							Command command = new Command(Command.REPLY);
+							command.putParam("id", taskId);
+							command.putParam("reply", v.getTag().toString());
+							CommandConnector con = new CommandConnector(
+									getContext(), command);
+							con.execute("");
+						}
+					});
+				}
+			}
 		}
-		if ("HAND".equals(task.getReplyVariants())) {
-			btnYes.setText("Ручной");
-			btnYes.setVisibility(View.VISIBLE);
-			btnNo.setVisibility(View.VISIBLE);
-			
-			btnYes.setOnClickListener(new OnClickListener() {
-			    public void onClick(View v)
-			    {
-			    	Command command = new Command(Command.REPLY);
-			    	command.putParam("id", taskId);
-			    	command.putParam("reply", "REPLY_HAND");
-					CommandConnector con = new CommandConnector(getContext(), command);
-					con.execute("");
-			    } 
-			});
-			btnNo.setOnClickListener(new OnClickListener() {
-			    public void onClick(View v)
-			    {
-			    	Command command = new Command(Command.REPLY);
-			    	command.putParam("id", taskId);
-			    	command.putParam("reply", "REPLY_NO");
-					CommandConnector con = new CommandConnector(getContext(), command);
-					con.execute("");
-			    } 
-			});
-		}
+
 		if ("INFO".equals(task.getReplyVariants())) {
 			btnYes.setVisibility(View.INVISIBLE);
 			btnNo.setVisibility(View.INVISIBLE);

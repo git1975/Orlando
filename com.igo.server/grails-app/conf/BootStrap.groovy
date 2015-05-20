@@ -1,6 +1,8 @@
+import com.igo.server.Button
 import com.igo.server.Deviation
 import com.igo.server.Role
 import com.igo.server.Task
+import com.igo.server.TaskStatus
 import com.igo.server.User
 import com.igo.server.Process
 import com.igo.server.Queue
@@ -46,6 +48,29 @@ class BootStrap {
 		}
 		if(!Deviation.count) {
 			new Deviation(name: 'Отказ').save(failOnError: true)
+		}
+		if(!Button.count) {
+			new Button(code: 'YES', name: 'Да', replystatus: 'REPLY_YES').save(failOnError: true)
+			new Button(code: 'NO', name: 'Нет', replystatus: 'REPLY_NO').save(failOnError: true)
+			new Button(code: 'HAND', name: 'Ручной режим', replystatus: 'REPLY_HAND').save(failOnError: true)
+		}
+		if(!TaskStatus.count) {
+			Button btn1 = Button.find("from Button as a where a.code = ?", ['YES'])
+			Button btn2 = Button.find("from Button as a where a.code = ?", ['NO'])
+			Button btn3 = Button.find("from Button as a where a.code = ?", ['HAND'])
+			
+			//start
+			Task task1 = Task.find("from Task as a where a.name = ?", ['start'])
+			TaskStatus ts1 = new TaskStatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', msgtext: 'подтверди контроль производства').save(failOnError: true)
+			ts1.addToButtons(btn1)
+			ts1.addToButtons(btn2)
+			ts1.task = task1
+			TaskStatus ts2 = new TaskStatus(status: 'REPLY_NO', msgtype: 'CMD', sendTo: 'Director', msgtext: 'назначь управляющего производством на сегодня').save(failOnError: true)
+			ts2.addToButtons(btn3)
+			ts2.addToButtons(btn2)
+			ts2.task = task1
+			TaskStatus ts3 = new TaskStatus(status: 'REPLY_HAND', msgtype: 'INFO', sendTo: 'Director, Manager', msgtext: 'сегодня производство управляется в ручном режиме').save(failOnError: true)
+			ts3.task = task1
 		}
 	}
 	def destroy = {

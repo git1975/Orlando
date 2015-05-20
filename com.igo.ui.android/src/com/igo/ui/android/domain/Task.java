@@ -8,6 +8,7 @@ public class Task {
 	private String replyVariants;
 	private String startDate;
 	private String endDate;
+	private Button[] buttons;
 
 	public String getId() {
 		return id;
@@ -63,5 +64,13 @@ public class Task {
 
 	public void setBody(String body) {
 		this.body = body;
+	}
+
+	public Button[] getButtons() {
+		return buttons;
+	}
+
+	public void setButtons(Button[] buttons) {
+		this.buttons = buttons;
 	}
 }

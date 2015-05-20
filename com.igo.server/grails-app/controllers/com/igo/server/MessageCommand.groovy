@@ -15,6 +15,7 @@ public class MessageCommand {
 	String body
 	Date startdate
 	Date enddate
+	Button[] buttons
 	
 	def setQueue(Queue q){
 		this.id = q.id

@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.igo.ui.android.DataStorage;
+import com.igo.ui.android.domain.Button;
 import com.igo.ui.android.domain.Login;
 import com.igo.ui.android.domain.Task;
 
@@ -113,6 +114,7 @@ public class CommandConnector extends AsyncTask<String, String, String> {
 				tasks = new Task[jArr.length()];
 				for (int i = 0; i < jArr.length(); i++) {
 					JSONObject jObj = jArr.getJSONObject(i);
+					JSONArray jButtons = jObj.getJSONArray("buttons");
 					Task task = new Task();
 					task.setId(getJsonValue(jObj, "id"));
 					task.setName(getJsonValue(jObj, "name"));
@@ -121,6 +123,17 @@ public class CommandConnector extends AsyncTask<String, String, String> {
 					task.setType(getJsonValue(jObj, "type"));
 					task.setReplyVariants(getJsonValue(jObj, "replyVariants"));
 					task.setBody(getJsonValue(jObj, "body"));
+					if(jButtons != null){
+						Button[] b = new Button[jButtons.length()];
+						for(int k = 0; k < jButtons.length(); k++){
+							JSONObject jBtn = jButtons.getJSONObject(i);
+							b[i] = new Button();
+							b[i].setCode(getJsonValue(jBtn, "code"));
+							b[i].setName(getJsonValue(jBtn, "name"));
+							b[i].setReplystatus(getJsonValue(jBtn, "replystatus"));
+						}
+						task.setButtons(b);
+					}
 					tasks[i] = task;
 				}
 				objResult = tasks;
