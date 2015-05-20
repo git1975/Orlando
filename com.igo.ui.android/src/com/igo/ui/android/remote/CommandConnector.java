@@ -121,16 +121,15 @@ public class CommandConnector extends AsyncTask<String, String, String> {
 					task.setStartDate(getJsonValue(jObj, "startdate"));
 					task.setEndDate(getJsonValue(jObj, "enddate"));
 					task.setType(getJsonValue(jObj, "type"));
-					task.setReplyVariants(getJsonValue(jObj, "replyVariants"));
 					task.setBody(getJsonValue(jObj, "body"));
 					if(jButtons != null){
 						Button[] b = new Button[jButtons.length()];
 						for(int k = 0; k < jButtons.length(); k++){
-							JSONObject jBtn = jButtons.getJSONObject(i);
-							b[i] = new Button();
-							b[i].setCode(getJsonValue(jBtn, "code"));
-							b[i].setName(getJsonValue(jBtn, "name"));
-							b[i].setReplystatus(getJsonValue(jBtn, "replystatus"));
+							JSONObject jBtn = jButtons.getJSONObject(k);
+							b[k] = new Button();
+							b[k].setCode(getJsonValue(jBtn, "code"));
+							b[k].setName(getJsonValue(jBtn, "name"));
+							b[k].setReplystatus(getJsonValue(jBtn, "replystatus"));
 						}
 						task.setButtons(b);
 					}

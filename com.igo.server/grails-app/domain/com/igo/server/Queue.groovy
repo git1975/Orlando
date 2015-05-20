@@ -12,6 +12,7 @@ class Queue {
 	int ord
 	User user
 	String status
+	Task task
 	
 	static constraints = {
 		type blank: false, unique: false

@@ -5,7 +5,6 @@ public class Task {
 	private String name;
 	private String body;
 	private String type;
-	private String replyVariants;
 	private String startDate;
 	private String endDate;
 	private Button[] buttons;
@@ -48,14 +47,6 @@ public class Task {
 
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	public String getReplyVariants() {
-		return replyVariants;
-	}
-
-	public void setReplyVariants(String replyVariants) {
-		this.replyVariants = replyVariants;
 	}
 
 	public String getBody() {

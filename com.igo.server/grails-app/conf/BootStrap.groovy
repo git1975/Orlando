@@ -71,6 +71,18 @@ class BootStrap {
 			ts2.task = task1
 			TaskStatus ts3 = new TaskStatus(status: 'REPLY_HAND', msgtype: 'INFO', sendTo: 'Director, Manager', msgtext: 'сегодня производство управляется в ручном режиме').save(failOnError: true)
 			ts3.task = task1
+			//prepare
+			task1 = Task.find("from Task as a where a.name = ?", ['prepare'])
+			ts1 = new TaskStatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', msgtext: 'подтверди отсутствие отклонений по подготовке производства').save(failOnError: true)
+			ts1.addToButtons(btn1)
+			ts1.addToButtons(btn2)
+			ts1.task = task1
+			ts2 = new TaskStatus(status: 'REPLY_NO', msgtype: 'CMD', sendTo: 'Director', msgtext: 'отклонения по подготовке производства, перейти в режим ручного управления').save(failOnError: true)
+			ts2.addToButtons(btn3)
+			ts2.addToButtons(btn2)
+			ts2.task = task1
+			ts3 = new TaskStatus(status: 'REPLY_HAND', msgtype: 'INFO', sendTo: 'Director, Manager', msgtext: 'управление производством переводится в ручной режим из-за отклонений на этапе подготовки').save(failOnError: true)
+			ts3.task = task1
 		}
 	}
 	def destroy = {

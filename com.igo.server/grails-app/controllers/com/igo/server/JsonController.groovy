@@ -26,7 +26,7 @@ class JsonController {
 		//Находим стартовый таск в статусе INIT
 		for(Queue q: list){
 			//int id = q.ord
-			Task t = Task.find("from Task as a where a.id = ?", [1L])
+			Task t = Task.find("from Task as a where a.id = ?", [q.task.id])
 			TaskStatus ts = TaskStatus.find("from TaskStatus as a where a.task = ? and a.status = ?", [t, q.status])
 			if(ts != null){
 				def mes = new MessageCommand()
@@ -40,24 +40,6 @@ class JsonController {
 				messages.add(mes)
 			}
 		}
-
-		/*for(Queue q: list){
-		 if(q.status == "INIT"){
-		 def mes = new MessageCommand()
-		 mes.setQueue(q)
-		 mes.body = "Вам необходимо подтвердить задачу"
-		 mes.type = MessageCommand.TYPE_CMD
-		 mes.replyVariants = MessageCommand.REPLY_YESNO
-		 messages.add(mes)
-		 } else if(q.status == "N"){
-		 def mes = new MessageCommand()
-		 mes.setQueue(q)
-		 mes.body = "назначь управляющего производством на сегодня – ФИО"
-		 mes.type = MessageCommand.TYPE_CMD
-		 mes.replyVariants = MessageCommand.REPLY_YESNO
-		 messages.add(mes)
-		 }
-		 }*/
 
 		render messages as JSON;
 	}

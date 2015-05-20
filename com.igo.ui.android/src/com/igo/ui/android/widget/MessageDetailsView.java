@@ -138,7 +138,7 @@ public class MessageDetailsView extends RelativeLayout /*
 			}
 		}
 
-		if ("INFO".equals(task.getReplyVariants())) {
+		if ("INFO".equals(task.getType())) {
 			btnYes.setVisibility(View.INVISIBLE);
 			btnNo.setVisibility(View.INVISIBLE);
 		}
