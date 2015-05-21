@@ -8,8 +8,8 @@
 
     <string name="demo_external_activity">Demo External Activity</string>
     <string name="demo_collection">Demo Collection</string>
-    <string name="mi_server_address">Server Address</string>
-    <string name="mi_edit_settings">mi_edit_settings</string>
+    <string name="mi_server_address">Адрес сервера (например 192.168.0.1:8080)</string>
+    <string name="mi_edit_settings">Настройки</string>
     <string name="str_login">Логин</string>
     <string name="str_password">Пароль</string>
     <string name="srt_enter">Вход</string>

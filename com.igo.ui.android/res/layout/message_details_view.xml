@@ -12,41 +12,59 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical" 
+            android:background="@layout/shape">
 
-             <TextView
-                android:id="@+id/txt_taskbody"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.46"
-                android:ems="10" />
-            <TextView
-                android:id="@+id/dt_start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.46"
-                android:ems="10" />
+                android:orientation="vertical" >
 
-            <TextView
-                android:id="@+id/dt_end"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.46"
-                android:ems="10" />
+                <TextView
+                    android:id="@+id/txt_taskbody"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.46"
+                    android:ems="10" 
+                	android:textColor="#000000"/>
 
-            <Button
-                android:id="@+id/btnYes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.46"
-                android:text="@string/str_yes" />
+                <TextView
+                    android:id="@+id/dt_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.46"
+                    android:ems="10" 
+                    android:textColor="#000000"/>
 
-            <Button
-                android:id="@+id/btnNo"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/dt_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.46"
+                    android:ems="10" 
+                    android:textColor="#000000"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.46"
-                android:text="@string/str_no" />
+                android:layout_weight="0.46" >
+
+                <Button
+                    android:id="@+id/btnYes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.46"
+                    android:text="@string/str_yes" />
+
+                <Button
+                    android:id="@+id/btnNo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.46"
+                    android:text="@string/str_no" />
+            </LinearLayout>
 
         </LinearLayout>
     </RelativeLayout >

@@ -6,6 +6,10 @@ import com.igo.ui.android.remote.Command;
 import com.igo.ui.android.remote.CommandConnector;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.RectF;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -32,24 +36,11 @@ public class MessageDetailsView extends RelativeLayout /*
 		inflater.inflate(R.layout.message_details_view, this, true);
 
 		setTask(task);
-		// LinearLayout msgView = (LinearLayout) findViewById(R.id.msg_view);
-		// msgView.setOnClickListener(this);
 	}
 
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.msg_view:
-			/*
-			 * Command command = new Command(Command.TASK_COMMIT);
-			 * command.putParam("id", getTaskId()); CommandConnector con = new
-			 * CommandConnector(getContext(), command);
-			 * con.setOnCommandEndListener(this); con.execute("");
-			 * 
-			 * ImageView imgTaskStatus = (ImageView)
-			 * findViewById(R.id.img_task_status);
-			 * imgTaskStatus.setImageResource(R.drawable.ic_wait);
-			 */
-
 			break;
 		case 2:
 			break;
@@ -96,6 +87,9 @@ public class MessageDetailsView extends RelativeLayout /*
 		return task;
 	}
 
+	/*
+	 * В зависимости от поступившей информации показываем кнопки
+	 */
 	public void setTask(Task task) {
 		this.task = task;
 		setTaskId(task.getId());
@@ -143,4 +137,21 @@ public class MessageDetailsView extends RelativeLayout /*
 			btnNo.setVisibility(View.INVISIBLE);
 		}
 	}
+	
+	//@Override
+	protected void onDraw1(android.graphics.Canvas canvas)
+    {
+        Paint paint = new Paint();
+
+        paint.setAlpha(255);
+        canvas.translate(0, 30);
+        paint.setColor(Color.BLUE);
+        Path mPath = new Path();
+        mPath.addRoundRect(new RectF(0, 0, 100,100),20,20, Path.Direction.CCW);
+        //canvas.clipPath(mPath, Region.Op.INTERSECT);
+        paint.setColor(Color.GREEN);
+        paint.setAntiAlias(true);
+        canvas.drawRect(0, 0, 120,120, paint);
+
+    }
 }

@@ -150,11 +150,16 @@ public class WorkActivity extends FragmentActivity implements
 
 		@Override
 		public int getCount() {
-			return 3;
+			return 2;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
+			if(position == 0){
+				return "Активности";
+			} else if(position == 1){
+				return "Отчеты";
+			}
 			return "Section " + (position + 1);
 		}
 	}

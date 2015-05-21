@@ -10,7 +10,6 @@
         android:childIndicator="@drawable/ic_launcher"
         android:choiceMode="singleChoice"
         android:divider="@android:color/transparent"
-        android:dividerHeight="0dp"
-        android:groupIndicator="@drawable/ic_launcher" />
+        android:dividerHeight="0dp" />
 
 </RelativeLayout>

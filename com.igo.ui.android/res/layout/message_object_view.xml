@@ -1,23 +1,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="false"
-    android:paddingRight="50dp" >
+    android:clickable="false" >
 
     <RelativeLayout
         android:id="@+id/msg_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
         android:clickable="false"
-        android:orientation="vertical"
-        android:paddingRight="50dp" >
+        android:orientation="vertical" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clickable="false"
             android:orientation="vertical"
-            android:paddingLeft="50dp" >
+            android:paddingLeft="50dp" 
+            android:background="@layout/shape">
 
             <ImageView
                 android:id="@+id/img_task_status"
@@ -36,9 +36,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.46"
                 android:clickable="false"
-                android:ems="10" />
-
+                android:ems="10" 
+                android:textColor="#000000"/>
         </LinearLayout>
-    </RelativeLayout >
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -17,7 +17,7 @@ class JsonController {
 
 		List<Queue> list = Queue.findAll("from Queue as q where q.finished = ? and q.type = 'Task' order by ord", [false])
 
-		print list.toString();
+		//print list.toString();
 		//list = 	getTopTask(list)
 
 		def messages = new ArrayList();
