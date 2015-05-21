@@ -8,6 +8,7 @@ class Task {
 	boolean autostart
 	Date startdate = new Date()
 	Date enddate = new Date()
+	Date signaldate
 	User user
 	int ord = 0
 	 

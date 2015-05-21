@@ -22,22 +22,36 @@ class JsonController {
 
 		def messages = new ArrayList();
 
-		//Ветка стартовой задачи
-		//Находим стартовый таск в статусе INIT
+		//Находим таск в статусе INIT
 		for(Queue q: list){
 			//int id = q.ord
 			Task t = Task.find("from Task as a where a.id = ?", [q.task.id])
 			TaskStatus ts = TaskStatus.find("from TaskStatus as a where a.task = ? and a.status = ?", [t, q.status])
+			//найден статус задачи, занесенный в шаблон
 			if(ts != null){
-				def mes = new MessageCommand()
-				mes.setQueue(q)
-				mes.body = ts.msgtext
-				mes.type = ts.msgtype
-				mes.buttons = new Button[ts.buttons.size()]
-				for(int i = 0; i < ts.buttons.size(); i++){
-					mes.buttons[i] = ts.buttons[i]
+				Date dt = q.getEnddate()
+				if(q.getSignaldate() != null){
+					dt = q.getSignaldate()
 				}
-				messages.add(mes)
+				//print '---->>>>' + t.name
+				//print '---->>>>' + Utils.sdfTime.parse("151900+0300")
+				//print '---->>>>' + Utils.sdfTime2.format(dt) + "+0300"
+				//print '---->>>>' + Utils.sdfTime.parse("235959+0300")
+				//Отправлять сигнал пользователю. если наступило время сигнала
+				if(Utils.isTimeInInterval(new Date(), Utils.sdfTime.parse(Utils.sdfTime2.format(dt) + "+0300"), Utils.sdfTime.parse("235959+0300"))){
+					print '---->>>>isTimeInInterval=true'
+					
+					def mes = new MessageCommand()
+					mes.setQueue(q)
+					mes.body = ts.msgtext
+					mes.type = ts.msgtype
+					mes.status = q.status
+					mes.buttons = new Button[ts.buttons.size()]
+					for(int i = 0; i < ts.buttons.size(); i++){
+						mes.buttons[i] = ts.buttons[i]
+					}
+					messages.add(mes)
+				}
 			}
 		}
 

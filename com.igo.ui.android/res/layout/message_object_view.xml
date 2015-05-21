@@ -37,7 +37,8 @@
                 android:layout_weight="0.46"
                 android:clickable="false"
                 android:ems="10" 
-                android:textColor="#000000"/>
+                android:textColor="#000000"
+                android:background="#00000000"/>
         </LinearLayout>
     </RelativeLayout>
 

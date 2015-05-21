@@ -122,6 +122,7 @@ public class CommandConnector extends AsyncTask<String, String, String> {
 					task.setEndDate(getJsonValue(jObj, "enddate"));
 					task.setType(getJsonValue(jObj, "type"));
 					task.setBody(getJsonValue(jObj, "body"));
+					task.setStatus(getJsonValue(jObj, "status"));
 					if(jButtons != null){
 						Button[] b = new Button[jButtons.length()];
 						for(int k = 0; k < jButtons.length(); k++){

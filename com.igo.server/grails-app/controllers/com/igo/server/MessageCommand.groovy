@@ -2,17 +2,12 @@ package com.igo.server
 
 import java.util.Date;
 
-public class MessageCommand {
-	public static final TYPE_CMD = "CMD"
-	public static final REPLY_YESNO = "YESNO"
-	public static final REPLY_HAND = "HAND"
-	public static final REPLY_INFO = "REPLY_INFO"
-	
+public class MessageCommand {	
 	String id
 	String name
 	String type
-	String replyVariants
 	String body
+	String status
 	Date startdate
 	Date enddate
 	Button[] buttons

@@ -44,16 +44,12 @@ public class TaskExpViewAdapter extends BaseExpandableListAdapter implements
 
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent) {
-		//if (convertView == null) {
-			MessageView view = new MessageView(context);
-			if (tasks[groupPosition] != null) {
-				view.setText(tasks[groupPosition].getName());
-				view.setTaskId(tasks[groupPosition].getId());
-			}
-			convertView = view;
-		//}
+		MessageView view = null;
+		if (tasks[groupPosition] != null) {
+			view = new MessageView(context, tasks[groupPosition]);
+		}
 
-		return convertView;
+		return view;
 	}
 
 	public void OnCommandEnd(Command command, Object result) {
@@ -73,13 +69,14 @@ public class TaskExpViewAdapter extends BaseExpandableListAdapter implements
 
 	public View getChildView(int groupPosition, int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
-		//System.out.println("getChildView---->>>>" + parent.getId());
-		
-		//if (convertView == null) {
-			MessageDetailsView view = new MessageDetailsView(context, tasks[groupPosition]);
+		// System.out.println("getChildView---->>>>" + parent.getId());
 
-			convertView = view;
-		//}
+		// if (convertView == null) {
+		MessageDetailsView view = new MessageDetailsView(context,
+				tasks[groupPosition]);
+
+		convertView = view;
+		// }
 
 		return convertView;
 	}

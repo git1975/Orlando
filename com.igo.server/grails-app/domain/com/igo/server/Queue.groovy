@@ -5,6 +5,7 @@ import java.util.Date
 class Queue {
 	Date startdate = new Date()
 	Date enddate = new Date()
+	Date signaldate
 	boolean finished
 	String type
 	String description

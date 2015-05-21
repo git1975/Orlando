@@ -44,11 +44,8 @@ public class TaskViewAdapter extends BaseAdapter implements ListAdapter, OnComma
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
-		MessageView view = new MessageView(context);
-		if (tasks[position] != null) {
-			view.setText(tasks[position].getName());
-			view.setTaskId(tasks[position].getId());
-		}
+		MessageView view = new MessageView(context, tasks[position]);
+
 		return view;
 	}
 

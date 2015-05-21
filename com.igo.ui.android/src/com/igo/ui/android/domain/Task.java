@@ -5,6 +5,7 @@ public class Task {
 	private String name;
 	private String body;
 	private String type;
+	private String status;
 	private String startDate;
 	private String endDate;
 	private Button[] buttons;
@@ -63,5 +64,13 @@ public class Task {
 
 	public void setButtons(Button[] buttons) {
 		this.buttons = buttons;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

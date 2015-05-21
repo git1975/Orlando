@@ -1,37 +1,29 @@
 package com.igo.ui.android.widget;
 
 import com.igo.ui.android.R;
+import com.igo.ui.android.domain.Task;
 import com.igo.ui.android.remote.Command;
-import com.igo.ui.android.remote.CommandConnector;
-import com.igo.ui.android.remote.OnCommandEndListener;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class MessageView extends RelativeLayout /*implements OnClickListener, OnCommandEndListener*/{
 	private String taskId = null;
+	private Task task = null;
 	
-	public MessageView(Context context) {
+	public MessageView(Context context, Task task) {
 		super(context);
 		
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(R.layout.message_object_view, this, true);
 		
-		//LinearLayout msgView = (LinearLayout) findViewById(R.id.msg_view);
-		//msgView.setOnClickListener(this);
-
-		//init();
-
-		//addView(imageView);
-		//addView(textView);
+		setTask(task);
 	}
 	
 	public void setText(String text){
@@ -64,11 +56,46 @@ public class MessageView extends RelativeLayout /*implements OnClickListener, On
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
 	}
+	
+	public void setImage(Task task) {
+		ImageView imgTaskStatus = (ImageView) findViewById(R.id.img_task_status);
+		if(task == null){
+			imgTaskStatus.setImageResource(R.drawable.ic_info);
+			return;
+		}
+		
+		if("INIT".equals(task.getStatus())){
+			imgTaskStatus.setImageResource(R.drawable.ic_info);
+		} else if("REPLY_NO".equals(task.getStatus())){
+			imgTaskStatus.setImageResource(R.drawable.ic_no);
+		} else if("TIMEOUT".equals(task.getStatus())){
+			imgTaskStatus.setImageResource(R.drawable.ic_time);
+		} else if("REPLY_HAND".equals(task.getStatus())){
+			imgTaskStatus.setImageResource(R.drawable.ic_hand);
+		}
+	}
 
 	public void OnCommandEnd(Command command, Object result) {
 		ImageView imgTaskStatus = (ImageView) findViewById(R.id.img_task_status);
 		imgTaskStatus.setImageResource(R.drawable.ic_alert);
 		
 		Toast.makeText(getContext(), result.toString(), Toast.LENGTH_LONG).show();
+	}
+
+	public Task getTask() {
+		return task;
+	}
+
+	public void setTask(Task task) {
+		this.task = task;
+		if(task == null){
+			setTaskId("0");
+			setText("null");
+			return;
+		}
+		
+		setTaskId(task.getId());
+		setText(task.getName());
+		setImage(task);
 	}
 }
