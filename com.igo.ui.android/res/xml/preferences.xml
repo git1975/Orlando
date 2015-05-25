@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <EditTextPreference android:dialogTitle="@string/mi_server_address" android:title="@string/mi_server_address" android:key="prefServerAddress"/>
+    <EditTextPreference android:dialogTitle="@string/mi_server_address" android:title="@string/mi_server_address" android:key="prefServerAddress" android:defaultValue="192.168.0.101:8080"/>
+    <EditTextPreference android:dialogTitle="@string/mi_server_root" android:title="@string/mi_server_root" android:key="prefServerRoot" android:defaultValue="/com.igo.server"/>
 </PreferenceScreen>

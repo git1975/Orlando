@@ -16,4 +16,5 @@
 	<string name="srt_login_failed">Неверное имя или пароль</string>
 	<string name="str_no">No</string>
 	<string name="str_yes">Yes</string>
+	<string name="mi_server_root">Корневой контекст</string>
 </resources>
