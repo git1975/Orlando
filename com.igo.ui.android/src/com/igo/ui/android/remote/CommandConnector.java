@@ -52,9 +52,8 @@ public class CommandConnector extends AsyncTask<String, String, String> {
 			command.putParam("login", username);
 		}
 		String paramsUrl = command.getParamsUrl();
-		String urlString = "http://" + prefServerAddress
-				+ prefServerRoot + "/json/" + command.getCommand() + "?"
-				+ paramsUrl;
+		String urlString = "http://" + prefServerAddress + prefServerRoot
+				+ "/json/" + command.getCommand() + "?" + paramsUrl;
 
 		String data = "";
 		InputStream in = null;
@@ -97,63 +96,10 @@ public class CommandConnector extends AsyncTask<String, String, String> {
 	@Override
 	protected void onPostExecute(String result) {
 		System.out.println("CommandConnector.onPostExecute.result=" + result);
-		try {
-			Object objResult = null;
-			if (Command.LOGIN.equals(command.getCommand())) {
-				JSONObject jObj = new JSONObject(result);
-				if (jObj.has("login")) {
-					Login login = new Login();
-					login.setLogin(jObj.getString("login"));
-					login.setName(jObj.getString("username"));
-					objResult = login;
-				}
-			} else if (Command.TASK_COMMIT.equals(command.getCommand())) {
-				JSONObject jObj = new JSONObject(result);
-				objResult = jObj.getString("result");
-			} else if (Command.SHOW.equals(command.getCommand())) {
-				Task[] tasks = null;
-				JSONArray jArr = new JSONArray(result);
-				tasks = new Task[jArr.length()];
-				for (int i = 0; i < jArr.length(); i++) {
-					JSONObject jObj = jArr.getJSONObject(i);
-					JSONArray jButtons = jObj.getJSONArray("buttons");
-					Task task = new Task();
-					task.setId(getJsonValue(jObj, "id"));
-					task.setName(getJsonValue(jObj, "name"));
-					task.setStartDate(getJsonValue(jObj, "startdate"));
-					task.setEndDate(getJsonValue(jObj, "enddate"));
-					task.setType(getJsonValue(jObj, "type"));
-					task.setBody(getJsonValue(jObj, "body"));
-					task.setStatus(getJsonValue(jObj, "status"));
-					if(jButtons != null){
-						Button[] b = new Button[jButtons.length()];
-						for(int k = 0; k < jButtons.length(); k++){
-							JSONObject jBtn = jButtons.getJSONObject(k);
-							b[k] = new Button();
-							b[k].setCode(getJsonValue(jBtn, "code"));
-							b[k].setName(getJsonValue(jBtn, "name"));
-							b[k].setReplystatus(getJsonValue(jBtn, "replystatus"));
-						}
-						task.setButtons(b);
-					}
-					tasks[i] = task;
-				}
-				objResult = tasks;
-			}
+		Object objResult = CommandResponseFactory.getCommandResponseObject(
+				command.getCommand(), result);
 
-			doCommandEnd(objResult);
-		} catch (JSONException e) {
-			e.printStackTrace();
-			doCommandEnd(null);
-		}
-	}
-
-	private String getJsonValue(JSONObject obj, String name) {
-		try {
-			return obj.getString(name);
-		} catch (JSONException e) {
-			return "";
-		}
+		doCommandEnd(objResult);
 	}
 
 	private void doCommandEnd(Object result) {

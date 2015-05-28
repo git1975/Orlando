@@ -77,4 +77,16 @@ class CommandService {
 
 		return queue
 	}
+	
+	def Chat sendChat(String from, String to, String body) {
+		Chat item = new Chat();
+		
+		item.sendfrom = from;
+		item.sendto = to;
+		item.body = body;
+		item.senddate = new Date();
+		item.save(failOnError: true)
+
+		return item
+	}
 }

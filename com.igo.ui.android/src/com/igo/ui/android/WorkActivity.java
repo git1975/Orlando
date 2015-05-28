@@ -17,6 +17,7 @@
 package com.igo.ui.android;
 
 import com.igo.ui.android.domain.Login;
+import com.igo.ui.android.fragment.ChatSectionFragment;
 import com.igo.ui.android.fragment.LaunchpadSectionFragment;
 
 import android.app.ActionBar;
@@ -138,6 +139,8 @@ public class WorkActivity extends FragmentActivity implements
 			switch (i) {
 			case 0:
 				return new LaunchpadSectionFragment();
+			case 1:
+				return new ChatSectionFragment();				
 
 			default:
 				Fragment fragment = new DummySectionFragment();
@@ -150,7 +153,7 @@ public class WorkActivity extends FragmentActivity implements
 
 		@Override
 		public int getCount() {
-			return 2;
+			return 3;
 		}
 
 		@Override
@@ -158,6 +161,8 @@ public class WorkActivity extends FragmentActivity implements
 			if(position == 0){
 				return "Активности";
 			} else if(position == 1){
+				return "Чат";
+			} else if(position == 2){
 				return "Отчеты";
 			}
 			return "Section " + (position + 1);

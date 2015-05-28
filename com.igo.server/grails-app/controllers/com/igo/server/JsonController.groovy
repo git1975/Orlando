@@ -59,9 +59,13 @@ class JsonController {
 	}
 
 	def login() {
-		print "JsonController.login." + params.login + "@" + params.password
+		print "JsonController.login." + params.login  + "..."
 
 		com.igo.server.User item = com.igo.server.User.find("from User as a where a.login = ? and password = ?", [params.login, params.password])
+		
+		if(item != null){
+			print item.username + " login OK"
+		}
 
 		render item as JSON;
 	}
@@ -105,6 +109,22 @@ class JsonController {
 		}
 
 		return res
+	}
+	
+	def getchat() {
+		print "JsonController.getchat." + params.login
+
+		List<Chat> list = com.igo.server.Chat.findAll("from Chat as a")
+
+		render list as JSON;
+	}
+	
+	def sendchat() {
+		print "JsonController.sendchat." + params.login + "." + params.to + ".body=" + params.body
+
+		def item = commandService.sendChat(params.login, params.to, params.body)
+
+		render item as JSON;
 	}
 
 }

@@ -17,4 +17,5 @@
 	<string name="str_no">No</string>
 	<string name="str_yes">Yes</string>
 	<string name="mi_server_root">Корневой контекст</string>
+	<string name="str_send">Send</string>
 </resources>
