@@ -25,6 +25,17 @@ class CommandService {
 				processTask(item)
 			}
 		}
+
+		autoReply()
+	}
+
+	def autoReply(){
+		List<Chat> items = Chat.findAll("from Chat as a order by a.id desc", [max: 1])
+		if(items != null && items.size() > 0){
+			if(items.get(0).sendto == 'user2'){
+				sendChat("user2", "user1", "Согласен. Договорились")
+			}
+		}
 	}
 
 	def processStartProcess(Queue item) {
@@ -77,12 +88,12 @@ class CommandService {
 
 		return queue
 	}
-	
-	def Chat sendChat(String from, String to, String body) {			
+
+	def Chat sendChat(String from, String to, String body) {
 		Chat item = new Chat()
-		
+
 		Date now = new Date()
-		
+
 		item.sendfrom = from
 		item.sendto = to
 		item.body = body

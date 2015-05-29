@@ -14,8 +14,9 @@
     <string name="str_password">Пароль</string>
     <string name="srt_enter">Вход</string>
 	<string name="srt_login_failed">Неверное имя или пароль</string>
-	<string name="str_no">No</string>
-	<string name="str_yes">Yes</string>
+	<string name="str_no">Нет</string>
+	<string name="str_yes">Да</string>
 	<string name="mi_server_root">Корневой контекст</string>
-	<string name="str_send">Send</string>
+	<string name="str_send">Послать</string>
+	<string name="str_iam">Я</string>
 </resources>

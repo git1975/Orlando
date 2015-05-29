@@ -2,8 +2,10 @@ package com.igo.ui.android.widget;
 
 import java.text.SimpleDateFormat;
 
+import com.igo.ui.android.DataStorage;
 import com.igo.ui.android.R;
 import com.igo.ui.android.domain.ChatMessage;
+import com.igo.ui.android.domain.Login;
 import com.igo.ui.android.remote.Command;
 
 import android.content.Context;
@@ -16,7 +18,7 @@ import android.widget.Toast;
 
 public class ChatMessageView extends RelativeLayout {
 	private ChatMessage chatItem = null;
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
 	public ChatMessageView(Context context, ChatMessage item) {
 		super(context);
@@ -99,6 +101,16 @@ public class ChatMessageView extends RelativeLayout {
 		}
 		tvDate = (TextView) findViewById(R.id.tv_chat_body);
 		tvDate.setText(item.getBody());
+
+		DataStorage ds = (DataStorage) getContext();
+		Login login = (Login) ds.getData("login");
+
+		tvDate = (TextView) findViewById(R.id.tv_chat_from);
+		if (item.getFrom().equals(login.getLogin())) {
+			tvDate.setText(getResources().getString(R.string.str_iam));
+		} else {
+			tvDate.setText(item.getFrom());
+		}
 
 		setImage(item);
 	}

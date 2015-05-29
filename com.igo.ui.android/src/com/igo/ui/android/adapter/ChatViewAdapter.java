@@ -113,7 +113,7 @@ public class ChatViewAdapter extends BaseAdapter implements ListAdapter,
 	}
 
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		if (view.getFirstVisiblePosition() == 0) {
+		if (view.getFirstVisiblePosition() == 0 || view.getLastVisiblePosition() == items.size() - 1) {
 			ChatTimerTask task = ChatTimerTask.getInstance(context, this);
 			if (items.size() > 0) {
 				task.setMinid(items.get(0).getIdLong());

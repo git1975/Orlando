@@ -42,6 +42,7 @@ public class ChatSectionFragment extends Fragment {
 				
 				Command command = new Command(Command.SEND_CHAT);
 				command.putParam("body", etSendmsg.getText().toString());
+				command.putParam("sendto", "user2");
 				CommandConnector con = new CommandConnector(getActivity()
 						.getApplicationContext(), command);
 				con.setOnCommandEndListener(adapter);

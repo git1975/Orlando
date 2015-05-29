@@ -143,9 +143,9 @@ class JsonController {
 	}
 	
 	def sendchat() {
-		print "JsonController.sendchat." + params.login + "." + params.to + ".body=" + params.body
+		print "JsonController.sendchat." + params.login + "." + params.sendto + ".body=" + params.body
 
-		def item = commandService.sendChat(params.login, params.to, params.body)
+		def item = commandService.sendChat(params.login, params.sendto, params.body)
 		def List<Chat> list = new ArrayList();
 		list.add(item)
 
