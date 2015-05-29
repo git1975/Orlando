@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 public class ChatMessageView extends RelativeLayout {
 	private ChatMessage chatItem = null;
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("hh:MM:ss");
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
 
 	public ChatMessageView(Context context, ChatMessage item) {
 		super(context);

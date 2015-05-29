@@ -4,6 +4,7 @@ class Chat {
 	String sendfrom
 	String sendto
 	Date senddate
+	Long sendtime
 	String body
 
     byte[] picture
@@ -14,6 +15,7 @@ class Chat {
     
     static mapping = {
         picture column: "picture", sqlType: "blob"
+		senddate column: "senddate", sqlType: "timestamp"
     }
-
+	
 }

@@ -9,7 +9,11 @@ import com.igo.server.Queue
 
 class BootStrap {
 
-	def init = { servletContext ->
+	def init = { 
+		servletContext ->
+		
+		TimeZone.setDefault(TimeZone.getTimeZone ("GMT+03:00"));
+		
 		if(!Role.count) {
 			Role role1 = new com.igo.server.Role(name: 'head', description: 'Директор').save(failOnError: true)
 			Role role2 = new com.igo.server.Role(name: 'mgr', description: 'Управляющий').save(failOnError: true)

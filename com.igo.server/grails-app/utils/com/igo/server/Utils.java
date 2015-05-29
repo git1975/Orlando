@@ -2,7 +2,9 @@ package com.igo.server;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Utils {
 	public static SimpleDateFormat sdfDate = new SimpleDateFormat("ddMMyyyy");
@@ -45,5 +47,17 @@ public class Utils {
 			e.printStackTrace();
 			return false;
 		}
+	}
+	
+	public static List reverse(List list){
+		if(list == null){
+			return null;
+		}
+		List result = new ArrayList(list.size());
+		for(int i = list.size() - 1; i >= 0; i--){
+			result.add(list.get(i));
+		}
+		
+		return result;
 	}
 }

@@ -61,7 +61,7 @@ class CommandService {
 		if(queue == null){
 			return null;
 		}
-		queue.status = status;
+		queue.status = status
 		queue.save(failOnError: true)
 
 		return queue
@@ -72,19 +72,22 @@ class CommandService {
 		if(queue == null){
 			return null;
 		}
-		queue.status = reply;
+		queue.status = reply
 		queue.save(failOnError: true)
 
 		return queue
 	}
 	
-	def Chat sendChat(String from, String to, String body) {
-		Chat item = new Chat();
+	def Chat sendChat(String from, String to, String body) {			
+		Chat item = new Chat()
 		
-		item.sendfrom = from;
-		item.sendto = to;
-		item.body = body;
-		item.senddate = new Date();
+		Date now = new Date()
+		
+		item.sendfrom = from
+		item.sendto = to
+		item.body = body
+		item.senddate = now
+		item.sendtime = now.getTime()
 		item.save(failOnError: true)
 
 		return item

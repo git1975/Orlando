@@ -44,16 +44,17 @@ public class ChatSectionFragment extends Fragment {
 				command.putParam("body", etSendmsg.getText().toString());
 				CommandConnector con = new CommandConnector(getActivity()
 						.getApplicationContext(), command);
+				con.setOnCommandEndListener(adapter);
 				con.execute("");
 				
 				etSendmsg.setText("");
 			}
 		});
 
-		ChatTimerTask task = ChatTimerTask.getInstance(getActivity()
+		/*ChatTimerTask task = ChatTimerTask.getInstance(getActivity()
 				.getApplicationContext(), adapter);
 		timer = new Timer("ChatTimer");
-		timer.schedule(task, 0, 5000);
+		timer.schedule(task, 0, 5000);*/
 
 		return rootView;
 	}

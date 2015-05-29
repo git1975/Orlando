@@ -1,10 +1,6 @@
 package com.igo.ui.android.remote;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,7 +12,6 @@ import com.igo.ui.android.domain.Login;
 import com.igo.ui.android.domain.Task;
 
 public class CommandResponseFactory {
-	private static final SimpleDateFormat sdfFull = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.ROOT);
 
 	public static Object getCommandResponseObject(String command, String result) {
 		Object objResult = null;
@@ -63,11 +58,11 @@ public class CommandResponseFactory {
 					tasks[i] = task;
 				}
 				objResult = tasks;
-			} else if (Command.GET_CHAT.equals(command)) {
+			} else if (Command.GET_CHAT.equals(command) || Command.SEND_CHAT.equals(command)) {
 
 				ChatMessage[] items = null;
 				JSONArray jArr = new JSONArray(result);
-				
+
 				items = new ChatMessage[jArr.length()];
 				for (int i = 0; i < jArr.length(); i++) {
 					JSONObject jObj = jArr.getJSONObject(i);
@@ -76,26 +71,23 @@ public class CommandResponseFactory {
 					item.setFrom(getJsonValue(jObj, "sendfrom"));
 					item.setTo(getJsonValue(jObj, "sendto"));
 					item.setBody(getJsonValue(jObj, "body"));
-					String d = getJsonValue(jObj, "senddate");
-					d = d.replace("Z", "+0000");
-					GregorianCalendar cal = new GregorianCalendar();
-					cal.setTime(new Date());
-					System.out.println(sdfFull.format(new Date()));
-					if(!"".equals(d)){
-						try {
-							item.setSendDate(sdfFull.parse(d));
-						} catch (ParseException e) {
-							e.printStackTrace();
-						}
+					Long time = 0L;
+					try {
+						time = Long.decode(getJsonValue(jObj, "sendtime"));
+					} catch (Exception e) {
+						time = 0L;
 					}
-					
+					Date d = new Date();
+					d.setTime(time);
+					item.setSendDate(d);
+
 					items[i] = item;
 				}
 				objResult = items;
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
-			
+
 			objResult = null;
 		}
 

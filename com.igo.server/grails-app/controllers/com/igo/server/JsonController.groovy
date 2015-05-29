@@ -112,10 +112,33 @@ class JsonController {
 	}
 	
 	def getchat() {
-		print "JsonController.getchat." + params.login
+		print "JsonController.getchat." + params.login + ";maxid=" + params.maxid + ";minid=" + params.minid
+		def long maxid = 0
+		try{
+			maxid = Long.parseLong(params.maxid);
+		} catch(Exception e){
+			maxid = 0
+		}
+		def long minid = 0
+		try{
+			minid = Long.parseLong(params.minid);
+		} catch(Exception e){
+			minid = 0
+		}
+		if(minid < 0){
+			minid = 1
+		}
 
-		List<Chat> list = com.igo.server.Chat.findAll("from Chat as a")
-
+		def List<Chat> list;
+		if(minid == 0 && maxid == 0){
+			list = Chat.findAll("from Chat as a order by a.id desc", [max: 10])
+			list = Utils.reverse(list);
+		} else {
+			//print "JsonController.getchat;maxid=" + maxid + ";minid=" + minid
+			list = Chat.findAll("from Chat as a where a.id > ? or a.id < ? order by a.id desc", [maxid, minid], [max: 10])
+		}
+		
+		
 		render list as JSON;
 	}
 	
@@ -123,8 +146,10 @@ class JsonController {
 		print "JsonController.sendchat." + params.login + "." + params.to + ".body=" + params.body
 
 		def item = commandService.sendChat(params.login, params.to, params.body)
+		def List<Chat> list = new ArrayList();
+		list.add(item)
 
-		render item as JSON;
+		render list as JSON;
 	}
 
 }
