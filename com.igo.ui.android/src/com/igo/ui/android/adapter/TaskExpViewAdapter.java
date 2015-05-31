@@ -134,7 +134,7 @@ public class TaskExpViewAdapter extends BaseExpandableListAdapter implements
 
 	public String getLastHash() {
 		if (tasks == null) {
-			return null;
+			return "";
 		}
 		String hash = "";
 		for (Task task : tasks) {

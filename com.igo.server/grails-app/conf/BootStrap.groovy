@@ -31,7 +31,7 @@ class BootStrap {
 		}
 		if(!Process.count) {
 			//Repeating process
-			Process proc = new Process(name: 'production', description: 'производство', repeatevery: 10)
+			Process proc = new Process(name: 'production', description: 'производство', repeatevery: 5)
 			.save(failOnError: true)
 			
 			User usr1 = User.find("from User as a where a.login = ?", ['user1'])
@@ -40,13 +40,13 @@ class BootStrap {
 			
 			SimpleDateFormat sdfTime = new SimpleDateFormat("mm")
 			
-			Task task = new Task(name: 'start', description: 'старт', user: usr1, ord: 1, startdate: sdfTime.parse("00"), signaldate: sdfTime.parse("02"), enddate: sdfTime.parse("03")).save(failOnError: true)
+			Task task = new Task(name: 'start', description: 'старт', user: usr1, ord: 1, startdate: sdfTime.parse("00"), signaldate: sdfTime.parse("00"), enddate: sdfTime.parse("01")).save(failOnError: true)
 			proc.addToTasks(task).save(failOnError: true)
-			task = new Task(name: 'prepare', description: 'подготовка', user: usr2, ord: 2, startdate: sdfTime.parse("03"), signaldate: sdfTime.parse("04"), enddate: sdfTime.parse("05")).save(failOnError: true)
+			task = new Task(name: 'prepare', description: 'подготовка', user: usr2, ord: 2, startdate: sdfTime.parse("01"), signaldate: sdfTime.parse("01"), enddate: sdfTime.parse("02")).save(failOnError: true)
 			proc.addToTasks(task).save(failOnError: true)
-			task = new Task(name: 'running', description: 'исполнение', user: usr3, ord: 3, startdate: sdfTime.parse("05"), signaldate: sdfTime.parse("06"), enddate: sdfTime.parse("07")).save(failOnError: true)
+			task = new Task(name: 'running', description: 'исполнение', user: usr3, ord: 3, startdate: sdfTime.parse("02"), signaldate: sdfTime.parse("02"), enddate: sdfTime.parse("03")).save(failOnError: true)
 			proc.addToTasks(task).save(failOnError: true)
-			task = new Task(name: 'finish', description: 'завершение', user: usr3, ord: 4, startdate: sdfTime.parse("07"), signaldate: sdfTime.parse("08"), enddate: sdfTime.parse("09")).save(failOnError: true)
+			task = new Task(name: 'finish', description: 'завершение', user: usr3, ord: 4, startdate: sdfTime.parse("03"), signaldate: sdfTime.parse("03"), enddate: sdfTime.parse("04")).save(failOnError: true)
 			proc.addToTasks(task).save(failOnError: true)
 		}
 		if(!Queue.count) {
@@ -93,6 +93,24 @@ class BootStrap {
 			ts2.task = task1
 			ts3 = new TaskStatus(status: 'REPLY_HAND', msgtype: 'INFO', sendTo: 'Director, Manager', msgtext: 'управление производством переводится в ручной режим из-за отклонений на этапе подготовки').save(failOnError: true)
 			ts3.task = task1
+			//running
+			task1 = Task.find("from Task as a where a.name = ?", ['running'])
+			ts1 = new TaskStatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', msgtext: 'подтверди отсутствие отклонений при исполнении').save(failOnError: true)
+			ts1.addToButtons(btn1)
+			ts1.addToButtons(btn2)
+			ts1.task = task1
+			ts2 = new TaskStatus(status: 'REPLY_NO', msgtype: 'CMD', sendTo: 'Director', msgtext: 'отклонения по подготовке производства, перейти в режим ручного управления').save(failOnError: true)
+			ts2.addToButtons(btn3)
+			ts2.addToButtons(btn2)
+			ts2.task = task1
+			ts3 = new TaskStatus(status: 'REPLY_HAND', msgtype: 'INFO', sendTo: 'Director, Manager', msgtext: 'управление производством переводится в ручной режим из-за отклонений на этапе подготовки').save(failOnError: true)
+			ts3.task = task1
+			//finish
+			task1 = Task.find("from Task as a where a.name = ?", ['running'])
+			ts1 = new TaskStatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', msgtext: 'подтверди отсутствие отклонений в цикле производство').save(failOnError: true)
+			ts1.addToButtons(btn1)
+			ts1.addToButtons(btn2)
+			ts1.task = task1
 		}
 	}
 	def destroy = {
