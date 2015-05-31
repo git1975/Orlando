@@ -1,19 +1,3 @@
-/*
- * Copyright 2012 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.igo.ui.android;
 
 import com.igo.ui.android.domain.Login;
@@ -41,14 +25,6 @@ import android.widget.TextView;
 public class WorkActivity extends FragmentActivity implements
 		ActionBar.TabListener {
 
-	/**
-	 * The {@link android.support.v4.view.PagerAdapter} that will provide
-	 * fragments for each of the three primary sections of the app. We use a
-	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
-	 * will keep every loaded fragment in memory. If this becomes too memory
-	 * intensive, it may be best to switch to a
-	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-	 */
 	AppSectionsPagerAdapter mAppSectionsPagerAdapter;
 
 	/**
@@ -56,15 +32,6 @@ public class WorkActivity extends FragmentActivity implements
 	 * app, one at a time.
 	 */
 	ViewPager mViewPager;
-
-	public static class LoginFragment extends Fragment {
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			return inflater.inflate(R.layout.fragment_userlogin, container,
-					false);
-		}
-	}
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -128,7 +95,7 @@ public class WorkActivity extends FragmentActivity implements
 	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
 	 * one of the primary sections of the app.
 	 */
-	public static class AppSectionsPagerAdapter extends FragmentPagerAdapter {
+	public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
 
 		public AppSectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
@@ -138,7 +105,8 @@ public class WorkActivity extends FragmentActivity implements
 		public Fragment getItem(int i) {
 			switch (i) {
 			case 0:
-				return new LaunchpadSectionFragment();
+				View v = findViewById(R.id.v_status);
+				return new LaunchpadSectionFragment(v);
 			case 1:
 				return new ChatSectionFragment();				
 
@@ -168,37 +136,6 @@ public class WorkActivity extends FragmentActivity implements
 			return "Section " + (position + 1);
 		}
 	}
-
-	/**
-	 * A fragment that launches other parts of the demo application.
-	 */
-	/*
-	 * public static class LaunchpadSectionFragment extends Fragment {
-	 * 
-	 * @Override public View onCreateView(LayoutInflater inflater, ViewGroup
-	 * container, Bundle savedInstanceState) { View rootView =
-	 * inflater.inflate(R.layout.fragment_section_launchpad, container, false);
-	 * 
-	 * // Demonstration of a collection-browsing activity.
-	 * rootView.findViewById(R.id.demo_collection_button)
-	 * .setOnClickListener(new View.OnClickListener() { //@Override public void
-	 * onClick(View v) { Intent intent = new Intent(getActivity(),
-	 * CollectionDemoActivity.class); startActivity(intent); } });
-	 * 
-	 * // Demonstration of navigating to external activities.
-	 * rootView.findViewById(R.id.demo_external_activity)
-	 * .setOnClickListener(new View.OnClickListener() { //@Override public void
-	 * onClick(View view) { // Create an intent that asks the user to pick a
-	 * photo, but using // FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, ensures that
-	 * relaunching // the application from the device home screen does not
-	 * return // to the external activity. Intent externalActivityIntent = new
-	 * Intent(Intent.ACTION_PICK); externalActivityIntent.setType("image/*");
-	 * externalActivityIntent.addFlags(
-	 * Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-	 * startActivity(externalActivityIntent); } });
-	 * 
-	 * return rootView; } }
-	 */
 
 	/**
 	 * A dummy fragment representing a section of the app, but that simply

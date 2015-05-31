@@ -6,17 +6,33 @@ import grails.transaction.Transactional
 
 @Transactional
 class CommandService {
-	private SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
-	def autoStartProcess() {
-		print sdf.format(new Date()) + " CommandService.autoStartProcess..."
-		List list = Queue.findAll("from process as a where a.autostart = ?", [true])
+	def repeatEveryProcess() {
+		List list = Process.findAll("from Process as a where a.repeatevery > 0")
+		//Проверим, есть-ли на сегодня незастартованный процесс, или процесс стартованный с прошедшим временем > repeatevery
 		for(Process item : list){
+			List qList = Queue.findAll("from Queue as a where a.idprocess = ? and a.ord = 1 order by startdate desc", [item.id])
+			if(qList == null || qList.size() == 0){
+				processStartProcess(item)
+			} else {
+				for(Queue q : qList){
+					Date dt = q.startdate
+					long minutesAgo = Utils.dateMinutesInterval(dt, new Date())
+					println "minutesAgo=" + minutesAgo
+
+					if(item.repeatevery < minutesAgo){
+						processStartProcess(item)
+					}
+
+					break;
+				}
+			}
 		}
 	}
 
 	def processNext() {
-		print sdf.format(new Date()) + " CommandService.processNext..."
+		//println sdf.format(new Date()) + " CommandService.processNext..."
 		List list = Queue.findAll("from Queue as a where a.finished = ?", [false])
 		for(Queue item : list){
 			if("StartProcess".equals(item.getType())){
@@ -27,6 +43,8 @@ class CommandService {
 		}
 
 		autoReply()
+
+		repeatEveryProcess()
 	}
 
 	def autoReply(){
@@ -39,19 +57,26 @@ class CommandService {
 	}
 
 	def processStartProcess(Queue item) {
-		print "CommandService.processStartProcess." + item.type + "." + item.finished
+		println "CommandService.processStartProcess." + item.type + "." + item.finished
 
 		(new ProcessInstanceFactory()).createInstance(item.getIdprocess())
 		item.setFinished(true)
 		item.save(failOnError: true)
 	}
 
+	def processStartProcess(Process item) {
+		println "CommandService.processStartProcess." + item.id + "." + item.name
+
+		(new ProcessInstanceFactory()).createInstance(item.id)
+		item.save(failOnError: true)
+	}
+
 	def processTask(Queue item) {
 		//Если задача просрочена, то поставить статус TIMEOUT
 		Date dt = item.getEnddate()
-		if(item.status != 'TIMEOUT' && item.status != 'REPLY_HAND' && Utils.isTimeInInterval(new Date(), Utils.sdfTime.parse(Utils.sdfTime2.format(dt) + "+0300"), Utils.sdfTime.parse("235959+0300"))){
+		if(item.status != 'TIMEOUT' && item.status == 'INIT' && Utils.isTimeInInterval(new Date(), Utils.sdfTime.parse(Utils.sdfTime2.format(dt) + "+0300"), Utils.sdfTime.parse("235959+0300"))){
 			statusQueue(item.id, 'TIMEOUT')
-			print 'TIMEOUT Task ' + item.description
+			println 'TIMEOUT Task ' + item.description
 		}
 	}
 

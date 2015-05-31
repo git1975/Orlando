@@ -41,7 +41,7 @@
                     android:clickable="false"
                     android:maxHeight="32dp"
                     android:maxWidth="32dp"
-                    android:src="@drawable/ic_info" />
+                    android:src="@drawable/ic_message" />
 
             </LinearLayout>
 

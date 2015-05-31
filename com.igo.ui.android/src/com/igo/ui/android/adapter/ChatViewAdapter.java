@@ -121,4 +121,8 @@ public class ChatViewAdapter extends BaseAdapter implements ListAdapter,
 			task.run();
 		}
 	}
+
+	public String getLastHash() {
+		return null;
+	}
 }

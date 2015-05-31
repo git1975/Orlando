@@ -54,4 +54,8 @@ public class TaskViewAdapter extends BaseAdapter implements ListAdapter, OnComma
 		
 		this.notifyDataSetChanged();
 	}
+
+	public String getLastHash() {
+		return null;
+	}
 }

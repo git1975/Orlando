@@ -7,8 +7,8 @@ class Task {
 	String description
 	boolean autostart
 	Date startdate = new Date()
-	Date enddate = new Date()
 	Date signaldate
+	Date enddate = new Date()
 	User user
 	int ord = 0
 	 

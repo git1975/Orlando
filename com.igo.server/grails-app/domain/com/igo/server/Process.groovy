@@ -4,7 +4,7 @@ class Process {
 	String name
 	String description
 	boolean autostart
-	boolean isrepeat
+	long repeatevery = 0
 	Date startdate = new Date()
 
 	static hasMany = [tasks: Task]
@@ -15,6 +15,6 @@ class Process {
 
 	static mapping = {
 		autostart defaultValue: "true"
-		isrepeat defaultValue: "true"
+		repeatevery defaultValue: 0L
 	}
 }

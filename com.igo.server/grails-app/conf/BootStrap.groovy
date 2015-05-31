@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat;
+
 import com.igo.server.Button
 import com.igo.server.Deviation
 import com.igo.server.Role
@@ -13,6 +15,7 @@ class BootStrap {
 		servletContext ->
 		
 		TimeZone.setDefault(TimeZone.getTimeZone ("GMT+03:00"));
+		System.out.println("System.file.encoding=" + System.getProperty("file.encoding"))
 		
 		if(!Role.count) {
 			Role role1 = new com.igo.server.Role(name: 'head', description: 'Директор').save(failOnError: true)
@@ -22,27 +25,28 @@ class BootStrap {
 			Role role1 = Role.find("from Role as a where a.name = ?", ['head'])
 			Role role2 = Role.find("from Role as a where a.name = ?", ['mgr'])
 			
-			User usr1 = new User(login: 'user1', username: 'Шпак Антон Семёнович', password: '1', role: role1).save(failOnError: true)
-			User usr2 = new User(login: 'user2', username: 'Горбунков Семён Семёныч', password: '1', role: role2).save(failOnError: true)
+			User usr1 = new User(login: 'user1', username: 'Горбунков Семён Семёныч', password: '1', role: role1).save(failOnError: true)
+			User usr2 = new User(login: 'user2', username: 'Борух Шмуль', password: '1', role: role2).save(failOnError: true)
 			User usr3 = new User(login: 'user3', username: 'Жорж Милославский', password: '1', role: role2).save(failOnError: true)
 		}
 		if(!Process.count) {
-			Process proc = new Process(name: 'production', description: 'производство', autostart: true, isrepeat: true)
+			//Repeating process
+			Process proc = new Process(name: 'production', description: 'производство', repeatevery: 10)
 			.save(failOnError: true)
 			
 			User usr1 = User.find("from User as a where a.login = ?", ['user1'])
 			User usr2 = User.find("from User as a where a.login = ?", ['user2'])
 			User usr3 = User.find("from User as a where a.login = ?", ['user3'])
 			
-			Task task = new Task(name: 'start', description: 'старт', user: usr1, ord: 1).save(failOnError: true)
+			SimpleDateFormat sdfTime = new SimpleDateFormat("mm")
+			
+			Task task = new Task(name: 'start', description: 'старт', user: usr1, ord: 1, startdate: sdfTime.parse("00"), signaldate: sdfTime.parse("02"), enddate: sdfTime.parse("03")).save(failOnError: true)
 			proc.addToTasks(task).save(failOnError: true)
-			task = new Task(name: 'verify', description: 'верификация', user: usr2, ord: 2).save(failOnError: true)
+			task = new Task(name: 'prepare', description: 'подготовка', user: usr2, ord: 2, startdate: sdfTime.parse("03"), signaldate: sdfTime.parse("04"), enddate: sdfTime.parse("05")).save(failOnError: true)
 			proc.addToTasks(task).save(failOnError: true)
-			task = new Task(name: 'prepare', description: 'подготовка', user: usr2, ord: 3).save(failOnError: true)
+			task = new Task(name: 'running', description: 'исполнение', user: usr3, ord: 3, startdate: sdfTime.parse("05"), signaldate: sdfTime.parse("06"), enddate: sdfTime.parse("07")).save(failOnError: true)
 			proc.addToTasks(task).save(failOnError: true)
-			task = new Task(name: 'running', description: 'исполнение', user: usr3, ord: 4).save(failOnError: true)
-			proc.addToTasks(task).save(failOnError: true)
-			task = new Task(name: 'finish', description: 'завершение', user: usr3, ord: 5).save(failOnError: true)
+			task = new Task(name: 'finish', description: 'завершение', user: usr3, ord: 4, startdate: sdfTime.parse("07"), signaldate: sdfTime.parse("08"), enddate: sdfTime.parse("09")).save(failOnError: true)
 			proc.addToTasks(task).save(failOnError: true)
 		}
 		if(!Queue.count) {

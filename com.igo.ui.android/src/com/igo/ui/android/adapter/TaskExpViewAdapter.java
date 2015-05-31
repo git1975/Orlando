@@ -1,6 +1,8 @@
 package com.igo.ui.android.adapter;
 
+import com.igo.ui.android.DataStorage;
 import com.igo.ui.android.R;
+import com.igo.ui.android.domain.Login;
 import com.igo.ui.android.domain.Task;
 import com.igo.ui.android.remote.Command;
 import com.igo.ui.android.remote.OnCommandEndListener;
@@ -11,10 +13,12 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 
 public class TaskExpViewAdapter extends BaseExpandableListAdapter implements
 		OnCommandEndListener {
 	private Context context;
+	private View statusView = null;
 
 	public Context getContext() {
 		return context;
@@ -22,9 +26,10 @@ public class TaskExpViewAdapter extends BaseExpandableListAdapter implements
 
 	private Task[] tasks = null;
 
-	public TaskExpViewAdapter(Context c) {
+	public TaskExpViewAdapter(Context c, View statusView) {
 		super();
 		context = c;
+		this.statusView = statusView;
 	}
 
 	public int getGroupCount() {
@@ -53,8 +58,34 @@ public class TaskExpViewAdapter extends BaseExpandableListAdapter implements
 	}
 
 	public void OnCommandEnd(Command command, Object result) {
+		if(result == null || ((Object[]) result).length == 0){
+			return;
+		}
 		this.tasks = (Task[]) result;
+		
+		if(tasks.length == 1 && "CLEAR".equals(tasks[0].getType())){
+			tasks = null;
+		}
 
+		int[] counter = { 0, 0, 0 };// green, yellow, red
+		if (tasks != null) {
+			for (Task item : tasks) {
+				if ("INIT".equals(item.getStatus())) {
+					counter[0]++;
+				} else if ("REPLY_YES".equals(item.getStatus())) {
+					counter[1]++;
+				} else if ("REPLY_NO".equals(item.getStatus())) {
+					counter[2]++;
+				}
+			}
+		}
+		Button btn = (Button) statusView.findViewById(R.id.btn_green);
+		btn.setText(counter[0] + "");
+		btn = (Button) statusView.findViewById(R.id.btn_yellow);
+		btn.setText(counter[1] + "");
+		btn = (Button) statusView.findViewById(R.id.btn_red);
+		btn.setText(counter[2] + "");
+		
 		this.notifyDataSetChanged();
 	}
 
@@ -99,6 +130,17 @@ public class TaskExpViewAdapter extends BaseExpandableListAdapter implements
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	public String getLastHash() {
+		if (tasks == null) {
+			return null;
+		}
+		String hash = "";
+		for (Task task : tasks) {
+			hash += "[" + task.getId() + ";" + task.getStatus() + "]";
+		}
+		return hash;
 	}
 
 }

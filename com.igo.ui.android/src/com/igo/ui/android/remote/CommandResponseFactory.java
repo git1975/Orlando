@@ -34,8 +34,21 @@ public class CommandResponseFactory {
 				tasks = new Task[jArr.length()];
 				for (int i = 0; i < jArr.length(); i++) {
 					JSONObject jObj = jArr.getJSONObject(i);
-					JSONArray jButtons = jObj.getJSONArray("buttons");
+					JSONArray jButtons = null;
+					Object jBut = jObj.get("buttons");
+					if(jBut != null && !"null".equals(jBut.toString())){
+						jButtons = jObj.getJSONArray("buttons");
+					}
 					Task task = new Task();
+					
+					String type = getJsonValue(jObj, "type");
+					//Special message type CLEAR, if there are no messages
+					if("CLEAR".equals(type) && jArr.length() == 0){
+						task.setType(type);
+						tasks[i] = task;
+						break;
+					}
+					
 					task.setId(getJsonValue(jObj, "id"));
 					task.setName(getJsonValue(jObj, "name"));
 					task.setStartDate(getJsonValue(jObj, "startdate"));

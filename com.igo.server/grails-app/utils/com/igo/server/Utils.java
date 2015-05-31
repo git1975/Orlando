@@ -3,6 +3,7 @@ package com.igo.server;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -47,6 +48,29 @@ public class Utils {
 			e.printStackTrace();
 			return false;
 		}
+	}
+	
+	public static long dateMinutesInterval(Date dt1, Date dt2){
+		Date diff = new Date(dt2.getTime() - dt1.getTime());
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(diff);
+		int minutes = calendar.get(Calendar.MINUTE);
+		
+		long result = minutes;
+		
+		return result;
+	}
+	
+	public static Date addMinutes(Date target, Date minutes){
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(minutes);
+		int m = calendar.get(Calendar.MINUTE);
+		
+		calendar.setTime(target);
+		calendar.add(Calendar.MINUTE, m);
+		
+		return calendar.getTime();
 	}
 	
 	public static List reverse(List list){

@@ -11,9 +11,14 @@ class JsonController {
 	//		update:['POST','PUT'],
 	//		delete:['POST','DELETE']
 	//	]
+	
+	def test() {
+		render "Парамеры(param1):" + params.param1
+	}
 
 	def show() {
-		print "JsonController.show"
+		String lastHash = params.hash
+		println "JsonController.show.hash=" + params.hash
 
 		List<Queue> list = Queue.findAll("from Queue as q where q.finished = ? and q.type = 'Task' order by ord", [false])
 
@@ -39,7 +44,7 @@ class JsonController {
 				//print '---->>>>' + Utils.sdfTime.parse("235959+0300")
 				//Отправлять сигнал пользователю. если наступило время сигнала
 				if(Utils.isTimeInInterval(new Date(), Utils.sdfTime.parse(Utils.sdfTime2.format(dt) + "+0300"), Utils.sdfTime.parse("235959+0300"))){
-					print '---->>>>isTimeInInterval=true'
+					//print '---->>>>isTimeInInterval=true'
 					
 					def mes = new MessageCommand()
 					mes.setQueue(q)
@@ -54,12 +59,30 @@ class JsonController {
 				}
 			}
 		}
+		//Check last hash
+		String hash = "";
+		for(MessageCommand mes: messages){
+			hash += "[" + mes.getId() + ";" + mes.getStatus() + "]";
+		}
+		
+		if(hash.equals(lastHash)){
+			render "[]";
+			return
+		} else {
+			if(messages.size() == 0){
+				def mes = new MessageCommand()
+				mes.type = "CLEAR"
+				messages.add(mes)
+				render messages as JSON;
+				return
+			}
+		}
 
 		render messages as JSON;
 	}
 
 	def login() {
-		print "JsonController.login." + params.login  + "..."
+		println "JsonController.login." + params.login  + "..."
 
 		com.igo.server.User item = com.igo.server.User.find("from User as a where a.login = ? and password = ?", [params.login, params.password])
 		
@@ -71,7 +94,7 @@ class JsonController {
 	}
 
 	def taskCommit() {
-		print "JsonController.taskCommit." + params.id
+		println "JsonController.taskCommit." + params.id
 
 		Queue queue = commandService.commitQueue(java.lang.Long.parseLong(params.id))
 
@@ -84,7 +107,7 @@ class JsonController {
 	}
 
 	def reply() {
-		print "JsonController.reply." + params.id + "." + params.reply
+		println "JsonController.reply." + params.id + "." + params.reply
 
 		Queue queue = commandService.replyQueue(java.lang.Long.parseLong(params.id), params.reply)
 
@@ -112,7 +135,7 @@ class JsonController {
 	}
 	
 	def getchat() {
-		print "JsonController.getchat." + params.login + ";maxid=" + params.maxid + ";minid=" + params.minid
+		println "JsonController.getchat." + params.login + ";maxid=" + params.maxid + ";minid=" + params.minid
 		def long maxid = 0
 		try{
 			maxid = Long.parseLong(params.maxid);
@@ -143,7 +166,7 @@ class JsonController {
 	}
 	
 	def sendchat() {
-		print "JsonController.sendchat." + params.login + "." + params.sendto + ".body=" + params.body
+		println "JsonController.sendchat." + params.login + "." + params.sendto + ".body=" + params.body
 
 		def item = commandService.sendChat(params.login, params.sendto, params.body)
 		def List<Chat> list = new ArrayList();

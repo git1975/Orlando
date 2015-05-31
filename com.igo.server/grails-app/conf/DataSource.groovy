@@ -39,10 +39,10 @@ environments {
 		dataSource {
 			pooled = true
 			dbCreate = "update"
-			url = "jdbc:mysql://localhost:3306/orlando"
+			url = "jdbc:mysql://mysql80591-env-3937912.jelastic.regruhosting.ru/orlando?useUnicode=yes&characterEncoding=UTF-8"
 			driverClassName = "com.mysql.jdbc.Driver"
-			username = "admin"
-			password = "admin"
+			username = "dima"
+			password = "igogo123"
 		}
 	}
 }

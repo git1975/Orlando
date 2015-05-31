@@ -18,6 +18,12 @@ public class LaunchpadSectionFragment extends Fragment {
 	private Timer timer = null;
 	private ExpandableListView view;
 	private TaskExpViewAdapter adapter;
+	private View statusView = null;
+	
+	public LaunchpadSectionFragment(View statusView){
+		super();
+		this.statusView = statusView;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,7 +34,7 @@ public class LaunchpadSectionFragment extends Fragment {
 				container, false);
 
 		view = (ExpandableListView) rootView.findViewById(R.id.explist_view);
-		adapter = new TaskExpViewAdapter(getActivity().getApplicationContext());
+		adapter = new TaskExpViewAdapter(getActivity().getApplicationContext(), statusView);
 		view.setAdapter(adapter);
 		view.setOnGroupExpandListener(new OnGroupExpandListener() {
 			public void onGroupExpand(int groupPosition) {

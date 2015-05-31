@@ -77,4 +77,8 @@ public class ChatTimerTask extends TimerTask implements OnCommandEndListener {
 			onCommandEndListener.OnCommandEnd(command, result);
 		}
 	}
+
+	public String getLastHash() {
+		return null;
+	}
 }

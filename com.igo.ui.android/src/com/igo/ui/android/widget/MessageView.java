@@ -65,11 +65,11 @@ public class MessageView extends RelativeLayout /*implements OnClickListener, On
 		}
 		
 		if("INIT".equals(task.getStatus())){
-			imgTaskStatus.setImageResource(R.drawable.ic_info);
+			imgTaskStatus.setImageResource(R.drawable.ic_start);
 		} else if("REPLY_NO".equals(task.getStatus())){
 			imgTaskStatus.setImageResource(R.drawable.ic_no);
 		} else if("TIMEOUT".equals(task.getStatus())){
-			imgTaskStatus.setImageResource(R.drawable.ic_time);
+			imgTaskStatus.setImageResource(R.drawable.ic_watch);
 		} else if("REPLY_HAND".equals(task.getStatus())){
 			imgTaskStatus.setImageResource(R.drawable.ic_hand);
 		}
