@@ -11,12 +11,69 @@ class JsonController {
 	//		update:['POST','PUT'],
 	//		delete:['POST','DELETE']
 	//	]
-	
+
 	def test() {
 		render "Парамеры(param1):" + params.param1
 	}
 
 	def show() {
+		String lastHash = params.hash
+		println "JsonController.show.hash=" + params.hash
+
+		Date now = new Date()
+
+		//Показать зеленым цветом инф. сообщение в любом случае, если текущее время между startdate и signaldate
+		//Показать желтым цветом сообщение с запросом, если время текущее между signaldate и enddate
+		//Показать красным цветом сообщение, если время текущее больше enddate и статус = TIMEOUT (т.е. пользователь не реагирует на запросы и система перевела статус в TIMEOUT)
+		List<Queue> listGreen = Queue.findAll("from Queue as q where q.type = 'Task' and startdate < ? and signaldate > ?", [now, now])
+		List<Queue> listYellow = Queue.findAll("from Queue as q where q.type = 'Task' and signaldate < ? and enddate > ?", [now, now])
+		List<Queue> listRed = Queue.findAll("from Queue as q where q.type = 'Task' and enddate < ?", [now])
+
+		def messages = new ArrayList();
+
+		for(Queue q: listGreen){
+			def mes = new MessageCommand()
+			mes.setQueue(q)
+			mes.body = "body"
+			mes.type = "type1"
+			mes.status = q.status
+			mes.color = 1
+
+			messages.add(mes)
+		}
+		for(Queue q: listYellow){
+			Task t = Task.find("from Task as a where a.id = ?", [q.task.id])
+			TaskStatus ts = TaskStatus.find("from TaskStatus as a where a.task = ? and a.status = ?", [t, q.status])
+			//найден статус задачи, занесенный в шаблон
+			if(ts != null){
+				def mes = new MessageCommand()
+				mes.setQueue(q)
+				mes.body = ts.msgtext
+				mes.type = ts.msgtype
+				mes.status = q.status
+				mes.color = 2
+				mes.buttons = new Button[ts.buttons.size()]
+				for(int i = 0; i < ts.buttons.size(); i++){
+					mes.buttons[i] = ts.buttons[i]
+				}
+				messages.add(mes)
+			}
+		}
+		for(Queue q: listRed){
+			def mes = new MessageCommand()
+			mes.setQueue(q)
+			mes.body = "body"
+			mes.type = "type3"
+			mes.status = q.status
+			mes.color = 3
+
+			messages.add(mes)
+		}
+
+		render messages as JSON;
+	}
+
+	def show2() {
 		String lastHash = params.hash
 		println "JsonController.show.hash=" + params.hash
 
@@ -45,7 +102,7 @@ class JsonController {
 				//Отправлять сигнал пользователю. если наступило время сигнала
 				if(Utils.isTimeInInterval(new Date(), Utils.sdfTime.parse(Utils.sdfTime2.format(dt) + "+0300"), Utils.sdfTime.parse("235959+0300"))){
 					//print '---->>>>isTimeInInterval=true'
-					
+
 					def mes = new MessageCommand()
 					mes.setQueue(q)
 					mes.body = ts.msgtext
@@ -64,7 +121,7 @@ class JsonController {
 		for(MessageCommand mes: messages){
 			hash += "[" + mes.getId() + ";" + mes.getStatus() + "]";
 		}
-		
+
 		if(hash.equals(lastHash)){
 			render "[]";
 			return
@@ -85,7 +142,7 @@ class JsonController {
 		println "JsonController.login." + params.login  + "..."
 
 		com.igo.server.User item = com.igo.server.User.find("from User as a where a.login = ? and password = ?", [params.login, params.password])
-		
+
 		if(item != null){
 			print item.username + " login OK"
 		}
@@ -133,7 +190,7 @@ class JsonController {
 
 		return res
 	}
-	
+
 	def getchat() {
 		println "JsonController.getchat." + params.login + ";maxid=" + params.maxid + ";minid=" + params.minid
 		def long maxid = 0
@@ -160,11 +217,11 @@ class JsonController {
 			//print "JsonController.getchat;maxid=" + maxid + ";minid=" + minid
 			list = Chat.findAll("from Chat as a where a.id > ? or a.id < ? order by a.id desc", [maxid, minid], [max: 10])
 		}
-		
-		
+
+
 		render list as JSON;
 	}
-	
+
 	def sendchat() {
 		println "JsonController.sendchat." + params.login + "." + params.sendto + ".body=" + params.body
 

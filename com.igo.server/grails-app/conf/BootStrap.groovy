@@ -14,7 +14,9 @@ class BootStrap {
 	def init = { 
 		servletContext ->
 		
-		TimeZone.setDefault(TimeZone.getTimeZone ("GMT+03:00"));
+		//TimeZone.setDefault(TimeZone.getTimeZone ("GMT+03:00"));
+		SimpleDateFormat sdfFull = new SimpleDateFormat("ddMMyyyyHHmmssZ");
+		System.out.println("now=" + sdfFull.format(new Date()))
 		System.out.println("System.file.encoding=" + System.getProperty("file.encoding"))
 		
 		if(!Role.count) {
@@ -106,7 +108,7 @@ class BootStrap {
 			ts3 = new TaskStatus(status: 'REPLY_HAND', msgtype: 'INFO', sendTo: 'Director, Manager', msgtext: 'управление производством переводится в ручной режим из-за отклонений на этапе подготовки').save(failOnError: true)
 			ts3.task = task1
 			//finish
-			task1 = Task.find("from Task as a where a.name = ?", ['running'])
+			task1 = Task.find("from Task as a where a.name = ?", ['finish'])
 			ts1 = new TaskStatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', msgtext: 'подтверди отсутствие отклонений в цикле производство').save(failOnError: true)
 			ts1.addToButtons(btn1)
 			ts1.addToButtons(btn2)

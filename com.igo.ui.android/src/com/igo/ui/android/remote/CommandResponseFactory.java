@@ -56,6 +56,7 @@ public class CommandResponseFactory {
 					task.setType(getJsonValue(jObj, "type"));
 					task.setBody(getJsonValue(jObj, "body"));
 					task.setStatus(getJsonValue(jObj, "status"));
+					task.setColor(getJsonInt(jObj, "color"));
 					if (jButtons != null) {
 						Button[] b = new Button[jButtons.length()];
 						for (int k = 0; k < jButtons.length(); k++) {
@@ -112,6 +113,13 @@ public class CommandResponseFactory {
 			return obj.getString(name);
 		} catch (JSONException e) {
 			return "";
+		}
+	}
+	private static int getJsonInt(JSONObject obj, String name) {
+		try {
+			return Integer.parseInt(obj.getString(name));
+		} catch (JSONException e) {
+			return 0;
 		}
 	}
 }

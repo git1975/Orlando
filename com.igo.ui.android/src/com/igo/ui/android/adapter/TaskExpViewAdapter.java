@@ -70,11 +70,11 @@ public class TaskExpViewAdapter extends BaseExpandableListAdapter implements
 		int[] counter = { 0, 0, 0 };// green, yellow, red
 		if (tasks != null) {
 			for (Task item : tasks) {
-				if ("INIT".equals(item.getStatus())) {
+				if (item.getColor() == 1) {
 					counter[0]++;
-				} else if ("REPLY_YES".equals(item.getStatus())) {
+				} else if (item.getColor() == 2) {
 					counter[1]++;
-				} else if ("REPLY_NO".equals(item.getStatus())) {
+				} else if (item.getColor() == 3) {
 					counter[2]++;
 				}
 			}

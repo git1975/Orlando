@@ -9,6 +9,7 @@ public class Task {
 	private String startDate;
 	private String endDate;
 	private Button[] buttons;
+	private int color;
 
 	public String getId() {
 		return id;
@@ -72,5 +73,13 @@ public class Task {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public int getColor() {
+		return color;
+	}
+
+	public void setColor(int color) {
+		this.color = color;
 	}
 }
