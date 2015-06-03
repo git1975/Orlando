@@ -10,6 +10,7 @@ import com.igo.ui.android.widget.MessageDetailsView;
 import com.igo.ui.android.widget.MessageView;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -80,10 +81,25 @@ public class TaskExpViewAdapter extends BaseExpandableListAdapter implements
 			}
 		}
 		Button btn = (Button) statusView.findViewById(R.id.btn_green);
+		if(counter[0] == 0){
+			btn.setBackground(statusView.getResources().getDrawable(R.drawable.ic_gray));
+		} else {
+			btn.setBackground(statusView.getResources().getDrawable(R.drawable.ic_green));
+		}
 		btn.setText(counter[0] + "");
 		btn = (Button) statusView.findViewById(R.id.btn_yellow);
+		if(counter[1] == 0){
+			btn.setBackground(statusView.getResources().getDrawable(R.drawable.ic_gray));
+		} else {
+			btn.setBackground(statusView.getResources().getDrawable(R.drawable.ic_yellow));
+		}
 		btn.setText(counter[1] + "");
 		btn = (Button) statusView.findViewById(R.id.btn_red);
+		if(counter[2] == 0){
+			btn.setBackground(statusView.getResources().getDrawable(R.drawable.ic_gray));
+		} else {
+			btn.setBackground(statusView.getResources().getDrawable(R.drawable.ic_red));
+		}
 		btn.setText(counter[2] + "");
 		
 		this.notifyDataSetChanged();
@@ -138,7 +154,7 @@ public class TaskExpViewAdapter extends BaseExpandableListAdapter implements
 		}
 		String hash = "";
 		for (Task task : tasks) {
-			hash += "[" + task.getId() + ";" + task.getStatus() + "]";
+			hash += "[" + task.getId() + ";" + task.getStatus() + ";" + task.getType() + "]";
 		}
 		return hash;
 	}

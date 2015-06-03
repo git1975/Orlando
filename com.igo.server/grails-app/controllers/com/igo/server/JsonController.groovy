@@ -35,8 +35,10 @@ class JsonController {
 		//Показать красным цветом сообщение, если время текущее больше enddate и статус = TIMEOUT (т.е. пользователь не реагирует на запросы и система перевела статус в TIMEOUT)
 		List<Queue> listGreen = Queue.findAll("from Queue as q where q.type = 'Task' and startdate < ? and signaldate > ? and startdate >= ?", [now, now, processDate])
 		List<Queue> listYellow = Queue.findAll("from Queue as q where q.type = 'Task' and signaldate < ? and enddate > ? and startdate >= ?", [now, now, processDate])
-		//List<Queue> listRed = Queue.findAll("from Queue as q where q.type = 'Task' and enddate < ? and q.status = 'TIMEOUT'  and startdate >= ?", [now, processDate])
+		//List<Queue> listRed = Queue.findAll("from Queue as q where q.type = 'Task' and enddate < ? and q.status = 'TIMEOUT' and startdate >= ?", [now, processDate])
 
+		println "Green-" + listGreen.size + "-Yellow-" + listYellow.size
+		
 		def messages = new ArrayList();
 
 		//Покажем инф. сообщение о начале этапа
@@ -46,7 +48,7 @@ class JsonController {
 				mes = new MessageCommand()
 				mes.type = "INFO"
 			}
-			mes.color = 1
+			//mes.color = 1
 
 			messages.add(mes)
 		}
@@ -54,7 +56,7 @@ class JsonController {
 		for(Queue q: listYellow){
 			def mes = getMessage(q, false)
 			if(mes != null){
-				mes.color = 2
+				//mes.color = 2
 				messages.add(mes)
 			}
 		}
@@ -72,7 +74,7 @@ class JsonController {
 		//Check last hash
 		String hash = "";
 		for(MessageCommand mes: messages){
-			hash += "[" + mes.getId() + ";" + mes.getStatus() + "]";
+			hash += "[" + mes.getId() + ";" + mes.getStatus() + ";" + mes.getType() + "]";
 		}
 
 		if(hash.equals(lastHash)){
@@ -93,14 +95,16 @@ class JsonController {
 
 	def getMessage(Queue q, boolean isInfoStage){
 		Task t = Task.find("from Task as a where a.id = ?", [q.task.id])
+		println "status=" + q.status + "-isInfoStage=" + isInfoStage
 		TaskStatus ts
 		if(isInfoStage){
-			ts = TaskStatus.find("from TaskStatus as a where a.task = ? and a.status = ? and a.msgtype = 'INFO'", [t, q.status])
+			ts = TaskStatus.find("from TaskStatus as a where a.task=? and a.status=? and a.msgtype='INFO' and a.status='INIT'", [t, q.status])
 		} else {
-			ts = TaskStatus.find("from TaskStatus as a where a.task = ? and a.status = ?", [t, q.status])
+			ts = TaskStatus.find("from TaskStatus as a where a.task=? and a.status=? and ((a.msgtype!='INFO' and a.status='INIT')or(a.status!='INIT'))", [t, q.status])
 		}
 		//найден статус задачи, занесенный в шаблон
 		if(ts != null){
+			println "msgtext=" + ts.msgtext
 			def mes = new MessageCommand()
 			mes.setQueue(q)
 			mes.body = ts.msgtext
