@@ -105,15 +105,18 @@ public class MessageDetailsView extends RelativeLayout /*
 		btnNo.setVisibility(View.INVISIBLE);
 		com.igo.ui.android.domain.Button[] buttons = task.getButtons();
 		if (buttons != null) {
+			int counter = 0;
 			for (com.igo.ui.android.domain.Button btn : buttons) {
+				counter++;
 				if (btn != null) {
 					Button btnC = btnYes;
-					if ("YES".equals(btn.getCode())) {
+					switch (counter) {
+					case 1:
 						btnC = btnYes;
-					} else if ("NO".equals(btn.getCode())) {
+						break;
+					case 2:
 						btnC = btnNo;
-					} else if ("HAND".equals(btn.getCode())) {
-						btnC = btnYes;
+						break;
 					}
 					btnC.setVisibility(View.VISIBLE);
 					btnC.setText(btn.getName());
@@ -137,21 +140,21 @@ public class MessageDetailsView extends RelativeLayout /*
 			btnNo.setVisibility(View.INVISIBLE);
 		}
 	}
-	
-	//@Override
-	protected void onDraw1(android.graphics.Canvas canvas)
-    {
-        Paint paint = new Paint();
 
-        paint.setAlpha(255);
-        canvas.translate(0, 30);
-        paint.setColor(Color.BLUE);
-        Path mPath = new Path();
-        mPath.addRoundRect(new RectF(0, 0, 100,100),20,20, Path.Direction.CCW);
-        //canvas.clipPath(mPath, Region.Op.INTERSECT);
-        paint.setColor(Color.GREEN);
-        paint.setAntiAlias(true);
-        canvas.drawRect(0, 0, 120,120, paint);
+	// @Override
+	protected void onDraw1(android.graphics.Canvas canvas) {
+		Paint paint = new Paint();
 
-    }
+		paint.setAlpha(255);
+		canvas.translate(0, 30);
+		paint.setColor(Color.BLUE);
+		Path mPath = new Path();
+		mPath.addRoundRect(new RectF(0, 0, 100, 100), 20, 20,
+				Path.Direction.CCW);
+		// canvas.clipPath(mPath, Region.Op.INTERSECT);
+		paint.setColor(Color.GREEN);
+		paint.setAntiAlias(true);
+		canvas.drawRect(0, 0, 120, 120, paint);
+
+	}
 }

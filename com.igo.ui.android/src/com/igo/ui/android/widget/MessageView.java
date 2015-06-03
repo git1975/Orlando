@@ -12,21 +12,24 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MessageView extends RelativeLayout /*implements OnClickListener, OnCommandEndListener*/{
+public class MessageView extends RelativeLayout /*
+												 * implements OnClickListener,
+												 * OnCommandEndListener
+												 */{
 	private String taskId = null;
 	private Task task = null;
-	
+
 	public MessageView(Context context, Task task) {
 		super(context);
-		
+
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(R.layout.message_object_view, this, true);
-		
+
 		setTask(task);
 	}
-	
-	public void setText(String text){
+
+	public void setText(String text) {
 		TextView tvTask = (TextView) findViewById(R.id.tv_task);
 		tvTask.setText(text);
 	}
@@ -34,17 +37,19 @@ public class MessageView extends RelativeLayout /*implements OnClickListener, On
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.msg_view:
-			/*Command command = new Command(Command.TASK_COMMIT);
-			command.putParam("id", getTaskId());
-			CommandConnector con = new CommandConnector(getContext(), command);
-			con.setOnCommandEndListener(this);
-			con.execute("");
-			
-			ImageView imgTaskStatus = (ImageView) findViewById(R.id.img_task_status);
-			imgTaskStatus.setImageResource(R.drawable.ic_wait);*/
-						
+			/*
+			 * Command command = new Command(Command.TASK_COMMIT);
+			 * command.putParam("id", getTaskId()); CommandConnector con = new
+			 * CommandConnector(getContext(), command);
+			 * con.setOnCommandEndListener(this); con.execute("");
+			 * 
+			 * ImageView imgTaskStatus = (ImageView)
+			 * findViewById(R.id.img_task_status);
+			 * imgTaskStatus.setImageResource(R.drawable.ic_wait);
+			 */
+
 			break;
-		case 2:			
+		case 2:
 			break;
 		}
 	}
@@ -56,30 +61,44 @@ public class MessageView extends RelativeLayout /*implements OnClickListener, On
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
 	}
-	
+
 	public void setImage(Task task) {
 		ImageView imgTaskStatus = (ImageView) findViewById(R.id.img_task_status);
-		if(task == null){
+		if (task == null) {
 			imgTaskStatus.setImageResource(R.drawable.ic_info);
 			return;
 		}
-		
-		if("INIT".equals(task.getStatus())){
-			imgTaskStatus.setImageResource(R.drawable.ic_start);
-		} else if("REPLY_NO".equals(task.getStatus())){
-			imgTaskStatus.setImageResource(R.drawable.ic_no);
-		} else if("TIMEOUT".equals(task.getStatus())){
-			imgTaskStatus.setImageResource(R.drawable.ic_watch);
-		} else if("REPLY_HAND".equals(task.getStatus())){
-			imgTaskStatus.setImageResource(R.drawable.ic_hand);
+
+		if ("CMD".equals(task.getType())) {
+			imgTaskStatus.setImageResource(R.drawable.ic_question2);
+		} else if ("INFO".equals(task.getType())) {
+			imgTaskStatus.setImageResource(R.drawable.ic_info);
 		}
+	}
+	
+	/**
+	 * Example: getResourceId("myIcon", "drawable", getPackageName());
+	 * @param pVariableName
+	 * @param pResourcename
+	 * @param pPackageName
+	 * @return
+	 */
+	public int getResourceId(String pVariableName, String pResourcename, String pPackageName) 
+	{
+	    try {
+	        return getResources().getIdentifier(pVariableName, pResourcename, pPackageName);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return R.drawable.ic_launcher;
+	    } 
 	}
 
 	public void OnCommandEnd(Command command, Object result) {
 		ImageView imgTaskStatus = (ImageView) findViewById(R.id.img_task_status);
 		imgTaskStatus.setImageResource(R.drawable.ic_alert);
-		
-		Toast.makeText(getContext(), result.toString(), Toast.LENGTH_LONG).show();
+
+		Toast.makeText(getContext(), result.toString(), Toast.LENGTH_LONG)
+				.show();
 	}
 
 	public Task getTask() {
@@ -88,12 +107,12 @@ public class MessageView extends RelativeLayout /*implements OnClickListener, On
 
 	public void setTask(Task task) {
 		this.task = task;
-		if(task == null){
+		if (task == null) {
 			setTaskId("0");
 			setText("null");
 			return;
 		}
-		
+
 		setTaskId(task.getId());
 		setText(task.getName());
 		setImage(task);

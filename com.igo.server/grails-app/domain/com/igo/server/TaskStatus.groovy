@@ -7,6 +7,8 @@ class TaskStatus {
 	String sendTo
 	String msgtext
 	Role role
+	int color = 1
+	int lifetime = 1
 	
 	static hasMany = [buttons: Button]
 

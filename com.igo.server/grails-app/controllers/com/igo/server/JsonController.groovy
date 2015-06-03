@@ -21,56 +21,99 @@ class JsonController {
 		println "JsonController.show.hash=" + params.hash
 
 		Date now = new Date()
+		Date processDate = new Date()
+
+		//Определим время текущей задачи, для демо
+		List<Queue> listCurrent = Queue.findAll("from Queue as q where q.type = 'Task' and ord = 1 order by startdate desc", [], [max: 1])
+		if(listCurrent != null && listCurrent.size() > 0){
+			Queue q = listCurrent.get(0)
+			processDate = q.startdate
+		}
 
 		//Показать зеленым цветом инф. сообщение в любом случае, если текущее время между startdate и signaldate
 		//Показать желтым цветом сообщение с запросом, если время текущее между signaldate и enddate
 		//Показать красным цветом сообщение, если время текущее больше enddate и статус = TIMEOUT (т.е. пользователь не реагирует на запросы и система перевела статус в TIMEOUT)
-		List<Queue> listGreen = Queue.findAll("from Queue as q where q.type = 'Task' and startdate < ? and signaldate > ?", [now, now])
-		List<Queue> listYellow = Queue.findAll("from Queue as q where q.type = 'Task' and signaldate < ? and enddate > ?", [now, now])
-		List<Queue> listRed = Queue.findAll("from Queue as q where q.type = 'Task' and enddate < ?", [now])
+		List<Queue> listGreen = Queue.findAll("from Queue as q where q.type = 'Task' and startdate < ? and signaldate > ? and startdate >= ?", [now, now, processDate])
+		List<Queue> listYellow = Queue.findAll("from Queue as q where q.type = 'Task' and signaldate < ? and enddate > ? and startdate >= ?", [now, now, processDate])
+		//List<Queue> listRed = Queue.findAll("from Queue as q where q.type = 'Task' and enddate < ? and q.status = 'TIMEOUT'  and startdate >= ?", [now, processDate])
 
 		def messages = new ArrayList();
 
+		//Покажем инф. сообщение о начале этапа
 		for(Queue q: listGreen){
-			def mes = new MessageCommand()
-			mes.setQueue(q)
-			mes.body = "body"
-			mes.type = "type1"
-			mes.status = q.status
+			def mes = getMessage(q, true)
+			if(mes == null){
+				mes = new MessageCommand()
+				mes.type = "INFO"
+			}
 			mes.color = 1
 
 			messages.add(mes)
 		}
+		//Покажем основные сообщения между signaldate и enddate
 		for(Queue q: listYellow){
-			Task t = Task.find("from Task as a where a.id = ?", [q.task.id])
-			TaskStatus ts = TaskStatus.find("from TaskStatus as a where a.task = ? and a.status = ?", [t, q.status])
-			//найден статус задачи, занесенный в шаблон
-			if(ts != null){
-				def mes = new MessageCommand()
-				mes.setQueue(q)
-				mes.body = ts.msgtext
-				mes.type = ts.msgtype
-				mes.status = q.status
+			def mes = getMessage(q, false)
+			if(mes != null){
 				mes.color = 2
-				mes.buttons = new Button[ts.buttons.size()]
-				for(int i = 0; i < ts.buttons.size(); i++){
-					mes.buttons[i] = ts.buttons[i]
-				}
 				messages.add(mes)
 			}
 		}
-		for(Queue q: listRed){
-			def mes = new MessageCommand()
-			mes.setQueue(q)
-			mes.body = "body"
-			mes.type = "type3"
-			mes.status = q.status
-			mes.color = 3
+		//Покажем сообщение о просрочке
+		/*for(Queue q: listRed){
+		 def mes = getMessage(q, true)
+		 if(mes == null){
+		 mes = new MessageCommand()
+		 mes.type = "INFO"
+		 }
+		 mes.color = 3
+		 messages.add(mes)
+		 }*/
 
-			messages.add(mes)
+		//Check last hash
+		String hash = "";
+		for(MessageCommand mes: messages){
+			hash += "[" + mes.getId() + ";" + mes.getStatus() + "]";
+		}
+
+		if(hash.equals(lastHash)){
+			render "[]";
+			return
+		} else {
+			if(messages.size() == 0){
+				def mes = new MessageCommand()
+				mes.type = "CLEAR"
+				messages.add(mes)
+				render messages as JSON;
+				return
+			}
 		}
 
 		render messages as JSON;
+	}
+
+	def getMessage(Queue q, boolean isInfoStage){
+		Task t = Task.find("from Task as a where a.id = ?", [q.task.id])
+		TaskStatus ts
+		if(isInfoStage){
+			ts = TaskStatus.find("from TaskStatus as a where a.task = ? and a.status = ? and a.msgtype = 'INFO'", [t, q.status])
+		} else {
+			ts = TaskStatus.find("from TaskStatus as a where a.task = ? and a.status = ?", [t, q.status])
+		}
+		//найден статус задачи, занесенный в шаблон
+		if(ts != null){
+			def mes = new MessageCommand()
+			mes.setQueue(q)
+			mes.body = ts.msgtext
+			mes.type = ts.msgtype
+			mes.status = q.status
+			mes.color = ts.color
+			mes.buttons = new Button[ts.buttons.size()]
+			for(int i = 0; i < ts.buttons.size(); i++){
+				mes.buttons[i] = ts.buttons[i]
+			}
+			return mes
+		}
+		return null
 	}
 
 	def show2() {

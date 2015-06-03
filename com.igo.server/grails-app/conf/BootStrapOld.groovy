@@ -9,7 +9,7 @@ import com.igo.server.User
 import com.igo.server.Process
 import com.igo.server.Queue
 
-class BootStrap {
+class BootStrapOld {
 
 	def init = { 
 		servletContext ->
@@ -62,55 +62,57 @@ class BootStrap {
 		if(!Button.count) {
 			new Button(code: 'YES', name: 'Да', replystatus: 'REPLY_YES').save(failOnError: true)
 			new Button(code: 'NO', name: 'Нет', replystatus: 'REPLY_NO').save(failOnError: true)
-			new Button(code: 'FINISH', name: 'Нет', replystatus: 'REPLY_FINISH').save(failOnError: true)
 			new Button(code: 'HAND', name: 'Ручной режим', replystatus: 'REPLY_HAND').save(failOnError: true)
-			new Button(code: 'BTN_1', name: 'Оценка 1', replystatus: 'REPLY_1').save(failOnError: true)
-			new Button(code: 'BTN_2', name: 'Оценка 2', replystatus: 'REPLY_2').save(failOnError: true)
 		}
 		if(!TaskStatus.count) {
 			Button btn1 = Button.find("from Button as a where a.code = ?", ['YES'])
-			Button btn2 = Button.find("from Button as a where a.code = ?", ['FINISH'])
-			Button btn3 = Button.find("from Button as a where a.code = ?", ['BTN_1'])
-			Button btn4 = Button.find("from Button as a where a.code = ?", ['BTN_2'])
-			
-			TaskStatus ts1, ts2, ts3, ts4
+			Button btn2 = Button.find("from Button as a where a.code = ?", ['NO'])
+			Button btn3 = Button.find("from Button as a where a.code = ?", ['HAND'])
 			
 			//start
 			Task task1 = Task.find("from Task as a where a.name = ?", ['start'])
-			ts1 = new TaskStatus(status: 'INIT', msgtype: 'INFO', sendTo: 'Manager', msgtext: 'Начинается цикл <process>, под контролем <user=user1>').save(failOnError: true)
-			ts1.task = task1
-			//prepare
-			task1 = Task.find("from Task as a where a.name = ?", ['prepare'])
-			ts1 = new TaskStatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', msgtext: 'Этап <stage>. Продолжить выполнение?').save(failOnError: true)
+			TaskStatus ts1 = new TaskStatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', msgtext: 'подтверди контроль производства').save(failOnError: true)
 			ts1.addToButtons(btn1)
 			ts1.addToButtons(btn2)
 			ts1.task = task1
-			ts2 = new TaskStatus(status: 'REPLY_YES', msgtype: 'INFO', sendTo: 'Manager', msgtext: 'Штатный режим этапа <stage>').save(failOnError: true)
+			TaskStatus ts2 = new TaskStatus(status: 'REPLY_NO', msgtype: 'CMD', sendTo: 'Director', msgtext: 'назначь управляющего производством на сегодня').save(failOnError: true)
+			ts2.addToButtons(btn3)
+			ts2.addToButtons(btn2)
 			ts2.task = task1
-			ts3 = new TaskStatus(status: 'REPLY_FINISH', msgtype: 'INFO', sendTo: 'Director, Manager', msgtext: 'Досрочный финиш этапа <stage>').save(failOnError: true)
+			TaskStatus ts3 = new TaskStatus(status: 'TIMEOUT', msgtype: 'INFO', sendTo: 'Director', msgtext: 'сегодня производство управляется в ручном режиме').save(failOnError: true)
+			ts3.task = task1
+			TaskStatus ts4 = new TaskStatus(status: 'REPLY_HAND', msgtype: 'INFO', sendTo: 'Director, Manager', msgtext: 'сегодня производство управляется в ручном режиме').save(failOnError: true)
+			ts4.task = task1
+			//prepare
+			task1 = Task.find("from Task as a where a.name = ?", ['prepare'])
+			ts1 = new TaskStatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', msgtext: 'подтверди отсутствие отклонений по подготовке производства').save(failOnError: true)
+			ts1.addToButtons(btn1)
+			ts1.addToButtons(btn2)
+			ts1.task = task1
+			ts2 = new TaskStatus(status: 'REPLY_NO', msgtype: 'CMD', sendTo: 'Director', msgtext: 'отклонения по подготовке производства, перейти в режим ручного управления').save(failOnError: true)
+			ts2.addToButtons(btn3)
+			ts2.addToButtons(btn2)
+			ts2.task = task1
+			ts3 = new TaskStatus(status: 'REPLY_HAND', msgtype: 'INFO', sendTo: 'Director, Manager', msgtext: 'управление производством переводится в ручной режим из-за отклонений на этапе подготовки').save(failOnError: true)
 			ts3.task = task1
 			//running
 			task1 = Task.find("from Task as a where a.name = ?", ['running'])
-			ts1 = new TaskStatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', msgtext: 'Этап <stage>. Продолжить выполнение?').save(failOnError: true)
+			ts1 = new TaskStatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', msgtext: 'подтверди отсутствие отклонений при исполнении').save(failOnError: true)
 			ts1.addToButtons(btn1)
 			ts1.addToButtons(btn2)
 			ts1.task = task1
-			ts2 = new TaskStatus(status: 'REPLY_YES', msgtype: 'INFO', sendTo: 'Manager', msgtext: 'Штатный режим этапа <stage>').save(failOnError: true)
+			ts2 = new TaskStatus(status: 'REPLY_NO', msgtype: 'CMD', sendTo: 'Director', msgtext: 'отклонения по подготовке производства, перейти в режим ручного управления').save(failOnError: true)
+			ts2.addToButtons(btn3)
+			ts2.addToButtons(btn2)
 			ts2.task = task1
-			ts3 = new TaskStatus(status: 'REPLY_FINISH', msgtype: 'INFO', sendTo: 'Director, Manager', msgtext: 'Досрочный финиш этапа <stage>').save(failOnError: true)
+			ts3 = new TaskStatus(status: 'REPLY_HAND', msgtype: 'INFO', sendTo: 'Director, Manager', msgtext: 'управление производством переводится в ручной режим из-за отклонений на этапе подготовки').save(failOnError: true)
 			ts3.task = task1
 			//finish
 			task1 = Task.find("from Task as a where a.name = ?", ['finish'])
-			ts1 = new TaskStatus(status: 'INIT', msgtype: 'INFO', sendTo: 'Director', msgtext: 'Завершается цикл <process>').save(failOnError: true)
+			ts1 = new TaskStatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', msgtext: 'подтверди отсутствие отклонений в цикле производство').save(failOnError: true)
+			ts1.addToButtons(btn1)
+			ts1.addToButtons(btn2)
 			ts1.task = task1
-			ts2 = new TaskStatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Director', msgtext: 'Оцените исполнение цикла <process>?').save(failOnError: true)
-			ts2.addToButtons(btn3)
-			ts2.addToButtons(btn4)
-			ts2.task = task1
-			ts3 = new TaskStatus(status: 'REPLY_1', msgtype: 'INFO', sendTo: 'Director', msgtext: 'Оценка цикла <process> = 1').save(failOnError: true)
-			ts3.task = task1
-			ts4 = new TaskStatus(status: 'REPLY_2', msgtype: 'INFO', sendTo: 'Director', msgtext: 'Оценка цикла <process> = 2').save(failOnError: true)
-			ts4.task = task1
 		}
 	}
 	def destroy = {
