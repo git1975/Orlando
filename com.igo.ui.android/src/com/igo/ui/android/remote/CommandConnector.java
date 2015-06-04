@@ -6,14 +6,8 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.igo.ui.android.DataStorage;
-import com.igo.ui.android.domain.Button;
 import com.igo.ui.android.domain.Login;
-import com.igo.ui.android.domain.Task;
 
 import android.content.Context;
 import android.content.SharedPreferences;

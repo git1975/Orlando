@@ -38,7 +38,7 @@ class CommandService {
 			if("StartProcess".equals(item.getType())){
 				processStartProcess(item)
 			} else if("Task".equals(item.getType())){
-				processTask(item)
+				//processTask(item)
 			}
 		}
 
@@ -74,7 +74,7 @@ class CommandService {
 	def processTask(Queue item) {
 		//Если задача просрочена, то поставить статус TIMEOUT
 		Date dt = item.getEnddate()
-		if(item.status != 'TIMEOUT' && item.status == 'INIT' && Utils.isTimeInInterval(new Date(), Utils.sdfTime.parse(Utils.sdfTime2.format(dt) + "+0300"), Utils.sdfTime.parse("235959+0300"))){
+		if(item.status != 'TIMEOUT' && item.status == 'INIT' && Utils.isTimeInInterval(new Date(), dt, Utils.sdfTime.parse("235959+0300"))){
 			statusQueue(item.id, 'TIMEOUT')
 			println 'TIMEOUT Task ' + item.description
 		}

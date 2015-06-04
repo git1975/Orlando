@@ -1,6 +1,8 @@
 package com.igo.server
 
 import grails.converters.JSON
+import java.util.regex.Matcher
+import java.util.regex.Pattern;
 
 class JsonController {
 	def commandService
@@ -35,10 +37,10 @@ class JsonController {
 		//Показать красным цветом сообщение, если время текущее больше enddate и статус = TIMEOUT (т.е. пользователь не реагирует на запросы и система перевела статус в TIMEOUT)
 		List<Queue> listGreen = Queue.findAll("from Queue as q where q.type = 'Task' and startdate < ? and signaldate > ? and startdate >= ?", [now, now, processDate])
 		List<Queue> listYellow = Queue.findAll("from Queue as q where q.type = 'Task' and signaldate < ? and enddate > ? and startdate >= ?", [now, now, processDate])
-		//List<Queue> listRed = Queue.findAll("from Queue as q where q.type = 'Task' and enddate < ? and q.status = 'TIMEOUT' and startdate >= ?", [now, processDate])
+		List<Queue> listRed = Queue.findAll("from Queue as q where q.type = 'Task' and enddate < ? and q.status = 'INIT' and startdate >= ?", [now, processDate])
 
-		println "Green-" + listGreen.size + "-Yellow-" + listYellow.size
-		
+		//println "Green-" + listGreen.size + "-Yellow-" + listYellow.size
+
 		def messages = new ArrayList();
 
 		//Покажем инф. сообщение о начале этапа
@@ -48,7 +50,6 @@ class JsonController {
 				mes = new MessageCommand()
 				mes.type = "INFO"
 			}
-			//mes.color = 1
 
 			messages.add(mes)
 		}
@@ -56,20 +57,23 @@ class JsonController {
 		for(Queue q: listYellow){
 			def mes = getMessage(q, false)
 			if(mes != null){
-				//mes.color = 2
 				messages.add(mes)
 			}
 		}
 		//Покажем сообщение о просрочке
-		/*for(Queue q: listRed){
-		 def mes = getMessage(q, true)
-		 if(mes == null){
-		 mes = new MessageCommand()
-		 mes.type = "INFO"
-		 }
-		 mes.color = 3
-		 messages.add(mes)
-		 }*/
+		for(Queue q: listRed){
+			def mes = getMessage(q, true)
+			if(mes == null){
+				mes = new MessageCommand()
+				mes.type = "INFO"
+			}
+			mes.setQueue(q)
+			mes.body = "Просрочка"
+			mes.type = "INFO"
+			mes.status = "INIT"
+			mes.color = 3
+			messages.add(mes)
+		}
 
 		//Check last hash
 		String hash = "";
@@ -95,7 +99,6 @@ class JsonController {
 
 	def getMessage(Queue q, boolean isInfoStage){
 		Task t = Task.find("from Task as a where a.id = ?", [q.task.id])
-		println "status=" + q.status + "-isInfoStage=" + isInfoStage
 		TaskStatus ts
 		if(isInfoStage){
 			ts = TaskStatus.find("from TaskStatus as a where a.task=? and a.status=? and a.msgtype='INFO' and a.status='INIT'", [t, q.status])
@@ -104,7 +107,6 @@ class JsonController {
 		}
 		//найден статус задачи, занесенный в шаблон
 		if(ts != null){
-			println "msgtext=" + ts.msgtext
 			def mes = new MessageCommand()
 			mes.setQueue(q)
 			mes.body = ts.msgtext
@@ -115,80 +117,59 @@ class JsonController {
 			for(int i = 0; i < ts.buttons.size(); i++){
 				mes.buttons[i] = ts.buttons[i]
 			}
+
+			mes.body = getMessageBody(q, mes.body)
+
+			//Check lifetime
+			if(mes.type == "CMD"){
+				long diff = (new Date()).getTime() - q.signaldate.getTime()
+				long diffMinutes = Math.round(diff/1000)
+				if(diffMinutes >= ts.lifetime*60){
+					mes.color = 3
+				}
+			}
 			return mes
 		}
 		return null
 	}
 
-	def show2() {
-		String lastHash = params.hash
-		println "JsonController.show.hash=" + params.hash
-
-		List<Queue> list = Queue.findAll("from Queue as q where q.finished = ? and q.type = 'Task' order by ord", [false])
-
-		//print list.toString();
-		//list = 	getTopTask(list)
-
-		def messages = new ArrayList();
-
-		//Находим таск в статусе INIT
-		for(Queue q: list){
-			//int id = q.ord
-			Task t = Task.find("from Task as a where a.id = ?", [q.task.id])
-			TaskStatus ts = TaskStatus.find("from TaskStatus as a where a.task = ? and a.status = ?", [t, q.status])
-			//найден статус задачи, занесенный в шаблон
-			if(ts != null){
-				Date dt = q.getEnddate()
-				if(q.getSignaldate() != null){
-					dt = q.getSignaldate()
-				}
-				//print '---->>>>' + t.name
-				//print '---->>>>' + Utils.sdfTime.parse("151900+0300")
-				//print '---->>>>' + Utils.sdfTime2.format(dt) + "+0300"
-				//print '---->>>>' + Utils.sdfTime.parse("235959+0300")
-				//Отправлять сигнал пользователю. если наступило время сигнала
-				if(Utils.isTimeInInterval(new Date(), Utils.sdfTime.parse(Utils.sdfTime2.format(dt) + "+0300"), Utils.sdfTime.parse("235959+0300"))){
-					//print '---->>>>isTimeInInterval=true'
-
-					def mes = new MessageCommand()
-					mes.setQueue(q)
-					mes.body = ts.msgtext
-					mes.type = ts.msgtype
-					mes.status = q.status
-					mes.buttons = new Button[ts.buttons.size()]
-					for(int i = 0; i < ts.buttons.size(); i++){
-						mes.buttons[i] = ts.buttons[i]
-					}
-					messages.add(mes)
+	/**
+	 * @param  Queue q
+	 * @param String body
+	 * @return
+	 */
+	def getMessageBody(Queue q, String body){
+		Pattern pattern = Pattern.compile('(<.*?>)|(.+?(?=<|$))');
+		Matcher matcher = pattern.matcher(body);
+		def result = ''
+		while (matcher.find()) {
+			def s = matcher.group()
+			if('<process>'.equals(s)){
+				Process process = Process.find("from Process as a where a.id = ?", [q.idprocess])
+				s = process.description
+			} else if('<stage>'.equals(s)){
+				s = q.description
+			} else if(s.indexOf('<user=') >= 0){
+				int ix = s.indexOf('=');
+				def login = s.substring(ix + 1, s.length() - 1)
+				User user = User.find("from User as a where a.login = ?", [login])
+				if(user != null){
+					s = user.username
+				} else {
+					s = "?"
 				}
 			}
-		}
-		//Check last hash
-		String hash = "";
-		for(MessageCommand mes: messages){
-			hash += "[" + mes.getId() + ";" + mes.getStatus() + "]";
+
+			result += s
 		}
 
-		if(hash.equals(lastHash)){
-			render "[]";
-			return
-		} else {
-			if(messages.size() == 0){
-				def mes = new MessageCommand()
-				mes.type = "CLEAR"
-				messages.add(mes)
-				render messages as JSON;
-				return
-			}
-		}
-
-		render messages as JSON;
+		return result
 	}
 
 	def login() {
 		println "JsonController.login." + params.login  + "..."
 
-		com.igo.server.User item = com.igo.server.User.find("from User as a where a.login = ? and password = ?", [params.login, params.password])
+		User item = User.find("from User as a where a.login = ? and password = ?", [params.login, params.password])
 
 		if(item != null){
 			print item.username + " login OK"

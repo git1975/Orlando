@@ -10,7 +10,6 @@ import com.igo.ui.android.widget.MessageDetailsView;
 import com.igo.ui.android.widget.MessageView;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
