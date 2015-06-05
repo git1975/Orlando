@@ -51,8 +51,8 @@ public class CommandResponseFactory {
 					
 					task.setId(getJsonValue(jObj, "id"));
 					task.setName(getJsonValue(jObj, "name"));
-					task.setStartDate(getJsonValue(jObj, "startdate"));
-					task.setEndDate(getJsonValue(jObj, "enddate"));
+					task.setStartDate(getJsonValue(jObj, "dt1"));
+					task.setEndDate(getJsonValue(jObj, "dt2"));
 					task.setType(getJsonValue(jObj, "type"));
 					task.setBody(getJsonValue(jObj, "body"));
 					task.setStatus(getJsonValue(jObj, "status"));

@@ -1,0 +1,45 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clickable="false" >
+
+    <RelativeLayout
+        android:id="@+id/msg_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:clickable="false"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="false"
+            android:orientation="vertical"
+            android:paddingLeft="50dp" 
+            android:background="@layout/shape">
+
+            <ImageView
+                android:id="@+id/img_task_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.34"
+                android:adjustViewBounds="true"
+                android:clickable="false"
+                android:maxHeight="32dp"
+                android:maxWidth="32dp"
+                android:src="@drawable/ic_alert" />
+
+            <TextView
+                android:id="@+id/tv_task"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.46"
+                android:clickable="false"
+                android:ems="10" 
+                android:textColor="#000000"
+                android:background="#00000000"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

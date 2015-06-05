@@ -11,31 +11,28 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnGroupExpandListener;
 
 import com.igo.ui.android.R;
+import com.igo.ui.android.adapter.ReportViewAdapter;
 import com.igo.ui.android.adapter.TaskExpViewAdapter;
-import com.igo.ui.android.timer.MessageTimerTask;
 
-public class LaunchpadSectionFragment extends Fragment {
-	private Timer timer = null;
+public class ReportSectionFragment extends Fragment {
 	private ExpandableListView view;
-	private TaskExpViewAdapter adapter;
+	private ReportViewAdapter adapter;
 	private View statusView = null;
-
-	public LaunchpadSectionFragment(View statusView) {
+	
+	public ReportSectionFragment(){
 		super();
-		this.statusView = statusView;
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		System.out.println("LaunchpadSectionFragment.onCreateView");
-
-		View rootView = inflater.inflate(R.layout.fragment_explistview,
+		System.out.println("ReportSectionFragment.onCreateView");
+		
+		View rootView = inflater.inflate(R.layout.fragment_reportview,
 				container, false);
 
-		view = (ExpandableListView) rootView.findViewById(R.id.explist_view);
-		adapter = new TaskExpViewAdapter(getActivity().getApplicationContext(),
-				statusView);
+		view = (ExpandableListView) rootView.findViewById(R.id.report_view);
+		adapter = new ReportViewAdapter(getActivity().getApplicationContext());
 		view.setAdapter(adapter);
 		view.setOnGroupExpandListener(new OnGroupExpandListener() {
 			public void onGroupExpand(int groupPosition) {
@@ -48,20 +45,11 @@ public class LaunchpadSectionFragment extends Fragment {
 			}
 		});
 
-		MessageTimerTask task = MessageTimerTask.getInstance(getActivity()
-				.getApplicationContext(), adapter);
-		timer = new Timer("JsonTimer");
-		timer.schedule(task, 0, 5000);
-
 		return rootView;
 	}
 
 	@Override
 	public void onDestroyView() {
-		if (timer != null) {
-			timer.cancel();
-			timer = null;
-		}
 		super.onDestroyView();
 	}
 }

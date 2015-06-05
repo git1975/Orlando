@@ -18,7 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MessageDetailsView extends RelativeLayout /*
+public class ReportDetailsView extends RelativeLayout /*
 														 * implements
 														 * OnClickListener,
 														 * OnCommandEndListener
@@ -30,12 +30,12 @@ public class MessageDetailsView extends RelativeLayout /*
 	public static SimpleDateFormat sdfFull = new SimpleDateFormat("yyyy-MM-ddHH:mm:ssZ");
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 
-	public MessageDetailsView(Context context, Task task) {
+	public ReportDetailsView(Context context, Task task) {
 		super(context);
 
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		inflater.inflate(R.layout.message_details_view, this, true);
+		inflater.inflate(R.layout.report_details_view, this, true);
 
 		setTask(task);
 	}

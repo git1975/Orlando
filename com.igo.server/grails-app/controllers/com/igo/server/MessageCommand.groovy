@@ -1,8 +1,11 @@
 package com.igo.server
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class MessageCommand {	
+public class MessageCommand {
+	public static SimpleDateFormat sdfFull = new SimpleDateFormat("yyyy-MM-ddHH:mm:ssZ");
+	
 	String id
 	String name
 	String type
@@ -23,5 +26,21 @@ public class MessageCommand {
 
 	static constraints={
 		
+	}
+	
+	def getDt1(){
+		if(startdate != null){
+			return sdfFull.format(startdate)
+		} else {
+			return "";
+		}
+	}
+	
+	def getDt2(){
+		if(enddate != null){
+			return sdfFull.format(enddate)
+		} else {
+			return "";
+		}
 	}
 }

@@ -3,6 +3,7 @@ package com.igo.ui.android;
 import com.igo.ui.android.domain.Login;
 import com.igo.ui.android.fragment.ChatSectionFragment;
 import com.igo.ui.android.fragment.LaunchpadSectionFragment;
+import com.igo.ui.android.fragment.ReportSectionFragment;
 
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
@@ -108,7 +109,9 @@ public class WorkActivity extends FragmentActivity implements
 				View v = findViewById(R.id.v_status);
 				return new LaunchpadSectionFragment(v);
 			case 1:
-				return new ChatSectionFragment();				
+				return new ChatSectionFragment();	
+			case 2:
+				return new ReportSectionFragment();								
 
 			default:
 				Fragment fragment = new DummySectionFragment();

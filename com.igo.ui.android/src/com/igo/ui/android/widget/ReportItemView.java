@@ -12,19 +12,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MessageView extends RelativeLayout /*
+public class ReportItemView extends RelativeLayout /*
 												 * implements OnClickListener,
 												 * OnCommandEndListener
 												 */{
 	private String taskId = null;
 	private Task task = null;
 
-	public MessageView(Context context, Task task) {
+	public ReportItemView(Context context, Task task) {
 		super(context);
 
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		inflater.inflate(R.layout.message_object_view, this, true);
+		inflater.inflate(R.layout.report_item_view, this, true);
 
 		setTask(task);
 	}

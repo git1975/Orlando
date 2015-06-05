@@ -37,7 +37,7 @@ class JsonController {
 		//Показать красным цветом сообщение, если время текущее больше enddate и статус = TIMEOUT (т.е. пользователь не реагирует на запросы и система перевела статус в TIMEOUT)
 		List<Queue> listGreen = Queue.findAll("from Queue as q where q.type = 'Task' and startdate < ? and signaldate > ? and startdate >= ?", [now, now, processDate])
 		List<Queue> listYellow = Queue.findAll("from Queue as q where q.type = 'Task' and signaldate < ? and enddate > ? and startdate >= ?", [now, now, processDate])
-		List<Queue> listRed = Queue.findAll("from Queue as q where q.type = 'Task' and enddate < ? and q.status = 'INIT' and startdate >= ?", [now, processDate])
+		List<Queue> listRed = Queue.findAll("from Queue as q where q.type = 'Task' and enddate < ? and q.status = 'INIT' and startdate >= ? and ord != 1 and ord != 4", [now, processDate])
 
 		//println "Green-" + listGreen.size + "-Yellow-" + listYellow.size
 
@@ -131,6 +131,44 @@ class JsonController {
 			return mes
 		}
 		return null
+	}
+	
+	def report() {
+		String lastHash = params.hash
+		println "JsonController.report"
+
+		Date now = new Date()
+		Date processDate = new Date()
+
+		//Определим время текущей задачи, для демо
+		List<Queue> listCurrent = Queue.findAll("from Queue as q where q.type = 'Task' and ord = 1 order by startdate desc", [], [max: 1])
+		if(listCurrent != null && listCurrent.size() > 0){
+			Queue q = listCurrent.get(0)
+			processDate = q.startdate
+		}
+
+		//Показать зеленым цветом инф. сообщение в любом случае, если текущее время между startdate и signaldate
+		//Показать желтым цветом сообщение с запросом, если время текущее между signaldate и enddate
+		//Показать красным цветом сообщение, если время текущее больше enddate и статус = TIMEOUT (т.е. пользователь не реагирует на запросы и система перевела статус в TIMEOUT)
+		List<Queue> list = Queue.findAll("from Queue as q where q.type = 'Task' and startdate < ? and signaldate > ? and startdate >= ?", [now, now, processDate])
+
+		//println "Green-" + listGreen.size + "-Yellow-" + listYellow.size
+
+		def messages = new ArrayList();
+
+		//Покажем инф. сообщение об этапах
+		for(Queue q: list){
+			def mes = getMessage(q, true)
+			if(mes == null){
+				mes = new MessageCommand()
+				mes.type = "INFO"
+				mes.body = "?"
+			}
+
+			messages.add(mes)
+		}
+
+		render messages as JSON;
 	}
 
 	/**

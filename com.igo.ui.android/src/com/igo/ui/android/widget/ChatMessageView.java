@@ -9,9 +9,11 @@ import com.igo.ui.android.domain.Login;
 import com.igo.ui.android.remote.Command;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,11 +30,6 @@ public class ChatMessageView extends RelativeLayout {
 		inflater.inflate(R.layout.chat_message_object_view, this, true);
 
 		setChatMessage(item);
-	}
-
-	public void setText(String text) {
-		TextView tvTask = (TextView) findViewById(R.id.tv_chat_item);
-		tvTask.setText(text);
 	}
 
 	public void onClick(View v) {
@@ -55,25 +52,6 @@ public class ChatMessageView extends RelativeLayout {
 		}
 	}
 
-	public void setImage(ChatMessage item) {
-		ImageView imgTaskStatus = (ImageView) findViewById(R.id.img_chat_status);
-		if (item == null) {
-			imgTaskStatus.setImageResource(R.drawable.ic_info);
-			return;
-		}
-
-		/*
-		 * if("INIT".equals(task.getStatus())){
-		 * imgTaskStatus.setImageResource(R.drawable.ic_info); } else
-		 * if("REPLY_NO".equals(task.getStatus())){
-		 * imgTaskStatus.setImageResource(R.drawable.ic_no); } else
-		 * if("TIMEOUT".equals(task.getStatus())){
-		 * imgTaskStatus.setImageResource(R.drawable.ic_time); } else
-		 * if("REPLY_HAND".equals(task.getStatus())){
-		 * imgTaskStatus.setImageResource(R.drawable.ic_hand); }
-		 */
-	}
-
 	public void OnCommandEnd(Command command, Object result) {
 		ImageView imgTaskStatus = (ImageView) findViewById(R.id.img_task_status);
 		imgTaskStatus.setImageResource(R.drawable.ic_alert);
@@ -89,29 +67,32 @@ public class ChatMessageView extends RelativeLayout {
 	public void setChatMessage(ChatMessage item) {
 		this.chatItem = item;
 		if (chatItem == null) {
-			setText("null");
 			return;
 		}
-
-		TextView tvDate = (TextView) findViewById(R.id.tv_chat_item);
-		if (item.getSendDate() == null) {
-			tvDate.setText("?");
-		} else {
-			tvDate.setText(sdf.format(item.getSendDate()));
-		}
-		tvDate = (TextView) findViewById(R.id.tv_chat_body);
-		tvDate.setText(item.getBody());
-
+		
 		DataStorage ds = (DataStorage) getContext();
 		Login login = (Login) ds.getData("login");
-
-		tvDate = (TextView) findViewById(R.id.tv_chat_from);
+		String from;
 		if (item.getFrom().equals(login.getLogin())) {
-			tvDate.setText(getResources().getString(R.string.str_iam));
+			from = getResources().getString(R.string.str_iam);
 		} else {
-			tvDate.setText(item.getFrom());
+			from = item.getFrom();
 		}
+		
+		String body = sdf.format(item.getSendDate()) + "-";
+		body += from + "\r\n";
+		body += item.getBody();
 
-		setImage(item);
+		TextView tvBody = (TextView) findViewById(R.id.tv_chat_body);
+		tvBody.setText(body);
+		
+		LinearLayout layoutChat = (LinearLayout) findViewById(R.id.layout_chat);
+		if (item.getFrom().equals(login.getLogin())) {
+			tvBody.setBackground(getResources().getDrawable(R.drawable.ic_speech2));
+			layoutChat.setGravity(Gravity.LEFT);
+		}  else {
+			tvBody.setBackground(getResources().getDrawable(R.drawable.ic_speech3));
+			layoutChat.setGravity(Gravity.RIGHT);
+		}
 	}
 }
