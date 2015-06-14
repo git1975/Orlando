@@ -130,9 +130,9 @@ public class WorkActivity extends FragmentActivity implements
 		@Override
 		public CharSequence getPageTitle(int position) {
 			if(position == 0){
-				return "Активности";
+				return "Задачи";
 			} else if(position == 1){
-				return "Чат";
+				return "Переписка";
 			} else if(position == 2){
 				return "Отчеты";
 			}
