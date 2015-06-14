@@ -1,45 +1,52 @@
 package com.igo.server
 
 class UserController {
-	
+
 	def dataService
 
-    def list() {
+	def list() {
 		return [users: User.list()]
 	}
-	
+
 	def add() {
 		if (request.method == 'GET') {
-			return [user: new User()]
+			return [user: new User(), roles: Role.list()]
 		}
 
-		def user = dataService.createUser(params.user_username, params.user_password)
+		def user = dataService.createUser(params.user_login, params.user_username, params.user_password)
 
 		if (user.hasErrors()) {
 			return [userBean: user]
 		}
 
-		//redirect action: 'add'
+		redirect action: 'list'
 	}
-	
+
 	def edit() {
-		def owner = Owner.get(params.id)
+		for(Iterator itr = params.iterator(); itr.hasNext();){
+			String key = itr.next();
+			println "->" + key
+		}
+		
 		if (request.method == 'GET') {
-			render view: 'add', model: [ownerBean: owner]
-			return
+			def User item = User.get(params.id)
+			
+			if(item == null){
+				redirect action: 'list'
+			}
+			println "Edit: " + item
+			return [user: item, roles: Role.list()]
+		} else {
+			def item = dataService.updateUser(User.get(params.id), params.user_login, params.user_username,
+					params.user_password, params.roleSelect)
+			if (item.hasErrors()) {
+				render view: 'edit', model: [user: item]
+				return
+			}
+			redirect action: 'list'
 		}
-
-		petclinicService.updateOwner(Owner.get(params.id), params.owner?.firstName, params.owner?.lastName,
-				params.owner?.address, params.owner?.city, params.owner?.telephone)
-
-		if (owner.hasErrors()) {
-			render view: 'add', model: [ownerBean: owner]
-			return
-		}
-
-		redirect action: 'show', id: owner.id
 	}
-	
+
 	def delete() {
 		for(User user : User.list()){
 			Object obj = params.get("users." + user.id)
