@@ -1,30 +1,29 @@
 <html>
 <head>
 <meta name="layout" content="main">
-<title>Add User</title>
+<title>Новый пользователь</title>
 </head>
 
 <body id="add">
 	<h2>
-		<g:if test="${!user.id}">New </g:if>
-		User:
+		Новый пользователь:
 	</h2>
 
-	<g:form action="${ user.id ? 'edit' : 'add'}" id="${user?.id}">
+	<g:form action="add" id="${item?.id}">
 		<table>
 			<tr>
 				<th><g:render template="/common/formField"
-						model="[name:'user', bean:user, field:'login', label:'Логин']" />
+						model="[name:'item', bean:item, field:'login', label:'Логин']" />
 				</th>
 			</tr>
 			<tr>
 				<th><g:render template="/common/formField"
-						model="[name:'user', bean:user, field:'username', label:'Имя']" />
+						model="[name:'item', bean:item, field:'username', label:'Имя']" />
 				</th>
 			</tr>
 			<tr>
 				<th><g:render template="/common/formField"
-						model="[name:'user', bean:user, field:'password', label:'Пароль']" />
+						model="[name:'item', bean:item, field:'password', label:'Пароль']" />
 				</th>
 			</tr>
 			<tr>

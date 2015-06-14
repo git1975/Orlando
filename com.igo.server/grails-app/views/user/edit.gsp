@@ -1,34 +1,34 @@
 <html>
 <head>
 <meta name="layout" content="main">
-<title>Edit User</title>
+<title>Пользователь</title>
 </head>
 
 <body id="edit">
-	<h2>Edit User:</h2>
+	<h2>Пользователь:</h2>
 
 	<g:form action="edit">
-		<input type="hidden" name="id" value="${user.id}">
+		<input type="hidden" name="id" value="${item.id}">
 		<table>
 			<tr>
 				<th><g:render template="/common/formField"
-						model="[name:'user', bean:user, field:'login', label:'Логин']" />
+						model="[name:'item', bean:item, field:'login', label:'Логин']" />
 				</th>
 			</tr>
 			<tr>
 				<th><g:render template="/common/formField"
-						model="[name:'user', bean:user, field:'username', label:'Имя']" />
+						model="[name:'item', bean:item, field:'username', label:'Имя']" />
 				</th>
 			</tr>
 			<tr>
 				<th><g:render template="/common/formField"
-						model="[name:'user', bean:user, field:'password', label:'Пароль']" />
+						model="[name:'item', bean:item, field:'password', label:'Пароль']" />
 				</th>
 			</tr>
 			<tr>
 				<th>Роль: <br /> <g:select name="roleSelect" from="${roles}"
 						optionKey="name" optionValue="description"
-						value="${ user.role ? user.role.description : '1'}" />
+						value="${ item.role ? item.role.name : 'mgr'}" />
 				</th>
 			</tr>
 			<tr>

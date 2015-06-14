@@ -1,44 +1,47 @@
 <html>
 <head>
 <meta name="layout" content="main">
-<title>Users</title>
+<title>Пользователи</title>
 </head>
 <body id="users">
 <g:form action='delete'>
-	<h2>Users:</h2>
+	<h2>Пользователи:</h2>
 
 	<table>
 		<thead>
 			<tr>
-				<th></th>
 				<th>Логин</th>
 				<th>Имя</th>
 				<th>Роль</th>
 				<th></th>
 			</tr>
 		</thead>
-		<g:each var="user" in="${users}">
+		<g:each var="item" in="${items}">
 			<tr>
-				<td><g:checkBox name="users.${user.id}" value="${false}"/> </td>
 				<td>
-					${user.login}
+					${item.login}
 				</td>
 				<td>
-					${user.username}
+					${item.username}
 				</td>
 				<td>
-					${ user.role ? user.role.description : '?'}
+					${ item.role ? item.role.description : '?'}
 				</td>
-				<td>
-					<g:form method="GET" url="[action:'edit', id:user.id]">
-						<p class="submit"><input type="submit" value="Редактировать"/></p>
-					</g:form>
-				</td>
+				<td><g:form method="GET" url="[action:'edit', id:item.id]">
+							<p class="submit">
+								<!--input type="submit" value="Редактировать"/-->
+								<g:link action="edit" id="${item.id}" alt="Редактировать">
+									<g:img file="edit.png" />
+								</g:link>
+								<g:link action="delete" id="${item.id}" alt="Удалить" onclick="return confirm('Удалить?')">
+									<g:img file="delete.png" />
+								</g:link>
+							</p>
+						</g:form></td>
 			</tr>
 		</g:each>
 	</table>
 	<g:link controller="user" action="add"><input type="button" value="Добавить"/></g:link>
-	<g:actionSubmit action="delete" value="Удалить" onclick="return confirm('Удалить?')"/>
 </g:form>
 </body>
 </html>

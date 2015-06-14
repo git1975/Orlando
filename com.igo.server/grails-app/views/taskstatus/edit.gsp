@@ -53,6 +53,9 @@
 					<td>
 						${buttons.name}
 					</td>
+					<td>
+						${buttons.replystatus}
+					</td>
 				</tr>
 			</g:each>
 		</table>

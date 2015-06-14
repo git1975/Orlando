@@ -5,8 +5,10 @@ import grails.transaction.Transactional
 @Transactional
 class DataService {
 
-	def createUser(String login, String username, String password){
-		def user = new User(login: login, username: username, password: password)
+	def createUser(String login, String username, String password, String role){
+		Role r = Role.find("from Role where name=?", [role])
+		
+		def user = new User(login: login, username: username, password: password, role: r)
 		user.save(failOnError: true)
 		user
 	}

@@ -5,15 +5,15 @@ class UserController {
 	def dataService
 
 	def list() {
-		return [users: User.list()]
+		return [items: User.list()]
 	}
 
 	def add() {
 		if (request.method == 'GET') {
-			return [user: new User(), roles: Role.list()]
+			return [item: new User(), roles: Role.list()]
 		}
 
-		def user = dataService.createUser(params.user_login, params.user_username, params.user_password)
+		def user = dataService.createUser(params.item_login, params.item_username, params.item_password, params.roleSelect)
 
 		if (user.hasErrors()) {
 			return [userBean: user]
@@ -23,10 +23,10 @@ class UserController {
 	}
 
 	def edit() {
-		for(Iterator itr = params.iterator(); itr.hasNext();){
+		/*for(Iterator itr = params.iterator(); itr.hasNext();){
 			String key = itr.next();
 			println "->" + key
-		}
+		}*/
 		
 		if (request.method == 'GET') {
 			def User item = User.get(params.id)
@@ -35,10 +35,10 @@ class UserController {
 				redirect action: 'list'
 			}
 			println "Edit: " + item
-			return [user: item, roles: Role.list()]
+			return [item: item, roles: Role.list()]
 		} else {
-			def item = dataService.updateUser(User.get(params.id), params.user_login, params.user_username,
-					params.user_password, params.roleSelect)
+			def item = dataService.updateUser(User.get(params.id), params.item_login, params.item_username,
+					params.item_password, params.roleSelect)
 			if (item.hasErrors()) {
 				render view: 'edit', model: [user: item]
 				return
@@ -48,15 +48,9 @@ class UserController {
 	}
 
 	def delete() {
-		for(User user : User.list()){
-			Object obj = params.get("users." + user.id)
-			if(obj != null){
-				if("on".equals(obj.toString())){
-					System.out.println "Delete user: " + user;
-					dataService.deleteUser(user.id);
-				}
-			}
-		}
+		def User item = User.get(params.id)
+		dataService.deleteUser(item.id);
+		
 		redirect action: 'list'
 	}
 }
