@@ -67,7 +67,7 @@ class DataService {
 		item
 	}
 
-	def updateTaskStatus(TaskStatus item, String msgtext, String msgtype, String status, String lifetime, String color, String task){
+	def updateTaskStatus(TaskStatus item, String msgtext, String msgtype, String status, String lifetime, String color, String task, List buttons){
 		if(item != null){
 			Task r = Task.find("from Task where name=?", [task])
 			
@@ -79,6 +79,9 @@ class DataService {
 			item.lifetime = Integer.parseInt(lifetime)
 			item.color = Integer.parseInt(color)
 			item.task = r
+			//Buttons
+			item.buttons = buttons
+			
 			item.save(failOnError: true)
 			item
 		}
@@ -88,6 +91,23 @@ class DataService {
 		def item = TaskStatus.get(id)
 		if(item != null){
 			item.delete(flush: true)
+		}
+	}
+	
+	def deleteTaskStatusButton(String mainid, String id){
+		def item = TaskStatus.get(mainid)
+		if(item != null){
+			for(Button btn: item.buttons){
+				if(id.equals(btn.id.toString())){
+					item.buttons.remove(btn)
+					
+					println "deleteTaskStatusButton:" + mainid + "," + id
+					
+					item.save(flush: true)
+					
+					break
+				}
+			}
 		}
 	}
 }

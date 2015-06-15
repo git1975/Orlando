@@ -63,6 +63,8 @@ grails.project.dependency.resolution = {
         compile ":asset-pipeline:1.9.6"
 		compile ':quartz:1.0.2'
 		//compile "org.grails.plugins.json-rest-api:json-rest-api:1.0.11"
+		//compile ':spring-security-core:2.0-RC5'// плагин для авторизации, работы с админкой системы
+		//compile ":easygrid:1.7.1"
 		
         // plugins needed at runtime but not for compilation
         runtime ":hibernate4:4.3.5.5" // or ":hibernate:3.6.10.17"

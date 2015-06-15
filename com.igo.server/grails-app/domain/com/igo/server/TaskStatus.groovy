@@ -13,9 +13,9 @@ class TaskStatus {
 	
 	static hasMany = [buttons: Button]
 	
-	static mapping = {
+	/*static mapping = {
 		buttons cascade:"all,delete-orphan"
-		}
+		}*/
 
     static constraints = {
     }

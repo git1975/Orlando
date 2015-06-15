@@ -25,22 +25,58 @@ class TaskStatusController {
 
 	def edit() {
 		if (request.method == 'GET') {
+			println "edit GET"
+			
 			def TaskStatus item = TaskStatus.get(params.id)
+			def allbuttons = Button.findAll()
 
 			if(item == null){
 				redirect action: 'list'
 			}
-			println "Edit TaskStatus: " + item + ", " + item.buttons
 			
-			return [item: item, tasks: Task.list()]
+			List btns = session["buttons"]
+			if(btns == null){
+				btns = new ArrayList();
+				btns.addAll(item.buttons)
+				session["buttons"] = btns
+			}
+
+			println "btns=" + btns
+			println "allbuttons=" + allbuttons
+			
+			return [item: item, tasks: Task.list(), buttons: btns, allbuttons: allbuttons]
 		}
-		def item = dataService.updateTaskStatus(TaskStatus.get(params.id), params.item_msgtext, params.msgtype, params.item_status, 
-			params.item_lifetime, params.color, params.taskSelect)
+		println "edit POST"
+		
+		/*def String[] allbuttons = params.allbuttons
+		//Добавленные кнопки
+		if(allbuttons != null && allbuttons.length > 0){
+			List btns = session["buttons"]
+			for(int i = 0; i < allbuttons.length; i++){
+				def code = params.get("allbuttons." + i)
+				Button btn = Button.find("from Button where code=?", [code])
+				if(btn != null){
+					btns.add(btn)
+				}
+			}
+			session["buttons"] = btns
+		}*/
+		
+		def item = dataService.updateTaskStatus(TaskStatus.get(params.id), params.item_msgtext, params.msgtype, params.item_status,
+				params.item_lifetime, params.color, params.taskSelect, session["buttons"])
+		
+		session["buttons"] = null
 
 		if (item.hasErrors()) {
 			render view: 'edit', model: [item: item]
 			return
 		}
+		redirect action: 'list'
+	}
+	
+	def cancel() {
+		session["buttons"] = null
+		
 		redirect action: 'list'
 	}
 
@@ -49,5 +85,39 @@ class TaskStatusController {
 		dataService.deleteTaskStatus(item.id);
 
 		redirect action: 'list'
+	}
+
+	def delButton() {
+		String mainid = params.mainid
+		String id = params.id
+
+		//def TaskStatus item = TaskStatus.get(params.id)
+		//dataService.deleteTaskStatusButton(mainid, params.id);
+		List btns = session["buttons"]
+		for(Button btn: btns){
+			println "->id=" + id + ",btn.id=" + btn.id
+			if(id.equals(btn.id.toString())){
+				btns.remove(btn)
+				println "->remove:" + btns
+				session["buttons"] = btns
+				break
+			}
+		}
+
+		redirect action: 'edit', id: mainid
+	}
+	
+	def addButton() {
+		println "addButton"
+		
+		String mainid = params.mainid
+		
+		def btn = new Button()
+		btn.id = 0
+		
+		List btns = session["buttons"]
+		btns.add(btn)
+		
+		redirect action: 'edit', id: mainid
 	}
 }
