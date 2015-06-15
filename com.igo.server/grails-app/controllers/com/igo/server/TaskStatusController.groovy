@@ -24,16 +24,21 @@ class TaskStatusController {
 	}
 
 	def edit() {
+		/*for(Iterator itr = params.iterator(); itr.hasNext();){
+		 String key = itr.next();
+		 println "->" + key
+		 }*/
+
 		if (request.method == 'GET') {
 			println "edit GET"
-			
+
 			def TaskStatus item = TaskStatus.get(params.id)
 			def allbuttons = Button.findAll()
 
 			if(item == null){
 				redirect action: 'list'
 			}
-			
+
 			List btns = session["buttons"]
 			if(btns == null){
 				btns = new ArrayList();
@@ -41,30 +46,27 @@ class TaskStatusController {
 				session["buttons"] = btns
 			}
 
-			println "btns=" + btns
-			println "allbuttons=" + allbuttons
-			
 			return [item: item, tasks: Task.list(), buttons: btns, allbuttons: allbuttons]
 		}
 		println "edit POST"
-		
-		/*def String[] allbuttons = params.allbuttons
+
 		//Добавленные кнопки
-		if(allbuttons != null && allbuttons.length > 0){
-			List btns = session["buttons"]
-			for(int i = 0; i < allbuttons.length; i++){
-				def code = params.get("allbuttons." + i)
-				Button btn = Button.find("from Button where code=?", [code])
-				if(btn != null){
-					btns.add(btn)
-				}
+		List btns = session["buttons"]
+		params.entrySet().findAll {
+			it.key.startsWith("allbuttons.")
+		}.each { 
+			def code = "$it.value"	
+			Button btn = Button.find("from Button where code=?", [code])
+			if(btn != null){
+				btns.add(btn)
 			}
-			session["buttons"] = btns
-		}*/
+		}
+		
+		session["buttons"] = btns
 		
 		def item = dataService.updateTaskStatus(TaskStatus.get(params.id), params.item_msgtext, params.msgtype, params.item_status,
 				params.item_lifetime, params.color, params.taskSelect, session["buttons"])
-		
+
 		session["buttons"] = null
 
 		if (item.hasErrors()) {
@@ -73,10 +75,10 @@ class TaskStatusController {
 		}
 		redirect action: 'list'
 	}
-	
+
 	def cancel() {
 		session["buttons"] = null
-		
+
 		redirect action: 'list'
 	}
 
@@ -106,18 +108,18 @@ class TaskStatusController {
 
 		redirect action: 'edit', id: mainid
 	}
-	
+
 	def addButton() {
 		println "addButton"
-		
+
 		String mainid = params.mainid
-		
+
 		def btn = new Button()
 		btn.id = 0
-		
+
 		List btns = session["buttons"]
 		btns.add(btn)
-		
+
 		redirect action: 'edit', id: mainid
 	}
 }

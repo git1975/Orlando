@@ -7,7 +7,7 @@ class DataService {
 
 	def createUser(String login, String username, String password, String role){
 		Role r = Role.find("from Role where name=?", [role])
-		
+
 		def user = new User(login: login, username: username, password: password, role: r)
 		user.save(failOnError: true)
 		user
@@ -16,7 +16,7 @@ class DataService {
 	def updateUser(User user, String login, String username, String password, String role){
 		if(user != null){
 			Role r = Role.find("from Role where name=?", [role])
-			
+
 			user.login = login
 			user.username = username
 			user.password = password
@@ -32,7 +32,7 @@ class DataService {
 			user.delete(flush: true)
 		}
 	}
-	
+
 	def createButton(String code, String name, String replystatus){
 		def item = new Button(code: code, name: name, replystatus: replystatus)
 		item.save(failOnError: true)
@@ -55,14 +55,14 @@ class DataService {
 			item.delete(flush: true)
 		}
 	}
-	
+
 	def createTaskStatus(String msgtext, String msgtype, String status, String lifetime, String color, String task){
 		Task r = Task.find("from Task where name=?", [task])
-		
+
 		println msgtext+'-'+msgtype+'-'+status+'-'+lifetime+'-'+color+'-'+task
-		
-		def item = new TaskStatus(msgtext: msgtext, msgtype: msgtype, status: status, lifetime: Integer.parseInt(lifetime), 
-			color: Integer.parseInt(color), task: r)
+
+		def item = new TaskStatus(msgtext: msgtext, msgtype: msgtype, status: status, lifetime: Integer.parseInt(lifetime),
+		color: Integer.parseInt(color), task: r)
 		item.save(failOnError: true)
 		item
 	}
@@ -70,9 +70,9 @@ class DataService {
 	def updateTaskStatus(TaskStatus item, String msgtext, String msgtype, String status, String lifetime, String color, String task, List buttons){
 		if(item != null){
 			Task r = Task.find("from Task where name=?", [task])
-			
+
 			println msgtext+'-'+msgtype+'-'+status+'-'+lifetime+'-'+color+'-'+task
-			
+
 			item.msgtext = msgtext
 			item.msgtype = msgtype
 			item.status = status
@@ -80,8 +80,15 @@ class DataService {
 			item.color = Integer.parseInt(color)
 			item.task = r
 			//Buttons
+			Iterator<Object> i = buttons.iterator();
+			while (i.hasNext()) {
+				Button btn = i.next();
+				if(btn.id == 0){
+					i.remove();
+				}
+			}
 			item.buttons = buttons
-			
+
 			item.save(failOnError: true)
 			item
 		}
@@ -93,18 +100,18 @@ class DataService {
 			item.delete(flush: true)
 		}
 	}
-	
+
 	def deleteTaskStatusButton(String mainid, String id){
 		def item = TaskStatus.get(mainid)
 		if(item != null){
 			for(Button btn: item.buttons){
 				if(id.equals(btn.id.toString())){
 					item.buttons.remove(btn)
-					
+
 					println "deleteTaskStatusButton:" + mainid + "," + id
-					
+
 					item.save(flush: true)
-					
+
 					break
 				}
 			}
