@@ -33,7 +33,7 @@ class TaskStatusController {
 			println "edit GET"
 
 			def TaskStatus item = TaskStatus.get(params.id)
-			def allbuttons = Button.findAll()
+			def allbuttons = Button.findAll("from Button where code is not null")
 
 			if(item == null){
 				redirect action: 'list'
@@ -41,7 +41,7 @@ class TaskStatusController {
 
 			List btns = session["buttons"]
 			if(btns == null){
-				btns = new ArrayList();
+				btns = new ArrayList(1);
 				btns.addAll(item.buttons)
 				session["buttons"] = btns
 			}
@@ -114,7 +114,7 @@ class TaskStatusController {
 
 		String mainid = params.mainid
 
-		def btn = new Button()
+		def btn = Button.findByCode("YES")
 		btn.id = 0
 
 		List btns = session["buttons"]

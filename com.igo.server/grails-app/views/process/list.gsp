@@ -1,31 +1,31 @@
 <html>
 <head>
 <meta name="layout" content="main">
-<title>Кнопки</title>
+<title>Циклы</title>
 </head>
-<body id="buttons">
-	<g:form action='delete'>
-		<h2>Кнопки:</h2>
+<body id="process">
+	<g:form>
+		<h2>Циклы:</h2>
 
 		<table>
 			<thead>
 				<tr>
 					<th>Код</th>
 					<th>Наименование</th>
-					<th>Код ответа</th>
+					<th>Активный</th>
 					<th></th>
 				</tr>
 			</thead>
 			<g:each var="item" in="${items}">
 				<tr>
 					<td>
-						${item.code}
-					</td>
-					<td>
 						${item.name}
 					</td>
 					<td>
-						${item.replystatus}
+						${item.description}
+					</td>
+					<td>
+						${ item.active}
 					</td>
 					<td><g:form method="GET" url="[action:'edit', id:item.id]">
 							<p class="submit">
@@ -33,7 +33,8 @@
 								<g:link action="edit" id="${item.id}" alt="Редактировать">
 									<g:img file="edit.png" />
 								</g:link>
-								<g:link action="delete" id="${item.id}" alt="Удалить" onclick="return confirm('Удалить?')">
+								<g:link action="delete" id="${item.id}" alt="Удалить"
+									onclick="return confirm('Удалить?')">
 									<g:img file="delete.png" />
 								</g:link>
 							</p>

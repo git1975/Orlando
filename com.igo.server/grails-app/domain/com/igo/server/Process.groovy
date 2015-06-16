@@ -4,6 +4,7 @@ class Process {
 	String name
 	String description
 	boolean autostart
+	boolean active = true
 	long repeatevery = 0
 	Date startdate = new Date()
 

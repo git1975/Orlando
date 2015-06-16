@@ -2,10 +2,11 @@ package com.igo.server
 
 class ProcessInstanceFactory {
 	def createInstance(long idprocess){
-		println "ProcessInstanceFactory.createInstance...idprocess=" + idprocess
+		Process item = Process.find("from Process as p where p.id = ? and p.active = 1", [idprocess])
 
-		List process = Process.findAll("from Process as p where p.id = ?", [idprocess])
-		for(Process item : process){
+		if(item != null){
+			println "ProcessInstanceFactory.createInstance...idprocess=" + item.id
+
 			Task[] tasks = item.tasks
 			println "ProcessInstanceFactory.createInstance...tasks=" + tasks
 			tasks.each{t ->

@@ -12,6 +12,7 @@ public class Utils {
 	public static SimpleDateFormat sdfTime = new SimpleDateFormat("HHmmssZ");
 	public static SimpleDateFormat sdfTime2 = new SimpleDateFormat("HHmmss");
 	public static SimpleDateFormat sdfFull = new SimpleDateFormat("ddMMyyyyHHmmssZ");
+	public static SimpleDateFormat sdfFull2 = new SimpleDateFormat("yyyy-dd-MM HH:mm:ss.s");
 	
 	public static boolean isTimeInInterval(Date dt, Date dt1, Date dt2){
 		String currentDate = sdfDate.format(dt);

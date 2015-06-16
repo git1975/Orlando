@@ -1,5 +1,7 @@
 package com.igo.server
 
+import java.text.SimpleDateFormat;
+
 import grails.transaction.Transactional
 
 @Transactional
@@ -115,6 +117,36 @@ class DataService {
 					break
 				}
 			}
+		}
+	}
+	
+	//2015-06-04 12:05:22.0
+	static SimpleDateFormat sdfFull2 = new SimpleDateFormat("yyyy-dd-MM HH:mm:ss")
+	
+	def createProcess(String name, String description, String active, String autostart, String repeatevery, String startdate){
+		def item = new Process(name: name, description: description, active: Boolean.parseBoolean(active), 
+			autostart: Boolean.parseBoolean(autostart), repeatevery: repeatevery, startdate: sdfFull2.parse(startdate))
+		item.save(failOnError: true)
+		item
+	}
+
+	def updateProcess(Process item, String name, String description, String active, String autostart, String repeatevery, String startdate){
+		if(item != null){
+			item.name = name
+			item.description = description
+			item.active = Boolean.parseBoolean(active)
+			item.autostart = Boolean.parseBoolean(autostart)
+			item.repeatevery = Long.parseLong(repeatevery)
+			item.startdate = sdfFull2.parse(startdate)
+			item.save(failOnError: true)
+			item
+		}
+	}
+
+	def deleteProcess(long id){
+		def item = Process.get(id)
+		if(item != null){
+			item.delete(flush: true)
 		}
 	}
 }

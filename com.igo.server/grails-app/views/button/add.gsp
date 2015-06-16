@@ -1,12 +1,12 @@
 <html>
 <head>
 <meta name="layout" content="main">
-<title>Add Button</title>
+<title>Добавить кнопку</title>
 </head>
 
 <body id="add">
 	<h2>
-		New Button:
+		Добавить кнопку:
 	</h2>
 
 	<g:form action="add" id="${item.id}">
