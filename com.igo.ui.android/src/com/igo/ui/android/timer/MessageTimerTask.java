@@ -15,8 +15,8 @@ public class MessageTimerTask extends TimerTask {
 	private Context context = null;
 
 	public static MessageTimerTask getInstance(Context context,
-			OnCommandEndListener onCommandEndListener) {
-		if (mt == null) {
+			OnCommandEndListener onCommandEndListener, boolean isNew) {
+		if (mt == null || isNew) {
 			mt = new MessageTimerTask(context, onCommandEndListener);
 		}
 		return mt;

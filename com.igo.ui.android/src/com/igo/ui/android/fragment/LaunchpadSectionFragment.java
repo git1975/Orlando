@@ -1,5 +1,6 @@
 package com.igo.ui.android.fragment;
 
+import java.util.Date;
 import java.util.Timer;
 
 import android.os.Bundle;
@@ -49,8 +50,10 @@ public class LaunchpadSectionFragment extends Fragment {
 		});
 
 		MessageTimerTask task = MessageTimerTask.getInstance(getActivity()
-				.getApplicationContext(), adapter);
-		timer = new Timer("JsonTimer");
+				.getApplicationContext(), adapter, true);
+		if (timer == null) {
+			timer = new Timer("JsonTimer." + (new Date()).getTime());
+		}
 		timer.schedule(task, 0, 5000);
 
 		return rootView;
@@ -60,6 +63,7 @@ public class LaunchpadSectionFragment extends Fragment {
 	public void onDestroyView() {
 		if (timer != null) {
 			timer.cancel();
+			timer.purge();
 			timer = null;
 		}
 		super.onDestroyView();
