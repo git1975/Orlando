@@ -1,11 +1,11 @@
 <html>
 <head>
 <meta name="layout" content="main">
-<title>Edit Button</title>
+<title>Кнопка</title>
 </head>
 
 <body id="edit">
-	<h2>Edit Button:</h2>
+	<h2>Кнопка:</h2>
 
 	<g:form action="edit">
 		<input type="hidden" name="id" value="${item.id}">

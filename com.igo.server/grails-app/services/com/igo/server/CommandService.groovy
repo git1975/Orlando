@@ -19,7 +19,7 @@ class CommandService {
 				for(Queue q : qList){
 					Date dt = q.startdate
 					long minutesAgo = Utils.dateMinutesInterval(dt, new Date())
-					println "minutesAgo=" + minutesAgo
+					//println "minutesAgo=" + minutesAgo
 
 					if(item.repeatevery < minutesAgo){
 						processStartProcess(item)
@@ -57,7 +57,7 @@ class CommandService {
 	}
 
 	def processStartProcess(Queue item) {
-		println "CommandService.processStartProcess." + item.type + "." + item.finished
+		//println "CommandService.processStartProcess." + item.type + "." + item.finished
 
 		(new ProcessInstanceFactory()).createInstance(item.getIdprocess())
 		item.setFinished(true)
