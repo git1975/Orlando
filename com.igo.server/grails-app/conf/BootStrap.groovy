@@ -16,8 +16,8 @@ class BootStrap {
 		
 		//TimeZone.setDefault(TimeZone.getTimeZone ("GMT+03:00"));
 		SimpleDateFormat sdfFull = new SimpleDateFormat("ddMMyyyyHHmmssZ");
-		System.out.println("now=" + sdfFull.format(new Date()))
-		System.out.println("System.file.encoding=" + System.getProperty("file.encoding"))
+		log.debug("now=" + sdfFull.format(new Date()))
+		log.debug("System.file.encoding=" + System.getProperty("file.encoding"))
 		
 		if(!Role.count) {
 			Role role1 = new com.igo.server.Role(name: 'head', description: 'Директор').save(failOnError: true)

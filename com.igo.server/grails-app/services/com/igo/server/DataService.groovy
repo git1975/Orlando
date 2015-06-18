@@ -61,7 +61,7 @@ class DataService {
 	def createTaskStatus(String msgtext, String msgtype, String status, String lifetime, String color, String task){
 		Task r = Task.find("from Task where name=?", [task])
 
-		println msgtext+'-'+msgtype+'-'+status+'-'+lifetime+'-'+color+'-'+task
+		log.debug("createTaskStatus-" + msgtext+'-'+msgtype+'-'+status+'-'+lifetime+'-'+color+'-'+task)
 
 		def item = new TaskStatus(msgtext: msgtext, msgtype: msgtype, status: status, lifetime: Integer.parseInt(lifetime),
 		color: Integer.parseInt(color), task: r)
@@ -73,7 +73,7 @@ class DataService {
 		if(item != null){
 			Task r = Task.find("from Task where name=?", [task])
 
-			println msgtext+'-'+msgtype+'-'+status+'-'+lifetime+'-'+color+'-'+task
+			log.debug("updateTaskStatus-" + msgtext+'-'+msgtype+'-'+status+'-'+lifetime+'-'+color+'-'+task)
 
 			item.msgtext = msgtext
 			item.msgtype = msgtype
@@ -110,7 +110,7 @@ class DataService {
 				if(id.equals(btn.id.toString())){
 					item.buttons.remove(btn)
 
-					println "deleteTaskStatusButton:" + mainid + "," + id
+					log.debug("deleteTaskStatusButton:" + mainid + "," + id)
 
 					item.save(flush: true)
 

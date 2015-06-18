@@ -29,7 +29,7 @@ class ButtonController {
 			if(item == null){
 				redirect action: 'list'
 			}
-			println "Edit Button: " + item
+			log.debug("Edit Button: " + item)
 			return [item: item]
 		} else {
 			def item = dataService.updateButton(Button.get(params.id), params.item_code, params.item_name, params.item_replystatus)

@@ -13,10 +13,6 @@ class ProcessController {
 	}
 
 	def add() {
-		for(Iterator itr = params.iterator(); itr.hasNext();){
-			String key = itr.next();
-			println "->" + key
-		}
 		if (request.method == 'GET') {
 			return [item: new Process()]
 		}
@@ -38,12 +34,12 @@ class ProcessController {
 			if(item == null){
 				redirect action: 'list'
 			}
-			println "Edit: " + item
+			log.debug("Edit: " + item)
 			return [item: item]
 		} else {
 			String active = params.active
 			
-			println "params.active=" + active
+			log.debug("params.active=" + active)
 			
 			def item = dataService.updateProcess(Process.get(params.id), params.item_name, params.item_description, params.active, params.autostart, 
 				params.item_repeatevery, params.item_startdate)

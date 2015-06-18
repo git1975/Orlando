@@ -5,10 +5,10 @@ class ProcessInstanceFactory {
 		Process item = Process.find("from Process as p where p.id = ? and p.active = 1", [idprocess])
 
 		if(item != null){
-			println "ProcessInstanceFactory.createInstance...idprocess=" + item.id
+			log.debug("ProcessInstanceFactory.createInstance...idprocess=" + item.id)
 
 			Task[] tasks = item.tasks
-			println "ProcessInstanceFactory.createInstance...tasks=" + tasks
+			log.debug("ProcessInstanceFactory.createInstance...tasks=" + tasks)
 			tasks.each{t ->
 				Date startdt = t.startdate
 				Date signaldt = t.signaldate

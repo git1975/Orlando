@@ -34,7 +34,7 @@ class UserController {
 			if(item == null){
 				redirect action: 'list'
 			}
-			println "Edit: " + item
+			log.debug("Edit: " + item)
 			return [item: item, roles: Role.list()]
 		} else {
 			def item = dataService.updateUser(User.get(params.id), params.item_login, params.item_username,

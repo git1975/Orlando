@@ -19,7 +19,7 @@ class CommandService {
 				for(Queue q : qList){
 					Date dt = q.startdate
 					long minutesAgo = Utils.dateMinutesInterval(dt, new Date())
-					//println "minutesAgo=" + minutesAgo
+					log.debug("minutesAgo=" + minutesAgo)
 
 					if(item.repeatevery < minutesAgo){
 						processStartProcess(item)
@@ -32,7 +32,7 @@ class CommandService {
 	}
 
 	def processNext() {
-		//println sdf.format(new Date()) + " CommandService.processNext..."
+		log.info(" CommandService.processNext...")
 		List list = Queue.findAll("from Queue as a where a.finished = ?", [false])
 		for(Queue item : list){
 			if("StartProcess".equals(item.getType())){
@@ -57,7 +57,7 @@ class CommandService {
 	}
 
 	def processStartProcess(Queue item) {
-		//println "CommandService.processStartProcess." + item.type + "." + item.finished
+		log.info("CommandService.processStartProcess." + item.type + "." + item.finished)
 
 		(new ProcessInstanceFactory()).createInstance(item.getIdprocess())
 		item.setFinished(true)
@@ -65,7 +65,7 @@ class CommandService {
 	}
 
 	def processStartProcess(Process item) {
-		println "CommandService.processStartProcess." + item.id + "." + item.name
+		log.info("CommandService.processStartProcess." + item.id + "." + item.name)
 
 		(new ProcessInstanceFactory()).createInstance(item.id)
 		item.save(failOnError: true)
@@ -76,7 +76,7 @@ class CommandService {
 		Date dt = item.getEnddate()
 		if(item.status != 'TIMEOUT' && item.status == 'INIT' && Utils.isTimeInInterval(new Date(), dt, Utils.sdfTime.parse("235959+0300"))){
 			statusQueue(item.id, 'TIMEOUT')
-			println 'TIMEOUT Task ' + item.description
+			log.debug('TIMEOUT Task ' + item.description)
 		}
 	}
 

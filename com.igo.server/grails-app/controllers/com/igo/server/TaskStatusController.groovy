@@ -24,13 +24,8 @@ class TaskStatusController {
 	}
 
 	def edit() {
-		/*for(Iterator itr = params.iterator(); itr.hasNext();){
-		 String key = itr.next();
-		 println "->" + key
-		 }*/
-
 		if (request.method == 'GET') {
-			println "edit GET"
+			log.debug("edit GET")
 
 			def TaskStatus item = TaskStatus.get(params.id)
 			def allbuttons = Button.findAll("from Button where code is not null")
@@ -48,7 +43,7 @@ class TaskStatusController {
 
 			return [item: item, tasks: Task.list(), buttons: btns, allbuttons: allbuttons]
 		}
-		println "edit POST"
+		log.debug("edit POST")
 
 		//Добавленные кнопки
 		List btns = session["buttons"]
@@ -90,6 +85,7 @@ class TaskStatusController {
 	}
 
 	def delButton() {
+		log.debug("delButton")
 		String mainid = params.mainid
 		String id = params.id
 
@@ -97,7 +93,6 @@ class TaskStatusController {
 		//dataService.deleteTaskStatusButton(mainid, params.id);
 		List btns = session["buttons"]
 		for(Button btn: btns){
-			println "->id=" + id + ",btn.id=" + btn.id
 			if(id.equals(btn.id.toString())){
 				btns.remove(btn)
 				println "->remove:" + btns
@@ -110,7 +105,7 @@ class TaskStatusController {
 	}
 
 	def addButton() {
-		println "addButton"
+		log.debug("addButton")
 
 		String mainid = params.mainid
 

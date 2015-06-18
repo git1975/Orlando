@@ -20,7 +20,7 @@ class JsonController {
 
 	def show() {
 		String lastHash = params.hash
-		println "JsonController.show.hash=" + params.hash
+		log.debug("JsonController.show.hash=" + params.hash)
 
 		Date now = new Date()
 		Date processDate = new Date()
@@ -135,7 +135,7 @@ class JsonController {
 	
 	def report() {
 		String lastHash = params.hash
-		println "JsonController.report"
+		log.debug("JsonController.report")
 
 		Date now = new Date()
 		Date processDate = new Date()
@@ -205,7 +205,7 @@ class JsonController {
 	}
 
 	def login() {
-		println "JsonController.login." + params.login  + "..."
+		log.debug("JsonController.login." + params.login  + "...")
 
 		User item = User.find("from User as a where a.login = ? and password = ?", [params.login, params.password])
 
@@ -217,7 +217,7 @@ class JsonController {
 	}
 
 	def taskCommit() {
-		println "JsonController.taskCommit." + params.id
+		log.debug("JsonController.taskCommit." + params.id)
 
 		Queue queue = commandService.commitQueue(java.lang.Long.parseLong(params.id))
 
@@ -230,7 +230,7 @@ class JsonController {
 	}
 
 	def reply() {
-		println "JsonController.reply." + params.id + "." + params.reply
+		log.debug("JsonController.reply." + params.id + "." + params.reply)
 
 		Queue queue = commandService.replyQueue(java.lang.Long.parseLong(params.id), params.reply)
 
@@ -258,7 +258,7 @@ class JsonController {
 	}
 
 	def getchat() {
-		println "JsonController.getchat." + params.login + ";maxid=" + params.maxid + ";minid=" + params.minid
+		log.debug("JsonController.getchat." + params.login + ";maxid=" + params.maxid + ";minid=" + params.minid)
 		def long maxid = 0
 		try{
 			maxid = Long.parseLong(params.maxid);
@@ -289,7 +289,7 @@ class JsonController {
 	}
 
 	def sendchat() {
-		println "JsonController.sendchat." + params.login + "." + params.sendto + ".body=" + params.body
+		log.debug("JsonController.sendchat." + params.login + "." + params.sendto + ".body=" + params.body)
 
 		def item = commandService.sendChat(params.login, params.sendto, params.body)
 		def List<Chat> list = new ArrayList();
