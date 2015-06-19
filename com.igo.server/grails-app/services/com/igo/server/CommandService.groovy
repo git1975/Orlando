@@ -32,7 +32,7 @@ class CommandService {
 	}
 
 	def processNext() {
-		log.info(" CommandService.processNext...")
+		//log.info(" CommandService.processNext...")
 		List list = Queue.findAll("from Queue as a where a.finished = ?", [false])
 		for(Queue item : list){
 			if("StartProcess".equals(item.getType())){
@@ -57,7 +57,7 @@ class CommandService {
 	}
 
 	def processStartProcess(Queue item) {
-		log.info("CommandService.processStartProcess." + item.type + "." + item.finished)
+		//log.info("CommandService.processStartProcess." + item.type + "." + item.finished)
 
 		(new ProcessInstanceFactory()).createInstance(item.getIdprocess())
 		item.setFinished(true)
@@ -65,7 +65,7 @@ class CommandService {
 	}
 
 	def processStartProcess(Process item) {
-		log.info("CommandService.processStartProcess." + item.id + "." + item.name)
+		//log.info("CommandService.processStartProcess." + item.id + "." + item.name)
 
 		(new ProcessInstanceFactory()).createInstance(item.id)
 		item.save(failOnError: true)
