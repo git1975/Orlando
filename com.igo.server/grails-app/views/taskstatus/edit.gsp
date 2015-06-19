@@ -89,7 +89,7 @@
 						<input type="submit" value="Сохранить" />
 					</p>
 				</td>
-				<td><g:link controller="taskStatus" action="cancel">
+				<td><g:link controller="taskstatus" action="cancel">
 						<input type="button" value="Отмена" />
 					</g:link></td>
 			</tr>

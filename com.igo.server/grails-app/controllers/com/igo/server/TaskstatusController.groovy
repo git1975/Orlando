@@ -1,16 +1,16 @@
 package com.igo.server
 
-class TaskStatusController {
+class TaskstatusController {
 
 	def dataService
 
 	def list() {
-		return [items: TaskStatus.list()]
+		return [items: Taskstatus.list()]
 	}
 
 	def add() {
 		if (request.method == 'GET') {
-			return [item: new TaskStatus(), tasks: Task.list()]
+			return [item: new Taskstatus(), tasks: Task.list()]
 		}
 
 		def item = dataService.createTaskStatus(params.item_msgtext, params.msgtype, params.item_status, params.item_lifetime, params.color,
@@ -27,7 +27,7 @@ class TaskStatusController {
 		if (request.method == 'GET') {
 			log.debug("edit GET")
 
-			def TaskStatus item = TaskStatus.get(params.id)
+			def Taskstatus item = Taskstatus.get(params.id)
 			def allbuttons = Button.findAll("from Button where code is not null")
 
 			if(item == null){
@@ -59,7 +59,7 @@ class TaskStatusController {
 		
 		session["buttons"] = btns
 		
-		def item = dataService.updateTaskStatus(TaskStatus.get(params.id), params.item_msgtext, params.msgtype, params.item_status,
+		def item = dataService.updateTaskStatus(Taskstatus.get(params.id), params.item_msgtext, params.msgtype, params.item_status,
 				params.item_lifetime, params.color, params.taskSelect, session["buttons"])
 
 		session["buttons"] = null
@@ -78,7 +78,7 @@ class TaskStatusController {
 	}
 
 	def delete() {
-		def TaskStatus item = TaskStatus.get(params.id)
+		def Taskstatus item = Taskstatus.get(params.id)
 		dataService.deleteTaskStatus(item.id);
 
 		redirect action: 'list'

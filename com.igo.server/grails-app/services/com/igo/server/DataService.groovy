@@ -63,13 +63,13 @@ class DataService {
 
 		log.debug("createTaskStatus-" + msgtext+'-'+msgtype+'-'+status+'-'+lifetime+'-'+color+'-'+task)
 
-		def item = new TaskStatus(msgtext: msgtext, msgtype: msgtype, status: status, lifetime: Integer.parseInt(lifetime),
+		def item = new Taskstatus(msgtext: msgtext, msgtype: msgtype, status: status, lifetime: Integer.parseInt(lifetime),
 		color: Integer.parseInt(color), task: r)
 		item.save(failOnError: true)
 		item
 	}
 
-	def updateTaskStatus(TaskStatus item, String msgtext, String msgtype, String status, String lifetime, String color, String task, List buttons){
+	def updateTaskStatus(Taskstatus item, String msgtext, String msgtype, String status, String lifetime, String color, String task, List buttons){
 		if(item != null){
 			Task r = Task.find("from Task where name=?", [task])
 
@@ -97,14 +97,14 @@ class DataService {
 	}
 
 	def deleteTaskStatus(long id){
-		def item = TaskStatus.get(id)
+		def item = Taskstatus.get(id)
 		if(item != null){
 			item.delete(flush: true)
 		}
 	}
 
 	def deleteTaskStatusButton(String mainid, String id){
-		def item = TaskStatus.get(mainid)
+		def item = Taskstatus.get(mainid)
 		if(item != null){
 			for(Button btn: item.buttons){
 				if(id.equals(btn.id.toString())){

@@ -53,7 +53,7 @@
 				</tr>
 			</g:each>
 		</table>
-		<g:link controller="taskStatus" action="add">
+		<g:link controller="taskstatus" action="add">
 			<input type="button" value="Добавить" />
 		</g:link>
 	</g:form>

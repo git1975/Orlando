@@ -19,7 +19,7 @@ class CommandService {
 				for(Queue q : qList){
 					Date dt = q.startdate
 					long minutesAgo = Utils.dateMinutesInterval(dt, new Date())
-					log.debug("minutesAgo=" + minutesAgo)
+					//log.debug("minutesAgo=" + minutesAgo)
 
 					if(item.repeatevery < minutesAgo){
 						processStartProcess(item)

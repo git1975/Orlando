@@ -16,7 +16,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td><g:link controller="taskStatus" action="list">Статусы задач</g:link>
+				<td><g:link controller="taskstatus" action="list">Статусы задач</g:link>
 				</td>
 			</tr>
 			<tr>

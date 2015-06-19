@@ -4,7 +4,7 @@ import com.igo.server.Button
 import com.igo.server.Deviation
 import com.igo.server.Role
 import com.igo.server.Task
-import com.igo.server.TaskStatus
+import com.igo.server.Taskstatus
 import com.igo.server.User
 import com.igo.server.Process
 import com.igo.server.Queue
@@ -64,52 +64,52 @@ class BootStrapOld {
 			new Button(code: 'NO', name: 'Нет', replystatus: 'REPLY_NO').save(failOnError: true)
 			new Button(code: 'HAND', name: 'Ручной режим', replystatus: 'REPLY_HAND').save(failOnError: true)
 		}
-		if(!TaskStatus.count) {
+		if(!Taskstatus.count) {
 			Button btn1 = Button.find("from Button as a where a.code = ?", ['YES'])
 			Button btn2 = Button.find("from Button as a where a.code = ?", ['NO'])
 			Button btn3 = Button.find("from Button as a where a.code = ?", ['HAND'])
 			
 			//start
 			Task task1 = Task.find("from Task as a where a.name = ?", ['start'])
-			TaskStatus ts1 = new TaskStatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', msgtext: 'подтверди контроль производства').save(failOnError: true)
+			Taskstatus ts1 = new Taskstatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', msgtext: 'подтверди контроль производства').save(failOnError: true)
 			ts1.addToButtons(btn1)
 			ts1.addToButtons(btn2)
 			ts1.task = task1
-			TaskStatus ts2 = new TaskStatus(status: 'REPLY_NO', msgtype: 'CMD', sendTo: 'Director', msgtext: 'назначь управляющего производством на сегодня').save(failOnError: true)
+			Taskstatus ts2 = new Taskstatus(status: 'REPLY_NO', msgtype: 'CMD', sendTo: 'Director', msgtext: 'назначь управляющего производством на сегодня').save(failOnError: true)
 			ts2.addToButtons(btn3)
 			ts2.addToButtons(btn2)
 			ts2.task = task1
-			TaskStatus ts3 = new TaskStatus(status: 'TIMEOUT', msgtype: 'INFO', sendTo: 'Director', msgtext: 'сегодня производство управляется в ручном режиме').save(failOnError: true)
+			Taskstatus ts3 = new Taskstatus(status: 'TIMEOUT', msgtype: 'INFO', sendTo: 'Director', msgtext: 'сегодня производство управляется в ручном режиме').save(failOnError: true)
 			ts3.task = task1
-			TaskStatus ts4 = new TaskStatus(status: 'REPLY_HAND', msgtype: 'INFO', sendTo: 'Director, Manager', msgtext: 'сегодня производство управляется в ручном режиме').save(failOnError: true)
+			Taskstatus ts4 = new Taskstatus(status: 'REPLY_HAND', msgtype: 'INFO', sendTo: 'Director, Manager', msgtext: 'сегодня производство управляется в ручном режиме').save(failOnError: true)
 			ts4.task = task1
 			//prepare
 			task1 = Task.find("from Task as a where a.name = ?", ['prepare'])
-			ts1 = new TaskStatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', msgtext: 'подтверди отсутствие отклонений по подготовке производства').save(failOnError: true)
+			ts1 = new Taskstatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', msgtext: 'подтверди отсутствие отклонений по подготовке производства').save(failOnError: true)
 			ts1.addToButtons(btn1)
 			ts1.addToButtons(btn2)
 			ts1.task = task1
-			ts2 = new TaskStatus(status: 'REPLY_NO', msgtype: 'CMD', sendTo: 'Director', msgtext: 'отклонения по подготовке производства, перейти в режим ручного управления').save(failOnError: true)
+			ts2 = new Taskstatus(status: 'REPLY_NO', msgtype: 'CMD', sendTo: 'Director', msgtext: 'отклонения по подготовке производства, перейти в режим ручного управления').save(failOnError: true)
 			ts2.addToButtons(btn3)
 			ts2.addToButtons(btn2)
 			ts2.task = task1
-			ts3 = new TaskStatus(status: 'REPLY_HAND', msgtype: 'INFO', sendTo: 'Director, Manager', msgtext: 'управление производством переводится в ручной режим из-за отклонений на этапе подготовки').save(failOnError: true)
+			ts3 = new Taskstatus(status: 'REPLY_HAND', msgtype: 'INFO', sendTo: 'Director, Manager', msgtext: 'управление производством переводится в ручной режим из-за отклонений на этапе подготовки').save(failOnError: true)
 			ts3.task = task1
 			//running
 			task1 = Task.find("from Task as a where a.name = ?", ['running'])
-			ts1 = new TaskStatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', msgtext: 'подтверди отсутствие отклонений при исполнении').save(failOnError: true)
+			ts1 = new Taskstatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', msgtext: 'подтверди отсутствие отклонений при исполнении').save(failOnError: true)
 			ts1.addToButtons(btn1)
 			ts1.addToButtons(btn2)
 			ts1.task = task1
-			ts2 = new TaskStatus(status: 'REPLY_NO', msgtype: 'CMD', sendTo: 'Director', msgtext: 'отклонения по подготовке производства, перейти в режим ручного управления').save(failOnError: true)
+			ts2 = new Taskstatus(status: 'REPLY_NO', msgtype: 'CMD', sendTo: 'Director', msgtext: 'отклонения по подготовке производства, перейти в режим ручного управления').save(failOnError: true)
 			ts2.addToButtons(btn3)
 			ts2.addToButtons(btn2)
 			ts2.task = task1
-			ts3 = new TaskStatus(status: 'REPLY_HAND', msgtype: 'INFO', sendTo: 'Director, Manager', msgtext: 'управление производством переводится в ручной режим из-за отклонений на этапе подготовки').save(failOnError: true)
+			ts3 = new Taskstatus(status: 'REPLY_HAND', msgtype: 'INFO', sendTo: 'Director, Manager', msgtext: 'управление производством переводится в ручной режим из-за отклонений на этапе подготовки').save(failOnError: true)
 			ts3.task = task1
 			//finish
 			task1 = Task.find("from Task as a where a.name = ?", ['finish'])
-			ts1 = new TaskStatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', msgtext: 'подтверди отсутствие отклонений в цикле производство').save(failOnError: true)
+			ts1 = new Taskstatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', msgtext: 'подтверди отсутствие отклонений в цикле производство').save(failOnError: true)
 			ts1.addToButtons(btn1)
 			ts1.addToButtons(btn2)
 			ts1.task = task1

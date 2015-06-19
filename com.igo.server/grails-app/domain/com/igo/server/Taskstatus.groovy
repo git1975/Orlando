@@ -1,6 +1,6 @@
 package com.igo.server
 
-class TaskStatus {
+class Taskstatus {
 	Task task
 	String status
 	String msgtype

@@ -4,7 +4,7 @@ import com.igo.server.Button
 import com.igo.server.Deviation
 import com.igo.server.Role
 import com.igo.server.Task
-import com.igo.server.TaskStatus
+import com.igo.server.Taskstatus
 import com.igo.server.User
 import com.igo.server.Process
 import com.igo.server.Queue
@@ -70,49 +70,49 @@ class BootStrap {
 			new Button(code: 'BTN_1', name: 'Хорошо', replystatus: 'REPLY_1').save(failOnError: true)
 			new Button(code: 'BTN_2', name: 'Плохо', replystatus: 'REPLY_2').save(failOnError: true)
 		}
-		if(!TaskStatus.count) {
+		if(!Taskstatus.count) {
 			Button btn1 = Button.find("from Button as a where a.code = ?", ['YES'])
 			Button btn2 = Button.find("from Button as a where a.code = ?", ['FINISH'])
 			Button btn3 = Button.find("from Button as a where a.code = ?", ['BTN_1'])
 			Button btn4 = Button.find("from Button as a where a.code = ?", ['BTN_2'])
 			
-			TaskStatus ts1, ts2, ts3, ts4
+			Taskstatus ts1, ts2, ts3, ts4
 			
 			//start
 			Task task1 = Task.find("from Task as a where a.name = ?", ['start'])
-			ts1 = new TaskStatus(status: 'INIT', msgtype: 'INFO', sendTo: 'Manager', color: 1, msgtext: 'Начинается цикл <process>, под контролем <user=user1>').save(failOnError: true)
+			ts1 = new Taskstatus(status: 'INIT', msgtype: 'INFO', sendTo: 'Manager', color: 1, msgtext: 'Начинается цикл <process>, под контролем <user=user1>').save(failOnError: true)
 			ts1.task = task1
 			//prepare
 			task1 = Task.find("from Task as a where a.name = ?", ['prepare'])
-			ts1 = new TaskStatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', color: 2, msgtext: 'Этап <stage>. Продолжить выполнение?').save(failOnError: true)
+			ts1 = new Taskstatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', color: 2, msgtext: 'Этап <stage>. Продолжить выполнение?').save(failOnError: true)
 			ts1.addToButtons(btn1)
 			ts1.addToButtons(btn2)
 			ts1.task = task1
-			ts2 = new TaskStatus(status: 'REPLY_YES', msgtype: 'INFO', sendTo: 'Manager', color: 1, msgtext: 'Штатный режим этапа <stage>').save(failOnError: true)
+			ts2 = new Taskstatus(status: 'REPLY_YES', msgtype: 'INFO', sendTo: 'Manager', color: 1, msgtext: 'Штатный режим этапа <stage>').save(failOnError: true)
 			ts2.task = task1
-			ts3 = new TaskStatus(status: 'REPLY_FINISH', msgtype: 'INFO', sendTo: 'Director, Manager', color: 1, msgtext: 'Досрочный финиш этапа <stage>').save(failOnError: true)
+			ts3 = new Taskstatus(status: 'REPLY_FINISH', msgtype: 'INFO', sendTo: 'Director, Manager', color: 1, msgtext: 'Досрочный финиш этапа <stage>').save(failOnError: true)
 			ts3.task = task1
 			//running
 			task1 = Task.find("from Task as a where a.name = ?", ['running'])
-			ts1 = new TaskStatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', color: 2, msgtext: 'Этап <stage>. Продолжить выполнение?').save(failOnError: true)
+			ts1 = new Taskstatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Manager', color: 2, msgtext: 'Этап <stage>. Продолжить выполнение?').save(failOnError: true)
 			ts1.addToButtons(btn1)
 			ts1.addToButtons(btn2)
 			ts1.task = task1
-			ts2 = new TaskStatus(status: 'REPLY_YES', msgtype: 'INFO', sendTo: 'Manager', color: 1, msgtext: 'Штатный режим этапа <stage>').save(failOnError: true)
+			ts2 = new Taskstatus(status: 'REPLY_YES', msgtype: 'INFO', sendTo: 'Manager', color: 1, msgtext: 'Штатный режим этапа <stage>').save(failOnError: true)
 			ts2.task = task1
-			ts3 = new TaskStatus(status: 'REPLY_FINISH', msgtype: 'INFO', sendTo: 'Director, Manager', color: 1, msgtext: 'Досрочный финиш этапа <stage>').save(failOnError: true)
+			ts3 = new Taskstatus(status: 'REPLY_FINISH', msgtype: 'INFO', sendTo: 'Director, Manager', color: 1, msgtext: 'Досрочный финиш этапа <stage>').save(failOnError: true)
 			ts3.task = task1
 			//finish
 			task1 = Task.find("from Task as a where a.name = ?", ['finish'])
-			ts1 = new TaskStatus(status: 'INIT', msgtype: 'INFO', sendTo: 'Director', color: 1, msgtext: 'Завершается цикл <process>').save(failOnError: true)
+			ts1 = new Taskstatus(status: 'INIT', msgtype: 'INFO', sendTo: 'Director', color: 1, msgtext: 'Завершается цикл <process>').save(failOnError: true)
 			ts1.task = task1
-			ts2 = new TaskStatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Director', color: 2, msgtext: 'Оцените исполнение цикла <process>?').save(failOnError: true)
+			ts2 = new Taskstatus(status: 'INIT', msgtype: 'CMD', sendTo: 'Director', color: 2, msgtext: 'Оцените исполнение цикла <process>?').save(failOnError: true)
 			ts2.addToButtons(btn3)
 			ts2.addToButtons(btn4)
 			ts2.task = task1
-			ts3 = new TaskStatus(status: 'REPLY_1', msgtype: 'INFO', sendTo: 'Director', color: 1, msgtext: 'Оценка цикла <process> Хорошо').save(failOnError: true)
+			ts3 = new Taskstatus(status: 'REPLY_1', msgtype: 'INFO', sendTo: 'Director', color: 1, msgtext: 'Оценка цикла <process> Хорошо').save(failOnError: true)
 			ts3.task = task1
-			ts4 = new TaskStatus(status: 'REPLY_2', msgtype: 'INFO', sendTo: 'Director', color: 1, msgtext: 'Оценка цикла <process> Плохо').save(failOnError: true)
+			ts4 = new Taskstatus(status: 'REPLY_2', msgtype: 'INFO', sendTo: 'Director', color: 1, msgtext: 'Оценка цикла <process> Плохо').save(failOnError: true)
 			ts4.task = task1
 		}
 	}

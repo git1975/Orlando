@@ -50,7 +50,7 @@
 									<input type="submit" value="Сохранить" />
 								</p>
 							</td>
-							<td><g:link controller="taskStatus" action="list">
+							<td><g:link controller="taskstatus" action="list">
 									<input type="button" value="Отмена" />
 								</g:link></td>
 						</tr>

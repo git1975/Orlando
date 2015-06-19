@@ -99,11 +99,11 @@ class JsonController {
 
 	def getMessage(Queue q, boolean isInfoStage){
 		Task t = Task.find("from Task as a where a.id = ?", [q.task.id])
-		TaskStatus ts
+		Taskstatus ts
 		if(isInfoStage){
-			ts = TaskStatus.find("from TaskStatus as a where a.task=? and a.status=? and a.msgtype='INFO' and a.status='INIT'", [t, q.status])
+			ts = Taskstatus.find("from Taskstatus as a where a.task=? and a.status=? and a.msgtype='INFO' and a.status='INIT'", [t, q.status])
 		} else {
-			ts = TaskStatus.find("from TaskStatus as a where a.task=? and a.status=? and ((a.msgtype!='INFO' and a.status='INIT')or(a.status!='INIT'))", [t, q.status])
+			ts = Taskstatus.find("from Taskstatus as a where a.task=? and a.status=? and ((a.msgtype!='INFO' and a.status='INIT')or(a.status!='INIT'))", [t, q.status])
 		}
 		//найден статус задачи, занесенный в шаблон
 		if(ts != null){
