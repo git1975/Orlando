@@ -242,8 +242,8 @@ class JsonController {
 
 	}
 
-	def List<Queue> getTopTask(List<Queue> list){
-		List<Queue> res = new ArrayList<Queue>()
+	def List getTopTask(List list){
+		List res = new ArrayList()
 		for(Queue item : list){
 			Date startdate = item.startdate
 			Date enddate = item.enddate
