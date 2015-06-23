@@ -8,7 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/metal_lines_stripes"
-        android:gravity="center_vertical|top"
+        android:gravity="center_vertical"
         android:orientation="vertical" >
 
         <TextView

@@ -25,7 +25,7 @@
 						${item.description}
 					</td>
 					<td>
-						${ item.active}
+						${item.active}
 					</td>
 					<td><g:form method="GET" url="[action:'edit', id:item.id]">
 							<p class="submit">
@@ -44,13 +44,15 @@
 		</table>
 		<table>
 			<tr>
-				<td><g:form method="GET" url="[action:'add']">
+				<td>
+					<g:form method="GET" url="[action:'add']">
 						<p class="submit">
 							<g:link action="add">
 								<g:img file="button-add.png" />
 							</g:link>
 						</p>
-					</g:form></td>
+					</g:form>
+				</td>
 			</tr>
 		</table>
 	</g:form>

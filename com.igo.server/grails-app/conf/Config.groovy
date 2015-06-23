@@ -151,7 +151,7 @@ environments {
 			}
 
 			root { off 'dailyAppender' }
-			info 'grails.app'
+			debug 'grails.app'
 		}
 	}
 }
