@@ -83,15 +83,21 @@ public class ChatMessageView extends RelativeLayout {
 		body += from + "\r\n";
 		body += item.getBody();
 
-		TextView tvBody = (TextView) findViewById(R.id.tv_chat_body);
-		tvBody.setText(body);
+		TextView tvBody1 = (TextView) findViewById(R.id.tv_chat_body_1);
+		TextView tvBody2 = (TextView) findViewById(R.id.tv_chat_body_2);
+		TextView tvBody3 = (TextView) findViewById(R.id.tv_chat_body_3);
+		tvBody2.setText(body);
 		
 		LinearLayout layoutChat = (LinearLayout) findViewById(R.id.layout_chat);
 		if (item.getFrom().equals(login.getLogin())) {
-			tvBody.setBackground(getResources().getDrawable(R.drawable.ic_speech2));
+			tvBody1.setBackground(getResources().getDrawable(R.drawable.ic_speech4_1));
+			tvBody2.setBackground(getResources().getDrawable(R.drawable.ic_speech4_2));
+			tvBody3.setBackground(getResources().getDrawable(R.drawable.ic_speech4_3));
 			layoutChat.setGravity(Gravity.LEFT);
 		}  else {
-			tvBody.setBackground(getResources().getDrawable(R.drawable.ic_speech3));
+			tvBody1.setBackground(getResources().getDrawable(R.drawable.ic_speech5_1));
+			tvBody2.setBackground(getResources().getDrawable(R.drawable.ic_speech5_2));
+			tvBody3.setBackground(getResources().getDrawable(R.drawable.ic_speech5_3));
 			layoutChat.setGravity(Gravity.RIGHT);
 		}
 	}

@@ -3,7 +3,9 @@ package com.igo.ui.android.remote;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.net.Authenticator;
 import java.net.HttpURLConnection;
+import java.net.PasswordAuthentication;
 import java.net.URL;
 
 import com.igo.ui.android.DataStorage;
@@ -55,6 +57,7 @@ public class CommandConnector extends AsyncTask<String, String, String> {
 		// HTTP Get
 		try {
 			System.out.println("try connect to " + urlString);
+			
 			URL url = new URL(urlString);
 
 			HttpURLConnection con = (HttpURLConnection) url.openConnection();

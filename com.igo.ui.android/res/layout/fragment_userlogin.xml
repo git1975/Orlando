@@ -7,9 +7,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/metal_lines_stripes"
+        android:background="@drawable/light_shiny_blue"
         android:gravity="center_vertical"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp" >
 
         <TextView
             android:id="@+id/tv_title"

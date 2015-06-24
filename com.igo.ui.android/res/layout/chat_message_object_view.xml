@@ -19,16 +19,35 @@
             android:orientation="horizontal" >
 
             <TextView
-                android:id="@+id/tv_chat_body"
+                android:id="@+id/tv_chat_body_1"
+                android:layout_width="12dp"
+                android:layout_height="fill_parent"
+                android:background="@drawable/ic_speech4_1"
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/tv_chat_body_2"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_speech2"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:text="TextView"
+                android:layout_height="fill_parent"
+                android:background="@drawable/ic_speech4_2"
+                android:maxWidth="300dp"
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
+                android:textColor="#000000" />
+
+            <TextView
+                android:id="@+id/tv_chat_body_3"
+                android:layout_width="12dp"
+                android:layout_height="fill_parent"
+                android:background="@drawable/ic_speech4_3"
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
                 android:textColor="#000000" />
 
         </LinearLayout>
+
     </RelativeLayout>
 
 </RelativeLayout>
