@@ -1,5 +1,7 @@
 package com.igo.ui.android.fragment;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Timer;
 
 import android.os.Bundle;
@@ -40,8 +42,15 @@ public class ChatSectionFragment extends Fragment {
 			public void onClick(View v) {
 				EditText etSendmsg = (EditText) rootView.findViewById(R.id.et_sendmsg);
 				
+				String body = etSendmsg.getText().toString();
+				try {
+					body = URLEncoder.encode(body, "UTF-8");
+				} catch (UnsupportedEncodingException e) {
+					body = URLEncoder.encode(body);
+					e.printStackTrace();
+				}
 				Command command = new Command(Command.SEND_CHAT);
-				command.putParam("body", etSendmsg.getText().toString());
+				command.putParam("body", body);
 				command.putParam("sendto", "user2");
 				CommandConnector con = new CommandConnector(getActivity()
 						.getApplicationContext(), command);

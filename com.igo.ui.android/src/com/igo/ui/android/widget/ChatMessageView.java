@@ -9,6 +9,7 @@ import com.igo.ui.android.domain.Login;
 import com.igo.ui.android.remote.Command;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -69,7 +70,7 @@ public class ChatMessageView extends RelativeLayout {
 		if (chatItem == null) {
 			return;
 		}
-		
+
 		DataStorage ds = (DataStorage) getContext();
 		Login login = (Login) ds.getData("login");
 		String from;
@@ -78,7 +79,7 @@ public class ChatMessageView extends RelativeLayout {
 		} else {
 			from = item.getFrom();
 		}
-		
+
 		String body = sdf.format(item.getSendDate()) + "-";
 		body += from + "\r\n";
 		body += item.getBody();
@@ -87,18 +88,30 @@ public class ChatMessageView extends RelativeLayout {
 		TextView tvBody2 = (TextView) findViewById(R.id.tv_chat_body_2);
 		TextView tvBody3 = (TextView) findViewById(R.id.tv_chat_body_3);
 		tvBody2.setText(body);
-		
+
 		LinearLayout layoutChat = (LinearLayout) findViewById(R.id.layout_chat);
 		if (item.getFrom().equals(login.getLogin())) {
-			tvBody1.setBackground(getResources().getDrawable(R.drawable.ic_speech4_1));
-			tvBody2.setBackground(getResources().getDrawable(R.drawable.ic_speech4_2));
-			tvBody3.setBackground(getResources().getDrawable(R.drawable.ic_speech4_3));
+			tvBody1.setBackground(getResources().getDrawable(
+					R.drawable.ic_speech4_1));
+			tvBody2.setBackground(getResources().getDrawable(
+					R.drawable.ic_speech4_2));
+			tvBody3.setBackground(getResources().getDrawable(
+					R.drawable.ic_speech4_3));
 			layoutChat.setGravity(Gravity.LEFT);
-		}  else {
-			tvBody1.setBackground(getResources().getDrawable(R.drawable.ic_speech5_1));
-			tvBody2.setBackground(getResources().getDrawable(R.drawable.ic_speech5_2));
-			tvBody3.setBackground(getResources().getDrawable(R.drawable.ic_speech5_3));
+		} else {
+			tvBody1.setBackground(getResources().getDrawable(
+					R.drawable.ic_speech5_1));
+			tvBody2.setBackground(getResources().getDrawable(
+					R.drawable.ic_speech5_2));
+			tvBody3.setBackground(getResources().getDrawable(
+					R.drawable.ic_speech5_3));
 			layoutChat.setGravity(Gravity.RIGHT);
+		}
+
+		if (tvBody2.getTypeface() == null) {
+			Typeface tf = Typeface.createFromAsset(getContext().getAssets(),
+					"fonts/TAHOMA.TTF");
+			tvBody2.setTypeface(tf);
 		}
 	}
 }
