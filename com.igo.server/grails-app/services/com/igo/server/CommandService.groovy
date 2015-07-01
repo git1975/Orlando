@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 
 import grails.transaction.Transactional
 
+import java.util.Date;
 import java.util.regex.Matcher
 import java.util.regex.Pattern;
 
@@ -47,6 +48,8 @@ class CommandService {
 
 		autoReply()
 
+		autoChat()
+
 		repeatEveryProcess()
 	}
 
@@ -58,11 +61,35 @@ class CommandService {
 			}
 		}
 	}
-	
+
 	def autoChat(){
 		def messages = getMessages();
 		for(MessageCommand mes: messages){
-			sendChat("auto", "user1", mes.body)
+
+			if(!checkChatExists(mes.body)){
+				sendChat("auto", "user1", mes.body)
+			}
+		}
+	}
+
+	def checkChatExists(String value){
+		Chat item = Chat.find("from Chat as a where body=? order by a.id desc", [value], [max: 1])
+		if(item == null){
+			return false;
+		}
+		
+		Long time = item.sendtime
+		Date dt = new Date();
+		dt.setTime(time);
+		
+		long minutesAgo = Utils.dateMinutesInterval(dt, new Date())
+		
+		log.println minutesAgo
+
+		if(minutesAgo > 5){
+			return false;
+		} else {
+			return true;
 		}
 	}
 
@@ -138,7 +165,7 @@ class CommandService {
 
 		return item
 	}
-	
+
 	def ArrayList getMessages(){
 		Date now = new Date()
 		Date processDate = new Date()
@@ -190,10 +217,10 @@ class CommandService {
 			mes.color = 3
 			messages.add(mes)
 		}
-		
+
 		return messages;
 	}
-	
+
 	def getMessage(Queue q, boolean isInfoStage){
 		Task t = Task.find("from Task as a where a.id = ?", [q.task.id])
 		Taskstatus ts
@@ -229,7 +256,7 @@ class CommandService {
 		}
 		return null
 	}
-	
+
 	/**
 	 * @param  Queue q
 	 * @param String body

@@ -79,6 +79,9 @@ public class ChatMessageView extends RelativeLayout {
 		} else {
 			from = item.getFrom();
 		}
+		if("auto".equals(from)){
+			from = "Система";
+		}
 
 		String body = sdf.format(item.getSendDate()) + "-";
 		body += from + "\r\n";
@@ -98,6 +101,14 @@ public class ChatMessageView extends RelativeLayout {
 			tvBody3.setBackground(getResources().getDrawable(
 					R.drawable.ic_speech4_3));
 			layoutChat.setGravity(Gravity.LEFT);
+		} else if (item.getFrom().equals("auto")) {
+			tvBody1.setBackground(getResources().getDrawable(
+					R.drawable.ic_speech6_1));
+			tvBody2.setBackground(getResources().getDrawable(
+					R.drawable.ic_speech6_2));
+			tvBody3.setBackground(getResources().getDrawable(
+					R.drawable.ic_speech6_3));
+			layoutChat.setGravity(Gravity.CENTER);
 		} else {
 			tvBody1.setBackground(getResources().getDrawable(
 					R.drawable.ic_speech5_1));

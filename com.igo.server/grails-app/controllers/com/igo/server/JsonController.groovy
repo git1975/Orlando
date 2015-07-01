@@ -69,7 +69,7 @@ class JsonController {
 
 		//Покажем инф. сообщение об этапах
 		for(Queue q: list){
-			def mes = getMessage(q, true)
+			def mes = commandService.getMessage(q, true)
 			if(mes == null){
 				mes = new MessageCommand()
 				mes.type = "INFO"
@@ -161,9 +161,20 @@ class JsonController {
 			//print "JsonController.getchat;maxid=" + maxid + ";minid=" + minid
 			list = Chat.findAll("from Chat as a where a.id > ? or a.id < ? order by a.id desc", [maxid, minid], [max: 10])
 		}
+		def List<ChatCommand> fullList = new ArrayList();
+		for(Chat chat: list){
+			ChatCommand chatCommand = new ChatCommand();
+			chatCommand.setChat(chat)
+			if("auto".equals(chat.sendfrom)){
+				MessageCommand mc = new MessageCommand()
+				mc.type = "Task"
+				mc.status = "CMD"
+				chatCommand.message = mc
+			}
+			fullList.add(chatCommand)
+		}
 
-
-		render list as JSON;
+		render fullList as JSON;
 	}
 
 	def sendchat() {
