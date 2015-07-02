@@ -69,7 +69,7 @@ class DataService {
 		item
 	}
 
-	def updateTaskStatus(Taskstatus item, String msgtext, String msgtype, String status, String lifetime, String color, String task, List buttons){
+	def updateTaskStatus(Taskstatus item, String msgtext, String msgtype, String status, String lifetime, String color, String task, List buttons, String sendTo){
 		if(item != null){
 			Task r = Task.find("from Task where name=?", [task])
 
@@ -80,6 +80,7 @@ class DataService {
 			item.status = status
 			item.lifetime = Integer.parseInt(lifetime)
 			item.color = Integer.parseInt(color)
+			item.sendTo = sendTo
 			item.task = r
 			//Buttons
 			Iterator<Object> i = buttons.iterator();

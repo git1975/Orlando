@@ -29,6 +29,11 @@ class TaskstatusController {
 
 			def Taskstatus item = Taskstatus.get(params.id)
 			def allbuttons = Button.findAll("from Button where code is not null")
+			def users = User.findAll("from User")
+			def allUser = new User();
+			allUser.login = "all"
+			allUser.username = "Все"
+			users.add(allUser)
 
 			if(item == null){
 				redirect action: 'list'
@@ -41,7 +46,7 @@ class TaskstatusController {
 				session["buttons"] = btns
 			}
 
-			return [item: item, tasks: Task.list(), buttons: btns, allbuttons: allbuttons]
+			return [item: item, tasks: Task.list(), buttons: btns, allbuttons: allbuttons, users: users]
 		}
 		log.debug("edit POST")
 
@@ -60,7 +65,7 @@ class TaskstatusController {
 		session["buttons"] = btns
 		
 		def item = dataService.updateTaskStatus(Taskstatus.get(params.id), params.item_msgtext, params.msgtype, params.item_status,
-				params.item_lifetime, params.color, params.taskSelect, session["buttons"])
+				params.item_lifetime, params.color, params.taskSelect, session["buttons"], params.sendTo)
 
 		session["buttons"] = null
 

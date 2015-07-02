@@ -38,6 +38,12 @@
 				</th>
 			</tr>
 			<tr>
+				<th>Кого информировать: <br /> <g:select name="sendTo"
+						from="${users}"
+						optionKey="login" optionValue="username" value="${ item.sendTo }" />
+				</th>
+			</tr>
+			<tr>
 				<th>Задача: <br /> <g:select name="taskSelect" from="${tasks}"
 						optionKey="name" optionValue="description"
 						value="${ item.task ? item.task.name : '1'}" />
