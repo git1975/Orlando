@@ -155,11 +155,11 @@ class JsonController {
 
 		def List<Chat> list;
 		if(minid == 0 && maxid == 0){
-			list = Chat.findAll("from Chat as a order by a.id desc", [max: 10])
+			list = Chat.findAll("from Chat as a where (sendto=? or sendto='all') and (sendfrom=? or sendfrom='auto') order by a.id desc", [params.login, params.login], [max: 10])
 			list = Utils.reverse(list);
 		} else {
 			//print "JsonController.getchat;maxid=" + maxid + ";minid=" + minid
-			list = Chat.findAll("from Chat as a where a.id > ? or a.id < ? order by a.id desc", [maxid, minid], [max: 10])
+			list = Chat.findAll("from Chat as a where (a.id > ? or a.id < ?) and (sendto=? or sendto='all') and (sendfrom=? or sendfrom='auto') order by a.id desc", [maxid, minid, params.login, params.login], [max: 10])
 		}
 		def List<ChatCommand> fullList = new ArrayList();
 		for(Chat chat: list){
@@ -180,7 +180,8 @@ class JsonController {
 	def sendchat() {
 		log.debug("JsonController.sendchat." + params.login + "." + params.sendto + ".body=" + params.body)
 
-		def item = commandService.sendChat(params.login, params.sendto, params.body)
+		//def item = commandService.sendChat(params.login, params.sendto, params.body)
+		def item = commandService.sendChat(params.login, "all", params.body)
 		def List<Chat> list = new ArrayList();
 		list.add(item)
 

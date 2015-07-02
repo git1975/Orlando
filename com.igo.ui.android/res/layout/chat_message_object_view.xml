@@ -20,12 +20,13 @@
 
             <TextView
                 android:id="@+id/tv_chat_body_1"
-                android:layout_width="12dp"
+                android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:background="@drawable/ic_speech4_1"
+                android:background="@drawable/ic_speech4_3"
                 android:paddingLeft="1dp"
                 android:paddingRight="1dp"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:width="12dp" />
 
             <TextView
                 android:id="@+id/tv_chat_body_2"
@@ -39,12 +40,13 @@
 
             <TextView
                 android:id="@+id/tv_chat_body_3"
-                android:layout_width="12dp"
+                android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:background="@drawable/ic_speech4_3"
+                android:background="@drawable/ic_speech4_1"
                 android:paddingLeft="1dp"
                 android:paddingRight="1dp"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:width="18dp" />
 
         </LinearLayout>
 

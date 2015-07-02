@@ -95,12 +95,12 @@ public class ChatMessageView extends RelativeLayout {
 		LinearLayout layoutChat = (LinearLayout) findViewById(R.id.layout_chat);
 		if (item.getFrom().equals(login.getLogin())) {
 			tvBody1.setBackground(getResources().getDrawable(
-					R.drawable.ic_speech4_1));
+					R.drawable.ic_speech4_3));
 			tvBody2.setBackground(getResources().getDrawable(
 					R.drawable.ic_speech4_2));
 			tvBody3.setBackground(getResources().getDrawable(
-					R.drawable.ic_speech4_3));
-			layoutChat.setGravity(Gravity.LEFT);
+					R.drawable.ic_speech4_1));
+			layoutChat.setGravity(Gravity.RIGHT);
 		} else if (item.getFrom().equals("auto")) {
 			tvBody1.setBackground(getResources().getDrawable(
 					R.drawable.ic_speech6_1));
@@ -111,12 +111,12 @@ public class ChatMessageView extends RelativeLayout {
 			layoutChat.setGravity(Gravity.CENTER);
 		} else {
 			tvBody1.setBackground(getResources().getDrawable(
-					R.drawable.ic_speech5_1));
+					R.drawable.ic_speech5_3));
 			tvBody2.setBackground(getResources().getDrawable(
 					R.drawable.ic_speech5_2));
 			tvBody3.setBackground(getResources().getDrawable(
-					R.drawable.ic_speech5_3));
-			layoutChat.setGravity(Gravity.RIGHT);
+					R.drawable.ic_speech5_1));
+			layoutChat.setGravity(Gravity.LEFT);
 		}
 
 		if (tvBody2.getTypeface() == null) {

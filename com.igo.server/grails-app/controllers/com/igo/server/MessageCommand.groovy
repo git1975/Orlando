@@ -11,6 +11,7 @@ public class MessageCommand {
 	String type
 	String body
 	String status
+	String sendTo
 	Date startdate
 	Date enddate
 	Button[] buttons

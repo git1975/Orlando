@@ -46,7 +46,7 @@ class CommandService {
 			}
 		}
 
-		autoReply()
+		//autoReply()
 
 		autoChat()
 
@@ -66,14 +66,14 @@ class CommandService {
 		def messages = getMessages();
 		for(MessageCommand mes: messages){
 
-			if(!checkChatExists(mes.body)){
-				sendChat("auto", "user1", mes.body)
+			if(!checkChatExists(mes)){
+				sendChat("auto", mes.sendTo, mes.body)
 			}
 		}
 	}
 
-	def checkChatExists(String value){
-		Chat item = Chat.find("from Chat as a where body=? order by a.id desc", [value], [max: 1])
+	def checkChatExists(MessageCommand mes){
+		Chat item = Chat.find("from Chat as a where body=? order by a.id desc", [mes.body], [max: 1])
 		if(item == null){
 			return false;
 		}
@@ -192,6 +192,7 @@ class CommandService {
 			if(mes == null){
 				mes = new MessageCommand()
 				mes.type = "INFO"
+				mes.sendTo = "all"
 			}
 
 			messages.add(mes)
@@ -209,12 +210,14 @@ class CommandService {
 			if(mes == null){
 				mes = new MessageCommand()
 				mes.type = "INFO"
+				mes.sendTo = "all"
 			}
 			mes.setQueue(q)
 			mes.body = "Просрочка"
 			mes.type = "INFO"
 			mes.status = "INIT"
 			mes.color = 3
+			
 			messages.add(mes)
 		}
 
@@ -237,6 +240,7 @@ class CommandService {
 			mes.type = ts.msgtype
 			mes.status = q.status
 			mes.color = ts.color
+			mes.sendTo = ts.sendTo
 			mes.buttons = new Button[ts.buttons.size()]
 			for(int i = 0; i < ts.buttons.size(); i++){
 				mes.buttons[i] = ts.buttons[i]
