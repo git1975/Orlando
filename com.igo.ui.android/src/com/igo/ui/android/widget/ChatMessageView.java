@@ -10,6 +10,9 @@ import com.igo.ui.android.remote.Command;
 import com.igo.ui.android.remote.CommandConnector;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -96,7 +99,7 @@ public class ChatMessageView extends RelativeLayout {
 		TextView tvBody2 = (TextView) findViewById(R.id.tv_chat_body_2);
 		TextView tvBody3 = (TextView) findViewById(R.id.tv_chat_body_3);
 		tvBody2.setText(body);
-
+		
 		LinearLayout layoutChat = (LinearLayout) findViewById(R.id.layout_chat);
 		if (item.getFrom().equals(login.getLogin())) {
 			tvBody1.setBackground(getResources().getDrawable(
@@ -129,6 +132,13 @@ public class ChatMessageView extends RelativeLayout {
 					"fonts/TAHOMA.TTF");
 			tvBody2.setTypeface(tf);
 		}
+		
+		Canvas canvas = new Canvas();
+		canvas.translate(20, 20);
+		Paint paint = new Paint();
+		paint.setColor(Color.rgb(0, 0, 0));
+		canvas.drawLine(0, 0, 20, 20, paint);
+		tvBody2.draw(canvas);
 
 		View viewChatCmd = findViewById(R.id.layout_chat_cmd);
 		viewChatCmd.setVisibility(View.INVISIBLE);

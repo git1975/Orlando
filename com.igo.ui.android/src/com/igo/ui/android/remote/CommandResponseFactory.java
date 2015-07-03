@@ -54,7 +54,7 @@ public class CommandResponseFactory {
 					item.setBody(getJsonValue(jObj, "body"));
 
 					String message = getJsonValue(jObj, "message");
-					if (message != null && !"".equals(message)) {
+					if (message != null && !"".equals(message) && !"null".equals(message)) {
 						JSONObject jTask = new JSONObject(message);
 						item.setTask(parseTaskJson(jTask));
 					}
