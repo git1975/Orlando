@@ -6,11 +6,13 @@ class Chat {
 	Date senddate
 	Long sendtime
 	String body
+	String xmlcontent
 
     byte[] picture
 
     static constraints = {
         picture(nullable:true)
+		xmlcontent size: 1..5000
     }
     
     static mapping = {

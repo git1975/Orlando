@@ -165,14 +165,10 @@ class JsonController {
 		for(Chat chat: list){
 			ChatCommand chatCommand = new ChatCommand();
 			chatCommand.setChat(chat)
-			if("auto".equals(chat.sendfrom)){
-				MessageCommand mc = new MessageCommand()
-				mc.type = "Task"
-				mc.status = "CMD"
-				chatCommand.message = mc
-			}
 			fullList.add(chatCommand)
 		}
+		
+		log.println fullList as JSON
 
 		render fullList as JSON;
 	}

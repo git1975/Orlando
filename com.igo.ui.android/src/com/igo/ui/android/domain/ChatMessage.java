@@ -8,6 +8,15 @@ public class ChatMessage {
 	private String to;
 	private Date sendDate;
 	private String body;
+	private Task task;
+
+	public Task getTask() {
+		return task;
+	}
+
+	public void setTask(Task task) {
+		this.task = task;
+	}
 
 	public String getFrom() {
 		return from;

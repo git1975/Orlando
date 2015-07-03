@@ -34,45 +34,12 @@ public class CommandResponseFactory {
 				tasks = new Task[jArr.length()];
 				for (int i = 0; i < jArr.length(); i++) {
 					JSONObject jObj = jArr.getJSONObject(i);
-					JSONArray jButtons = null;
-					Object jBut = jObj.get("buttons");
-					if(jBut != null && !"null".equals(jBut.toString())){
-						jButtons = jObj.getJSONArray("buttons");
-					}
-					Task task = new Task();
-					
-					String type = getJsonValue(jObj, "type");
-					//Special message type CLEAR, if there are no messages
-					if("CLEAR".equals(type) && jArr.length() == 0){
-						task.setType(type);
-						tasks[i] = task;
-						break;
-					}
-					
-					task.setId(getJsonValue(jObj, "id"));
-					task.setName(getJsonValue(jObj, "name"));
-					task.setStartDate(getJsonValue(jObj, "dt1"));
-					task.setEndDate(getJsonValue(jObj, "dt2"));
-					task.setType(getJsonValue(jObj, "type"));
-					task.setBody(getJsonValue(jObj, "body"));
-					task.setStatus(getJsonValue(jObj, "status"));
-					task.setColor(getJsonInt(jObj, "color"));
-					if (jButtons != null) {
-						Button[] b = new Button[jButtons.length()];
-						for (int k = 0; k < jButtons.length(); k++) {
-							JSONObject jBtn = jButtons.getJSONObject(k);
-							b[k] = new Button();
-							b[k].setCode(getJsonValue(jBtn, "code"));
-							b[k].setName(getJsonValue(jBtn, "name"));
-							b[k].setReplystatus(getJsonValue(jBtn,
-									"replystatus"));
-						}
-						task.setButtons(b);
-					}
+					Task task = parseTaskJson(jObj);
 					tasks[i] = task;
 				}
 				objResult = tasks;
-			} else if (Command.GET_CHAT.equals(command) || Command.SEND_CHAT.equals(command)) {
+			} else if (Command.GET_CHAT.equals(command)
+					|| Command.SEND_CHAT.equals(command)) {
 
 				ChatMessage[] items = null;
 				JSONArray jArr = new JSONArray(result);
@@ -85,6 +52,13 @@ public class CommandResponseFactory {
 					item.setFrom(getJsonValue(jObj, "sendfrom"));
 					item.setTo(getJsonValue(jObj, "sendto"));
 					item.setBody(getJsonValue(jObj, "body"));
+
+					String message = getJsonValue(jObj, "message");
+					if (message != null && !"".equals(message)) {
+						JSONObject jTask = new JSONObject(message);
+						item.setTask(parseTaskJson(jTask));
+					}
+
 					Long time = 0L;
 					try {
 						time = Long.decode(getJsonValue(jObj, "sendtime"));
@@ -115,11 +89,42 @@ public class CommandResponseFactory {
 			return "";
 		}
 	}
+
 	private static int getJsonInt(JSONObject obj, String name) {
 		try {
 			return Integer.parseInt(obj.getString(name));
 		} catch (JSONException e) {
 			return 0;
 		}
+	}
+
+	private static Task parseTaskJson(JSONObject jObj) throws JSONException {
+		Task task = new Task();
+		JSONArray jButtons = null;
+		Object jBut = jObj.get("buttons");
+		if (jBut != null && !"null".equals(jBut.toString())) {
+			jButtons = jObj.getJSONArray("buttons");
+		}
+		task.setId(getJsonValue(jObj, "id"));
+		task.setName(getJsonValue(jObj, "name"));
+		task.setStartDate(getJsonValue(jObj, "dt1"));
+		task.setEndDate(getJsonValue(jObj, "dt2"));
+		task.setType(getJsonValue(jObj, "type"));
+		task.setBody(getJsonValue(jObj, "body"));
+		task.setStatus(getJsonValue(jObj, "status"));
+		task.setColor(getJsonInt(jObj, "color"));
+		if (jButtons != null) {
+			Button[] b = new Button[jButtons.length()];
+			for (int k = 0; k < jButtons.length(); k++) {
+				JSONObject jBtn = jButtons.getJSONObject(k);
+				b[k] = new Button();
+				b[k].setCode(getJsonValue(jBtn, "code"));
+				b[k].setName(getJsonValue(jBtn, "name"));
+				b[k].setReplystatus(getJsonValue(jBtn, "replystatus"));
+			}
+			task.setButtons(b);
+		}
+
+		return task;
 	}
 }

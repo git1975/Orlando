@@ -2,6 +2,7 @@ package com.igo.server
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import groovy.json.JsonSlurper
 
 public class MessageCommand {
 	public static SimpleDateFormat sdfFull = new SimpleDateFormat("yyyy-MM-ddHH:mm:ssZ");
@@ -24,7 +25,7 @@ public class MessageCommand {
 		this.startdate = q.startdate
 		this.enddate = q.enddate
 	}
-
+	
 	static constraints={
 		
 	}

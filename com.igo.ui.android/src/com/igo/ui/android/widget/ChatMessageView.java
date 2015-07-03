@@ -7,12 +7,15 @@ import com.igo.ui.android.R;
 import com.igo.ui.android.domain.ChatMessage;
 import com.igo.ui.android.domain.Login;
 import com.igo.ui.android.remote.Command;
+import com.igo.ui.android.remote.CommandConnector;
 
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -22,6 +25,8 @@ import android.widget.Toast;
 public class ChatMessageView extends RelativeLayout {
 	private ChatMessage chatItem = null;
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+
+	private String taskId = null;
 
 	public ChatMessageView(Context context, ChatMessage item) {
 		super(context);
@@ -79,7 +84,7 @@ public class ChatMessageView extends RelativeLayout {
 		} else {
 			from = item.getFrom();
 		}
-		if("auto".equals(from)){
+		if ("auto".equals(from)) {
 			from = "Система";
 		}
 
@@ -123,6 +128,50 @@ public class ChatMessageView extends RelativeLayout {
 			Typeface tf = Typeface.createFromAsset(getContext().getAssets(),
 					"fonts/TAHOMA.TTF");
 			tvBody2.setTypeface(tf);
+		}
+
+		View viewChatCmd = findViewById(R.id.layout_chat_cmd);
+		viewChatCmd.setVisibility(View.INVISIBLE);
+		Button btnYes = (Button) findViewById(R.id.chat_btn1);
+		Button btnNo = (Button) findViewById(R.id.chat_btn2);
+		btnYes.setVisibility(View.INVISIBLE);
+		btnNo.setVisibility(View.INVISIBLE);
+		if (item.getTask() != null) {
+			viewChatCmd.setVisibility(View.VISIBLE);
+			com.igo.ui.android.domain.Button[] buttons = item.getTask()
+					.getButtons();
+			taskId = item.getTask().getId();
+			if (buttons != null) {
+				int counter = 0;
+				for (com.igo.ui.android.domain.Button btn : buttons) {
+					counter++;
+					if (btn != null) {
+						Button btnC = btnYes;
+						switch (counter) {
+						case 1:
+							btnC = btnYes;
+							break;
+						case 2:
+							btnC = btnNo;
+							break;
+						}
+						btnC.setVisibility(View.VISIBLE);
+						btnC.setText(btn.getName());
+						btnC.setTag(btn.getReplystatus());
+						btnC.setOnClickListener(new OnClickListener() {
+							public void onClick(View v) {
+								Command command = new Command(Command.REPLY);
+								command.putParam("id", taskId);
+								command.putParam("reply", v.getTag().toString());
+								CommandConnector con = new CommandConnector(
+										getContext(), command);
+
+								con.execute("");
+							}
+						});
+					}
+				}
+			}
 		}
 	}
 }

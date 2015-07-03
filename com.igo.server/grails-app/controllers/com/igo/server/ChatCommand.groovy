@@ -10,9 +10,8 @@ public class ChatCommand {
 	Date senddate
 	Long sendtime
 	String body
-	
-	MessageCommand message
-	
+	String message
+
 	def setChat(Chat chat){
 		sendfrom = chat.sendfrom
 		sendto = chat.sendto
@@ -20,5 +19,6 @@ public class ChatCommand {
 		sendtime = chat.sendtime
 		body = chat.body
 		id = chat.id
+		message = chat.xmlcontent
 	}
 }

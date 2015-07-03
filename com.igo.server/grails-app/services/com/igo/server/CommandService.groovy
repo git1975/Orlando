@@ -2,6 +2,7 @@ package com.igo.server
 
 import java.text.SimpleDateFormat;
 
+import grails.converters.JSON
 import grails.transaction.Transactional
 
 import java.util.Date;
@@ -67,7 +68,19 @@ class CommandService {
 		for(MessageCommand mes: messages){
 
 			if(!checkChatExists(mes)){
-				sendChat("auto", mes.sendTo, mes.body)
+				log.println mes as JSON
+				//this.sendChat("auto", mes.sendTo, mes.body, mes as JSON)
+				Chat item = new Chat()
+
+				Date now = new Date()
+
+				item.sendfrom = "auto"
+				item.sendto = mes.sendTo
+				item.body = mes.body
+				item.senddate = now
+				item.sendtime = now.getTime()
+				item.xmlcontent = (mes as JSON)
+				item.save(failOnError: true)
 			}
 		}
 	}
@@ -77,13 +90,13 @@ class CommandService {
 		if(item == null){
 			return false;
 		}
-		
+
 		Long time = item.sendtime
 		Date dt = new Date();
 		dt.setTime(time);
-		
+
 		long minutesAgo = Utils.dateMinutesInterval(dt, new Date())
-		
+
 		log.println minutesAgo
 
 		if(minutesAgo > 5){
@@ -217,7 +230,7 @@ class CommandService {
 			mes.type = "INFO"
 			mes.status = "INIT"
 			mes.color = 3
-			
+
 			messages.add(mes)
 		}
 
