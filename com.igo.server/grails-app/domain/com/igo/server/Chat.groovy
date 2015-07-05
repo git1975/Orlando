@@ -7,6 +7,7 @@ class Chat {
 	Long sendtime
 	String body
 	String xmlcontent
+	String replystatus
 
     byte[] picture
 

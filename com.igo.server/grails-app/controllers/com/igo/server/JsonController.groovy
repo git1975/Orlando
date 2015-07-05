@@ -108,31 +108,39 @@ class JsonController {
 	}
 
 	def reply() {
-		log.debug("JsonController.reply." + params.id + "." + params.reply)
+		log.debug("JsonController.reply." + params.id + "." + params.reply + "." + params.forStatus + "." + params.chatid)
 
-		Queue queue = commandService.replyQueue(java.lang.Long.parseLong(params.id), params.reply)
+		Queue queue = commandService.replyQueue(java.lang.Long.parseLong(params.id), params.reply, params.forStatus)
 
-		if(queue != null){
-			render "{'result':'OK'}";
-		} else {
-			render "{'result':'queue is null'}";
-		}
+		def res = null;
+		if(params.chatid != null && params.chatid != ""){
+			commandService.replyChat(params.chatid, params.reply)
 
-	}
-
-	def List getTopTask(List list){
-		List res = new ArrayList()
-		for(Queue item : list){
-			Date startdate = item.startdate
-			Date enddate = item.enddate
-			Date dt = new Date()
-
-			if(Utils.isTimeInInterval(dt, startdate, enddate)){
-				res.add(item)
+			if(queue != null){
+				Button btn = Button.find("from Button where replystatus=?", [params.reply])
+				if(btn != null){
+					res = "{'result':'" + btn.name + "'}"
+				} else {
+					res = "{'result':'OK'}"
+				}
+			} else {
+				res = "{'result':'Просрочка'}"
 			}
 		}
+		if(res != null){
+			log.debug(res)
+			render res
+			return
+		}		
 
-		return res
+		if(queue != null){
+			log.debug("{'result':'OK'}")
+			render "{'result':'OK'}"
+		} else {
+			log.debug("{'result':'0'}")
+			render "{'result':'0'}"
+		}
+
 	}
 
 	def getchat() {
@@ -159,15 +167,21 @@ class JsonController {
 			list = Utils.reverse(list);
 		} else {
 			//print "JsonController.getchat;maxid=" + maxid + ";minid=" + minid
-			list = Chat.findAll("from Chat as a where (a.id > ? or a.id < ?) and (sendto=? or sendto='all') and (sendfrom=? or sendfrom='auto') order by a.id desc", [maxid, minid, params.login, params.login], [max: 10])
+			list = Chat.findAll("from Chat as a where (a.id > ? or a.id < ?) and (sendto=? or sendto='all') order by a.id desc", [maxid, minid, params.login], [max: 10])
 		}
 		def List<ChatCommand> fullList = new ArrayList();
 		for(Chat chat: list){
 			ChatCommand chatCommand = new ChatCommand();
 			chatCommand.setChat(chat)
+			if(chat.replystatus != null){
+				Button btn = Button.find("from Button where replystatus=?", [chat.replystatus])
+				if(btn != null){
+					chatCommand.message = "{'replytext':'" + btn.name + "'}";
+				}
+			}
 			fullList.add(chatCommand)
 		}
-		
+
 		log.println fullList as JSON
 
 		render fullList as JSON;

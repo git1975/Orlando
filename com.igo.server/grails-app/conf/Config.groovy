@@ -124,7 +124,7 @@ environments {
 				console name:'stdout', layout: pattern(conversionPattern:'%d [%t] %-5p %c{2} %x - %m%n')
 			}
 
-			root { off 'stdout', 'dailyAppender' }
+			root { error 'stdout', 'dailyAppender' }
 			all 'grails.app'
 		}
 	}

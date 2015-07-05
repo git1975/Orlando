@@ -11,6 +11,7 @@ public class MessageCommand {
 	String name
 	String type
 	String body
+	String forStatus
 	String status
 	String sendTo
 	Date startdate

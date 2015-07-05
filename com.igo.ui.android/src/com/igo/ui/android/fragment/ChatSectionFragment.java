@@ -61,10 +61,10 @@ public class ChatSectionFragment extends Fragment {
 			}
 		});
 
-		/*ChatTimerTask task = ChatTimerTask.getInstance(getActivity()
+		ChatTimerTask task = ChatTimerTask.getInstance(getActivity()
 				.getApplicationContext(), adapter);
 		timer = new Timer("ChatTimer");
-		timer.schedule(task, 0, 5000);*/
+		timer.schedule(task, 0, 5000);
 
 		return rootView;
 	}

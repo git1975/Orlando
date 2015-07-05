@@ -5,14 +5,24 @@ public class Task {
 	private String name;
 	private String body;
 	private String type;
+	private String forStatus;
 	private String status;
 	private String startDate;
 	private String endDate;
 	private Button[] buttons;
 	private int color;
+	private String replytext;
 
 	public String getId() {
 		return id;
+	}
+
+	public String getReplytext() {
+		return replytext;
+	}
+
+	public void setReplytext(String replytext) {
+		this.replytext = replytext;
 	}
 
 	public String getName() {
@@ -81,5 +91,13 @@ public class Task {
 
 	public void setColor(int color) {
 		this.color = color;
+	}
+
+	public String getForStatus() {
+		return forStatus;
+	}
+
+	public void setForStatus(String forStatus) {
+		this.forStatus = forStatus;
 	}
 }

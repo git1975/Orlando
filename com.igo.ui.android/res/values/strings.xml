@@ -20,4 +20,9 @@
 	<string name="str_send">Послать</string>
 	<string name="str_iam">Я</string>
 	<string name="str_0">0</string>
+	<string name="tag_id">1</string>
+	<string name="tag_reply">2</string>
+	<string name="tag_forStatus">3</string>
+	<string name="tag_parent">4</string>
+	<string name="tag_chatid">5</string>
 </resources>

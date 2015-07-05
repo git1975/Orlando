@@ -28,6 +28,9 @@ public class CommandResponseFactory {
 			} else if (Command.TASK_COMMIT.equals(command)) {
 				JSONObject jObj = new JSONObject(result);
 				objResult = jObj.getString("result");
+			} else if (Command.REPLY.equals(command)) {
+				JSONObject jObj = new JSONObject(result);
+				objResult = jObj.getString("result");
 			} else if (Command.SHOW.equals(command)) {
 				Task[] tasks = null;
 				JSONArray jArr = new JSONArray(result);
@@ -82,7 +85,7 @@ public class CommandResponseFactory {
 		return objResult;
 	}
 
-	private static String getJsonValue(JSONObject obj, String name) {
+	public static String getJsonValue(JSONObject obj, String name) {
 		try {
 			return obj.getString(name);
 		} catch (JSONException e) {
@@ -90,7 +93,7 @@ public class CommandResponseFactory {
 		}
 	}
 
-	private static int getJsonInt(JSONObject obj, String name) {
+	public static int getJsonInt(JSONObject obj, String name) {
 		try {
 			return Integer.parseInt(obj.getString(name));
 		} catch (JSONException e) {
@@ -98,8 +101,13 @@ public class CommandResponseFactory {
 		}
 	}
 
-	private static Task parseTaskJson(JSONObject jObj) throws JSONException {
+	public static Task parseTaskJson(JSONObject jObj) throws JSONException {
 		Task task = new Task();
+		if(!"".equals(getJsonValue(jObj, "replytext"))){
+			task.setReplytext(getJsonValue(jObj, "replytext"));
+			return task;
+		}
+		
 		JSONArray jButtons = null;
 		Object jBut = jObj.get("buttons");
 		if (jBut != null && !"null".equals(jBut.toString())) {
@@ -112,6 +120,7 @@ public class CommandResponseFactory {
 		task.setType(getJsonValue(jObj, "type"));
 		task.setBody(getJsonValue(jObj, "body"));
 		task.setStatus(getJsonValue(jObj, "status"));
+		task.setForStatus(getJsonValue(jObj, "forStatus"));
 		task.setColor(getJsonInt(jObj, "color"));
 		if (jButtons != null) {
 			Button[] b = new Button[jButtons.length()];

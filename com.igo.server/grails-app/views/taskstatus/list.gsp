@@ -15,6 +15,7 @@
 					<th>Статус</th>
 					<th>Время жизни</th>
 					<th>Светофор</th>
+					<th>Кому</th>
 					<th>Задача</th>
 					<th></th>
 				</tr>
@@ -35,6 +36,9 @@
 					</td>
 					<td>
 						${item.color}
+					</td>
+					<td>
+						${item.sendTo}
 					</td>
 					<td>
 					${ item.task ? item.task.description : '?'}

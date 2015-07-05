@@ -99,7 +99,7 @@ class CommandService {
 
 		log.println minutesAgo
 
-		if(minutesAgo > 5){
+		if(minutesAgo > 2){
 			return false;
 		} else {
 			return true;
@@ -153,8 +153,8 @@ class CommandService {
 		return queue
 	}
 
-	def Queue replyQueue(long id, String reply) {
-		Queue queue = Queue.find("from Queue as q where q.id = ?", [id])
+	def Queue replyQueue(long id, String reply, String forStatus) {
+		Queue queue = Queue.find("from Queue as q where q.id = ? and q.status=?", [id, forStatus])
 		if(queue == null){
 			return null;
 		}
@@ -162,6 +162,17 @@ class CommandService {
 		queue.save(failOnError: true)
 
 		return queue
+	}
+	
+	def Chat replyChat(String id, String replystatus) {
+		Chat item = Chat.get(id)
+		if(item == null){
+			return null;
+		}
+		item.replystatus = replystatus
+		item.save(failOnError: true)
+
+		return item
 	}
 
 	def Chat sendChat(String from, String to, String body) {
@@ -249,9 +260,11 @@ class CommandService {
 		if(ts != null){
 			def mes = new MessageCommand()
 			mes.setQueue(q)
+			mes.id = q.id
 			mes.body = ts.msgtext
 			mes.type = ts.msgtype
 			mes.status = q.status
+			mes.forStatus = ts.status
 			mes.color = ts.color
 			mes.sendTo = ts.sendTo
 			mes.buttons = new Button[ts.buttons.size()]

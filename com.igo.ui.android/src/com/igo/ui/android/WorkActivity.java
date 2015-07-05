@@ -105,13 +105,15 @@ public class WorkActivity extends FragmentActivity implements
 		@Override
 		public Fragment getItem(int i) {
 			switch (i) {
-			case 0:
+			/*case 0:
 				View v = findViewById(R.id.v_status);
 				return new LaunchpadSectionFragment(v);
 			case 1:
 				return new ChatSectionFragment();	
 			case 2:
-				return new ReportSectionFragment();								
+				return new ReportSectionFragment();*/	
+			case 0:
+				return new ChatSectionFragment();
 
 			default:
 				Fragment fragment = new DummySectionFragment();
@@ -124,13 +126,13 @@ public class WorkActivity extends FragmentActivity implements
 
 		@Override
 		public int getCount() {
-			return 3;
+			return 1;
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
 			if(position == 0){
-				return "Задачи";
+				return "Переписка";
 			} else if(position == 1){
 				return "Переписка";
 			} else if(position == 2){
