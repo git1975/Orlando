@@ -9,6 +9,7 @@ public class ChatMessage {
 	private Date sendDate;
 	private String body;
 	private Task task;
+	private String chatcode;
 
 	public Task getTask() {
 		return task;
@@ -65,5 +66,13 @@ public class ChatMessage {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getChatcode() {
+		return chatcode;
+	}
+
+	public void setChatcode(String chatcode) {
+		this.chatcode = chatcode;
 	}
 }

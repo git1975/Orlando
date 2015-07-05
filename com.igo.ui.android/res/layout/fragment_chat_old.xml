@@ -1,13 +1,13 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="fill_parent"
-    android:background="@drawable/light_shiny_blue" >
+    android:layout_height="match_parent" >
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="fill_vertical"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <ListView
             android:id="@+id/list_chat_view"
@@ -42,9 +42,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/str_send" />
-
         </LinearLayout>
+    </FrameLayout>
 
-    </LinearLayout>
+    <ListView
+        android:id="@+id/left_drawer"
+        android:layout_width="240dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#111"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp" />
 
-</FrameLayout>
+</android.support.v4.widget.DrawerLayout>

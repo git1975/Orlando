@@ -14,17 +14,27 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.igo.ui.android.DataStorage;
 import com.igo.ui.android.R;
 import com.igo.ui.android.adapter.ChatViewAdapter;
+import com.igo.ui.android.domain.ChatsItem;
+import com.igo.ui.android.domain.Login;
 import com.igo.ui.android.remote.Command;
 import com.igo.ui.android.remote.CommandConnector;
 import com.igo.ui.android.timer.ChatTimerTask;
 
 public class ChatSectionFragment extends Fragment {
-	private Timer timer = null;
+	final Timer timer = new Timer("ChatTimer");
 	private ListView view;
 	private ChatViewAdapter adapter;
-	View rootView;
+	private View rootView;
+	private ChatsItem chatsItem; 
+	private String login;
+	
+	public ChatSectionFragment(ChatsItem chatsItem, String login){
+		this.chatsItem = chatsItem;
+		this.login = login;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -51,7 +61,14 @@ public class ChatSectionFragment extends Fragment {
 				}
 				Command command = new Command(Command.SEND_CHAT);
 				command.putParam("body", body);
-				command.putParam("sendto", "user2");
+				if(chatsItem.isIspersonal()){
+					command.putParam("sendto", chatsItem.getCode());
+					command.putParam("chatcode", chatsItem.getCode() + "-" + login);
+				} else {
+					command.putParam("sendto", "all");
+					command.putParam("chatcode", chatsItem.getCode());
+				}
+				
 				CommandConnector con = new CommandConnector(getActivity()
 						.getApplicationContext(), command);
 				con.setOnCommandEndListener(adapter);
@@ -61,10 +78,7 @@ public class ChatSectionFragment extends Fragment {
 			}
 		});
 
-		ChatTimerTask task = ChatTimerTask.getInstance(getActivity()
-				.getApplicationContext(), adapter);
-		timer = new Timer("ChatTimer");
-		timer.schedule(task, 0, 5000);
+		timer.schedule(new ChatTimerTask(getActivity().getApplicationContext(), adapter, chatsItem.getCode()), 0, 5000);
 
 		return rootView;
 	}
@@ -73,6 +87,7 @@ public class ChatSectionFragment extends Fragment {
 	public void onDestroyView() {
 		if (timer != null) {
 			timer.cancel();
+			timer.purge();
 		}
 		super.onDestroyView();
 	}

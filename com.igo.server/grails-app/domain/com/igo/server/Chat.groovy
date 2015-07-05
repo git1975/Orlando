@@ -8,6 +8,7 @@ class Chat {
 	String body
 	String xmlcontent
 	String replystatus
+	String chatcode
 
     byte[] picture
 

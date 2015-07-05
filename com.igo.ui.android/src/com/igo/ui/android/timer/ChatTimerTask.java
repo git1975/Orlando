@@ -13,6 +13,7 @@ public class ChatTimerTask extends TimerTask implements OnCommandEndListener {
 	private static ChatTimerTask mt = null;
 	long maxid = 0;
 	long minid = 0;
+	String chatcode;
 
 	public long getMinid() {
 		return minid;
@@ -26,9 +27,9 @@ public class ChatTimerTask extends TimerTask implements OnCommandEndListener {
 	private Context context = null;
 
 	public static ChatTimerTask getInstance(Context context,
-			OnCommandEndListener onCommandEndListener) {
+			OnCommandEndListener onCommandEndListener, String chatcode) {
 		if (mt == null) {
-			mt = new ChatTimerTask(context, onCommandEndListener);
+			mt = new ChatTimerTask(context, onCommandEndListener, chatcode);
 		}
 		return mt;
 	}
@@ -37,11 +38,12 @@ public class ChatTimerTask extends TimerTask implements OnCommandEndListener {
 		return mt;
 	}
 
-	private ChatTimerTask(Context context,
-			OnCommandEndListener onCommandEndListener) {
+	public ChatTimerTask(Context context,
+			OnCommandEndListener onCommandEndListener, String chatcode) {
 		super();
 		this.context = context;
 		this.onCommandEndListener = onCommandEndListener;
+		this.chatcode = chatcode;
 	}
 
 	@Override
@@ -51,6 +53,7 @@ public class ChatTimerTask extends TimerTask implements OnCommandEndListener {
 		Command command = new Command(Command.GET_CHAT);
 		command.putParam("maxid", maxid + "");
 		command.putParam("minid", minid + "");
+		command.putParam("chatcode", chatcode);
 		CommandConnector con = new CommandConnector(context, command);
 		con.setOnCommandEndListener(this);
 		con.execute("");

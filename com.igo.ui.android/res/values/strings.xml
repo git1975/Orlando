@@ -3,26 +3,35 @@
 
     <string name="hello">Hello World, MasterActivity!</string>
     <string name="app_name">SOLITY</string>
-
     <string name="dummy_section_text">Section %1d is just a dummy section.</string>
-
     <string name="demo_external_activity">Demo External Activity</string>
     <string name="demo_collection">Demo Collection</string>
     <string name="mi_server_address">Адрес сервера (например 192.168.0.1:8080)</string>
     <string name="mi_edit_settings">Настройки</string>
+    <string name="str_app_quit">Выход</string>
     <string name="str_login">Логин</string>
     <string name="str_password">Пароль</string>
     <string name="srt_enter">Вход</string>
-	<string name="srt_login_failed">Неверное имя или пароль</string>
-	<string name="str_no">Нет</string>
-	<string name="str_yes">Да</string>
-	<string name="mi_server_root">Корневой контекст</string>
-	<string name="str_send">Послать</string>
-	<string name="str_iam">Я</string>
-	<string name="str_0">0</string>
-	<string name="tag_id">1</string>
-	<string name="tag_reply">2</string>
-	<string name="tag_forStatus">3</string>
-	<string name="tag_parent">4</string>
-	<string name="tag_chatid">5</string>
+    <string name="srt_login_failed">Неверное имя или пароль</string>
+    <string name="str_no">Нет</string>
+    <string name="str_yes">Да</string>
+    <string name="mi_server_root">Корневой контекст</string>
+    <string name="str_send">Послать</string>
+    <string name="str_iam">Я</string>
+    <string name="str_0">0</string>
+    <string name="tag_id">1</string>
+    <string name="tag_reply">2</string>
+    <string name="tag_forStatus">3</string>
+    <string name="tag_parent">4</string>
+    <string name="tag_chatid">5</string>
+
+    <string-array name="screen_array">
+        <item>Производство</item>
+        <item>Иванов</item>
+        <item>Петров</item>
+    </string-array>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
 </resources>

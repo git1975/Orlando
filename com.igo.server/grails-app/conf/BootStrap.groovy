@@ -55,9 +55,9 @@ class BootStrap {
 			proc.addToTasks(task).save(failOnError: true)
 		}
 		if(!Queue.count) {
-			Process proc = Process.findByName("production")
-			Queue queue = new Queue(type: 'StartProcess', finished: false, description: 'description', idprocess: proc.id)
-			.save(failOnError: true)
+			//Process proc = Process.findByName("production")
+			//Queue queue = new Queue(type: 'StartProcess', finished: false, description: 'description', idprocess: proc.id)
+			//.save(failOnError: true)
 		}
 		if(!Deviation.count) {
 			new Deviation(name: 'Отказ').save(failOnError: true)

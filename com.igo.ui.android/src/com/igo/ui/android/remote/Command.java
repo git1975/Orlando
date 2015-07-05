@@ -11,6 +11,7 @@ public class Command {
 	public static final String REPLY = "reply";
 	public static final String GET_CHAT = "getchat";
 	public static final String SEND_CHAT = "sendchat";
+	public static final String GET_CHATS = "getchats";
 	
 	private String command = null;
 	private Map<String, String> params = new HashMap<String, String>(0);

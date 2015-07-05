@@ -14,6 +14,7 @@ public class MessageCommand {
 	String forStatus
 	String status
 	String sendTo
+	String chatcode
 	Date startdate
 	Date enddate
 	Button[] buttons

@@ -36,6 +36,19 @@ class CommandService {
 		}
 	}
 
+	def startProcessByTime() {
+		List list = Process.findAll("from Process as a where a.repeatevery = 0")
+		//Проверим, есть-ли в очереди задачи этого процесса с временем старта больше времени старта процесса
+		for(Process item : list){
+			Date nowTime = Utils.shiftDateInPresent(item.startdate);
+
+			List qList = Queue.findAll("from Queue as a where a.idprocess = ? and a.ord = 1 and startdate > ?", [item.id, nowTime])
+			if(qList == null || qList.size() == 0){
+				processStartProcess(item)
+			}
+		}
+	}
+
 	def processNext() {
 		//log.info(" CommandService.processNext...")
 		List list = Queue.findAll("from Queue as a where a.finished = ?", [false])
@@ -52,6 +65,8 @@ class CommandService {
 		autoChat()
 
 		repeatEveryProcess()
+
+		startProcessByTime()
 	}
 
 	def autoReply(){
@@ -77,6 +92,7 @@ class CommandService {
 				item.sendfrom = "auto"
 				item.sendto = mes.sendTo
 				item.body = mes.body
+				item.chatcode = mes.chatcode
 				item.senddate = now
 				item.sendtime = now.getTime()
 				item.xmlcontent = (mes as JSON)
@@ -163,7 +179,7 @@ class CommandService {
 
 		return queue
 	}
-	
+
 	def Chat replyChat(String id, String replystatus) {
 		Chat item = Chat.get(id)
 		if(item == null){
@@ -175,7 +191,7 @@ class CommandService {
 		return item
 	}
 
-	def Chat sendChat(String from, String to, String body) {
+	def Chat sendChat(String from, String to, String body, String chatcode) {
 		Chat item = new Chat()
 
 		Date now = new Date()
@@ -183,6 +199,7 @@ class CommandService {
 		item.sendfrom = from
 		item.sendto = to
 		item.body = body
+		item.chatcode = chatcode
 		item.senddate = now
 		item.sendtime = now.getTime()
 		item.save(failOnError: true)
@@ -235,6 +252,7 @@ class CommandService {
 				mes = new MessageCommand()
 				mes.type = "INFO"
 				mes.sendTo = "all"
+				//mes.chatcode = 'production'
 			}
 			mes.setQueue(q)
 			mes.body = "Просрочка"
@@ -267,6 +285,8 @@ class CommandService {
 			mes.forStatus = ts.status
 			mes.color = ts.color
 			mes.sendTo = ts.sendTo
+			Process process = Process.get(q.idprocess)
+			mes.chatcode = process.name
 			mes.buttons = new Button[ts.buttons.size()]
 			for(int i = 0; i < ts.buttons.size(); i++){
 				mes.buttons[i] = ts.buttons[i]
@@ -318,5 +338,16 @@ class CommandService {
 		}
 
 		return result
+	}
+
+	def doResetDatabase(){
+		try{
+			Chat.findAll().each { it.delete(flush:true, failOnError:true) }			
+			Queue.findAll().each { it.delete(flush:true, failOnError:true) }
+			
+			return 'OK'
+		} catch (Exception e){
+			return e.getMessage()
+		}
 	}
 }

@@ -36,8 +36,8 @@ public class ChatViewAdapter extends BaseAdapter implements ListAdapter,
 		this.context = c;
 		this.listView = listView;
 
-		ChatTimerTask task = ChatTimerTask.getInstance(context, this);
-		task.run();
+		//ChatTimerTask task = ChatTimerTask.getInstance(context, this);
+		//task.run();
 
 		this.listView.setOnScrollListener(this);
 	}

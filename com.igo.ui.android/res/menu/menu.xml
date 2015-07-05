@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/mi_edit_settings" android:title="@string/mi_edit_settings" android:checkable="false" android:menuCategory="system"></item>
+    <item android:id="@+id/mi_edit_settings" android:title="@string/mi_edit_settings" android:checkable="false" android:menuCategory="system">
+    </item>
+    <item android:id="@+id/mi_app_quit" android:menuCategory="system" android:title="@string/str_app_quit" android:checkable="false"></item>
     
 
 </menu>

@@ -1,180 +1,158 @@
 package com.igo.ui.android;
 
+import com.igo.ui.android.domain.ChatsItem;
 import com.igo.ui.android.domain.Login;
 import com.igo.ui.android.fragment.ChatSectionFragment;
-import com.igo.ui.android.fragment.LaunchpadSectionFragment;
-import com.igo.ui.android.fragment.ReportSectionFragment;
+import com.igo.ui.android.remote.Command;
+import com.igo.ui.android.remote.CommandConnector;
+import com.igo.ui.android.remote.OnCommandEndListener;
 
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
-import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
-public class WorkActivity extends FragmentActivity implements
-		ActionBar.TabListener {
+public class WorkActivity extends ActionBarActivity implements OnCommandEndListener{
+	private String[] mScreenTitles;
+	private DrawerLayout mDrawerLayout;
+	private ListView mDrawerList;
+	private ChatsItem[] chatsItems;
 
-	AppSectionsPagerAdapter mAppSectionsPagerAdapter;
-
-	/**
-	 * The {@link ViewPager} that will display the three primary sections of the
-	 * app, one at a time.
-	 */
-	ViewPager mViewPager;
-
+	private ActionBarDrawerToggle mDrawerToggle;
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
+    
+    @Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.activity_main);
+
+		mScreenTitles = new String[0];//getResources().getStringArray(R.array.screen_array);
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		
-		DataStorage ds = (DataStorage)getApplicationContext();
-		Login login = (Login)ds.getData("login");
-		TextView tvTitle = (TextView) findViewById(R.id.tv_title);
-		tvTitle.setText(login.getName());
+		mDrawerList = (ListView) findViewById(R.id.left_drawer);
+		// Set the adapter for the list view
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_list_item, mScreenTitles));
+        // Set the list's click listener
+        mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+        mDrawerList.setBackgroundResource(R.drawable.ic_abstract);
+        
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this, /* host Activity */
+                mDrawerLayout, /* DrawerLayout object */
+                //R.drawable.ic_drawer, /* nav drawer icon to replace 'Up' caret */
+                R.string.drawer_open, /* "open drawer" description */
+                R.string.drawer_close /* "close drawer" description */
+                ) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                getSupportActionBar().setTitle(mTitle);
+                supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                getSupportActionBar().setTitle(mDrawerTitle);
+            	supportInvalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+            }
+        };
+
+        // Set the drawer toggle as the DrawerListener
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        
+        // Initialize the first fragment when the application first loads.
+        if (savedInstanceState == null) {
+            selectItem(0);
+        }
+
+        loadChats();
+    }
+    
+    private void loadChats(){
+    	DataStorage ds = (DataStorage) getApplicationContext();
+		Login login = (Login) ds.getData("login");
 		
-		// Create the adapter that will return a fragment for each of the three
-		// primary sections
-		// of the app.
-		mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(
-				getSupportFragmentManager());
+    	Command command = new Command(Command.GET_CHATS);
+		command.putParam("login", login.getLogin());
+		CommandConnector con = new CommandConnector(getApplicationContext(), command);
+		con.setOnCommandEndListener(this);
+		con.execute("");
+    }
+    
+     /* The click listener for ListView in the navigation drawer */
+    private class DrawerItemClickListener implements ListView.OnItemClickListener {
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            selectItem(position);
+        }
+    }
 
-		// Set up the action bar.
-		final ActionBar actionBar = getActionBar();
+    /** Swaps fragments in the main content view */
+    private void selectItem(int position) {
+    	if(position > mScreenTitles.length - 1){
+    		return;
+    	}
+        // Update the main content by replacing fragments
+    	DataStorage ds = (DataStorage) getApplicationContext();
+		Login login = (Login) ds.getData("login");
+        Fragment fragment = new ChatSectionFragment(chatsItems[position], login.getLogin());
+ 
+        // Insert the fragment by replacing any existing fragment
+        if (fragment != null) {
+        	FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, fragment).commit();
+ 
+            // Highlight the selected item, update the title, and close the drawer
+    	    mDrawerList.setItemChecked(position, true);
+    	    setTitle(mScreenTitles[position]);
+    	    mDrawerLayout.closeDrawer(mDrawerList);
+        }
+    }
+    
+    @Override
+    public void setTitle(CharSequence title) {
+        mTitle = title;
+        getSupportActionBar().setTitle(mTitle);
+    }
+    
+    /**
+     * When using the ActionBarDrawerToggle, you must call it during
+     * onPostCreate() and onConfigurationChanged()...
+     */
+    
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
 
-		// Specify that the Home/Up button should not be enabled, since there is
-		// no hierarchical
-		// parent.
-		actionBar.setHomeButtonEnabled(false);
-
-		// Specify that we will be displaying tabs in the action bar.
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-		// Set up the ViewPager, attaching the adapter and setting up a listener
-		// for when the
-		// user swipes between sections.
-		mViewPager = (ViewPager) findViewById(R.id.pager);
-		mViewPager.setAdapter(mAppSectionsPagerAdapter);
-		mViewPager
-				.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-					@Override
-					public void onPageSelected(int position) {
-						// When swiping between different app sections, select
-						// the corresponding tab.
-						// We can also use ActionBar.Tab#select() to do this if
-						// we have a reference to the
-						// Tab.
-						actionBar.setSelectedNavigationItem(position);
-					}
-				});
-
-		// For each of the sections in the app, add a tab to the action bar.
-		for (int i = 0; i < mAppSectionsPagerAdapter.getCount(); i++) {
-			// Create a tab with text corresponding to the page title defined by
-			// the adapter.
-			// Also specify this Activity object, which implements the
-			// TabListener interface, as the
-			// listener for when this tab is selected.
-			actionBar.addTab(actionBar.newTab()
-					.setText(mAppSectionsPagerAdapter.getPageTitle(i))
-					.setTabListener(this));
-		}
-	}
-
-	/**
-	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-	 * one of the primary sections of the app.
-	 */
-	public class AppSectionsPagerAdapter extends FragmentPagerAdapter {
-
-		public AppSectionsPagerAdapter(FragmentManager fm) {
-			super(fm);
-		}
-
-		@Override
-		public Fragment getItem(int i) {
-			switch (i) {
-			/*case 0:
-				View v = findViewById(R.id.v_status);
-				return new LaunchpadSectionFragment(v);
-			case 1:
-				return new ChatSectionFragment();	
-			case 2:
-				return new ReportSectionFragment();*/	
-			case 0:
-				return new ChatSectionFragment();
-
-			default:
-				Fragment fragment = new DummySectionFragment();
-				Bundle args = new Bundle();
-				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, i + 1);
-				fragment.setArguments(args);
-				return fragment;
-			}
-		}
-
-		@Override
-		public int getCount() {
-			return 1;
-		}
-
-		@Override
-		public CharSequence getPageTitle(int position) {
-			if(position == 0){
-				return "Переписка";
-			} else if(position == 1){
-				return "Переписка";
-			} else if(position == 2){
-				return "Отчеты";
-			}
-			return "Section " + (position + 1);
-		}
-	}
-
-	/**
-	 * A dummy fragment representing a section of the app, but that simply
-	 * displays dummy text.
-	 */
-	public static class DummySectionFragment extends Fragment {
-
-		public static final String ARG_SECTION_NUMBER = "section_number";
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_section_dummy,
-					container, false);
-			Bundle args = getArguments();
-			((TextView) rootView.findViewById(android.R.id.text1))
-					.setText(getString(R.string.dummy_section_text,
-							args.getInt(ARG_SECTION_NUMBER)));
-			return rootView;
-		}
-	}
-
-	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-
-	}
-
-	public void onTabReselected(Tab tab, FragmentTransaction ft) {
-
-	}
-
-	public void onTabSelected(Tab tab, FragmentTransaction ft) {
-		mViewPager.setCurrentItem(tab.getPosition());
-	}
-
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Pass any configuration change to the drawer toggles
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+    
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -185,10 +163,44 @@ public class WorkActivity extends FragmentActivity implements
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.mi_edit_settings:
+		case R.id.mi_edit_settings: {
 			startActivity(new Intent(this, SettingsActivity.class));
 			return true;
 		}
+		case R.id.mi_app_quit: {
+			finish();
+			return true;
+		}
+		}
+
 		return false;
 	}
+
+	@Override
+	public void onBackPressed() {
+		finish();
+	}
+	
+	public void OnCommandEnd(Command command, Object result) {
+		if(result == null){
+			return;
+		}
+		chatsItems = (ChatsItem[]) result;
+		
+		mScreenTitles = new String[chatsItems.length];
+		for(int i = 0; i < chatsItems.length; i++){
+			mScreenTitles[i] = chatsItems[i].getName();
+		}
+		
+		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+                R.layout.drawer_list_item, mScreenTitles));
+		
+		selectItem(0);
+	}
+
+	public String getLastHash() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

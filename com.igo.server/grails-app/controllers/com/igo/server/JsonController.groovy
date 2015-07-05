@@ -144,7 +144,7 @@ class JsonController {
 	}
 
 	def getchat() {
-		log.debug("JsonController.getchat." + params.login + ";maxid=" + params.maxid + ";minid=" + params.minid)
+		log.debug("JsonController.getchat." + params.login + ";maxid=" + params.maxid + ";minid=" + params.minid + ".code=" + params.chatcode)
 		def long maxid = 0
 		try{
 			maxid = Long.parseLong(params.maxid);
@@ -163,11 +163,13 @@ class JsonController {
 
 		def List<Chat> list;
 		if(minid == 0 && maxid == 0){
-			list = Chat.findAll("from Chat as a where (sendto=? or sendto='all') and (sendfrom=? or sendfrom='auto') order by a.id desc", [params.login, params.login], [max: 10])
+			list = Chat.findAll("from Chat as a where ((chatcode=? and (sendto=? or sendto='all')) or chatcode=? or chatcode=?) order by a.id desc", 
+				[params.chatcode, params.login, params.login + "-" + params.chatcode, params.chatcode + "-" + params.login], [max: 10])
 			list = Utils.reverse(list);
 		} else {
 			//print "JsonController.getchat;maxid=" + maxid + ";minid=" + minid
-			list = Chat.findAll("from Chat as a where (a.id > ? or a.id < ?) and (sendto=? or sendto='all') order by a.id desc", [maxid, minid, params.login], [max: 10])
+			list = Chat.findAll("from Chat as a where (a.id > ? or a.id < ?) and ((chatcode=? and (sendto=? or sendto='all')) or chatcode=? or chatcode=?) order by a.id desc", 
+				[maxid, minid, params.chatcode,  params.login, params.login + "-" + params.chatcode, params.chatcode + "-" + params.login], [max: 10])
 		}
 		def List<ChatCommand> fullList = new ArrayList();
 		for(Chat chat: list){
@@ -188,14 +190,41 @@ class JsonController {
 	}
 
 	def sendchat() {
-		log.debug("JsonController.sendchat." + params.login + "." + params.sendto + ".body=" + params.body)
+		log.debug("JsonController.sendchat." + params.login + "." + params.sendto + ".body=" + params.body + ".code=" + params.chatcode)
 
 		//def item = commandService.sendChat(params.login, params.sendto, params.body)
-		def item = commandService.sendChat(params.login, "all", params.body)
+		def item = commandService.sendChat(params.login, params.sendto, params.body, params.chatcode)
 		def List<Chat> list = new ArrayList();
 		list.add(item)
 
 		render list as JSON;
+	}
+	
+	def getchats() {
+		log.debug("JsonController.getchats." + params.login)
+		
+		List<Process> list = Process.findAll()
+		def List<ChatsCommand> fullList = new ArrayList();
+		for(Process item: list){
+			ChatsCommand cc = new ChatsCommand()
+			cc.code = item.name
+			cc.name = item.description
+			cc.ispersonal = false
+			
+			fullList.add(cc)
+		}
+		
+		List<User> list2 = User.findAll("from User as a where a.login != ?", [params.login])
+		for(User item: list2){
+			ChatsCommand cc = new ChatsCommand()
+			cc.code = item.login
+			cc.name = item.username
+			cc.ispersonal = true
+			
+			fullList.add(cc)
+		}
+		
+		render fullList as JSON;
 	}
 
 }

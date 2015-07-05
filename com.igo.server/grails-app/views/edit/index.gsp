@@ -23,6 +23,10 @@
 				<td><g:link controller="process" action="list">Циклы</g:link>
 				</td>
 			</tr>
+			<tr>
+				<td><g:link controller="service" action="index">Сервис</g:link>
+				</td>
+			</tr>
 		</table>
 	</g:form>
 </body>

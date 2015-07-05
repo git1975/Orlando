@@ -33,7 +33,7 @@ import android.widget.Toast;
 public class ChatMessageView extends RelativeLayout implements
 		OnCommandEndListener {
 	private ChatMessage chatItem = null;
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
 	public ChatMessageView(Context context, ChatMessage item) {
 		super(context);
@@ -125,6 +125,9 @@ public class ChatMessageView extends RelativeLayout implements
 			tvBody3.setBackground(getResources().getDrawable(
 					R.drawable.ic_speech4_1));
 			layoutChat.setGravity(Gravity.RIGHT);
+			
+			tvBody1.setWidth(12);
+			tvBody3.setWidth(18);
 		} else if (item.getFrom().equals("auto")) {
 			tvBody1.setBackground(getResources().getDrawable(
 					R.drawable.ic_speech6_1));
@@ -133,6 +136,9 @@ public class ChatMessageView extends RelativeLayout implements
 			tvBody3.setBackground(getResources().getDrawable(
 					R.drawable.ic_speech6_3));
 			layoutChat.setGravity(Gravity.LEFT);
+			
+			tvBody1.setWidth(18);
+			tvBody3.setWidth(18);
 		} else {
 			tvBody1.setBackground(getResources().getDrawable(
 					R.drawable.ic_speech5_3));
@@ -141,6 +147,9 @@ public class ChatMessageView extends RelativeLayout implements
 			tvBody3.setBackground(getResources().getDrawable(
 					R.drawable.ic_speech5_1));
 			layoutChat.setGravity(Gravity.LEFT);
+			
+			tvBody1.setWidth(18);
+			tvBody3.setWidth(12);
 		}
 
 		if (tvBody2.getTypeface() == null) {

@@ -11,6 +11,7 @@ public class ChatCommand {
 	Long sendtime
 	String body
 	String message
+	String chatcode
 
 	def setChat(Chat chat){
 		sendfrom = chat.sendfrom
@@ -20,5 +21,6 @@ public class ChatCommand {
 		body = chat.body
 		id = chat.id
 		message = chat.xmlcontent
+		chatcode = chat.chatcode
 	}
 }

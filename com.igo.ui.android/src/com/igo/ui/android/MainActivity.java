@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,7 +25,7 @@ import android.widget.Toast;
  * Login main form
  *
  */
-public class MainActivity extends Activity implements OnClickListener, OnCommandEndListener {
+public class MainActivity extends ActionBarActivity implements OnClickListener, OnCommandEndListener {
 	Button btnLogin;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -110,18 +111,28 @@ public class MainActivity extends Activity implements OnClickListener, OnCommand
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case R.id.mi_edit_settings:
-			startActivity(new Intent(this, SettingsActivity.class));
-			return true;
-		}
-		return false;
-	}
-
 	public String getLastHash() {
 		return null;
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.mi_edit_settings: {
+			startActivity(new Intent(this, SettingsActivity.class));
+			return true;
+		}
+		case R.id.mi_app_quit: {
+			finish();
+			return true;
+		}
+		}
+
+		return false;
+	}
+
+	@Override
+	public void onBackPressed() {
+		finish();
+	}
 }

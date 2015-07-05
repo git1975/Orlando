@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import com.igo.ui.android.domain.Button;
 import com.igo.ui.android.domain.ChatMessage;
+import com.igo.ui.android.domain.ChatsItem;
 import com.igo.ui.android.domain.Login;
 import com.igo.ui.android.domain.Task;
 
@@ -55,6 +56,7 @@ public class CommandResponseFactory {
 					item.setFrom(getJsonValue(jObj, "sendfrom"));
 					item.setTo(getJsonValue(jObj, "sendto"));
 					item.setBody(getJsonValue(jObj, "body"));
+					item.setChatcode(getJsonValue(jObj, "chatcode"));
 
 					String message = getJsonValue(jObj, "message");
 					if (message != null && !"".equals(message) && !"null".equals(message)) {
@@ -75,6 +77,21 @@ public class CommandResponseFactory {
 					items[i] = item;
 				}
 				objResult = items;
+			} else if (Command.GET_CHATS.equals(command)){
+				ChatsItem[] items = null;
+				JSONArray jArr = new JSONArray(result);
+				
+				items = new ChatsItem[jArr.length()];
+				for (int i = 0; i < jArr.length(); i++) {
+					JSONObject jObj = jArr.getJSONObject(i);
+					ChatsItem item = new ChatsItem();
+					item.setCode(getJsonValue(jObj, "code"));
+					item.setName(getJsonValue(jObj, "name"));
+					item.setIspersonal(getJsonBoolean(jObj, "ispersonal"));
+					
+					items[i] = item;
+				}
+				objResult = items;
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -90,6 +107,14 @@ public class CommandResponseFactory {
 			return obj.getString(name);
 		} catch (JSONException e) {
 			return "";
+		}
+	}
+	
+	public static Boolean getJsonBoolean(JSONObject obj, String name) {
+		try {
+			return obj.getBoolean(name);
+		} catch (JSONException e) {
+			return false;
 		}
 	}
 
