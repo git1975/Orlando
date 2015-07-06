@@ -10,7 +10,8 @@ import com.igo.server.Process
 import com.igo.server.Queue
 
 class BootStrap {
-
+	def commandService
+	
 	def init = { 
 		servletContext ->
 		
@@ -19,7 +20,8 @@ class BootStrap {
 		log.debug("now=" + sdfFull.format(new Date()))
 		log.debug("System.file.encoding=" + System.getProperty("file.encoding"))
 		
-		if(!Role.count) {
+		commandService.initDatabase()
+		/*if(!Role.count) {
 			Role role1 = new com.igo.server.Role(name: 'head', description: 'Директор').save(failOnError: true)
 			Role role2 = new com.igo.server.Role(name: 'mgr', description: 'Управляющий').save(failOnError: true)
 		}
@@ -27,8 +29,8 @@ class BootStrap {
 			Role role1 = Role.find("from Role as a where a.name = ?", ['head'])
 			Role role2 = Role.find("from Role as a where a.name = ?", ['mgr'])
 			
-			User usr1 = new User(login: 'user1', username: 'Горбунков Семён Семёныч', password: '1', role: role1).save(failOnError: true)
-			User usr2 = new User(login: 'user2', username: 'Борух Шмуль', password: '1', role: role2).save(failOnError: true)
+			User usr1 = new User(login: 'user1', username: 'Директор Иванов', password: '1', role: role1).save(failOnError: true)
+			User usr2 = new User(login: 'user2', username: 'Управляющий Петров', password: '1', role: role2).save(failOnError: true)
 			User usr3 = new User(login: 'user3', username: 'Жорж Милославский', password: '1', role: role2).save(failOnError: true)
 		}
 		if(!Process.count) {
@@ -114,7 +116,7 @@ class BootStrap {
 			ts3.task = task1
 			ts4 = new Taskstatus(status: 'REPLY_2', msgtype: 'INFO', sendTo: 'all', color: 1, msgtext: 'Оценка цикла <process> Плохо').save(failOnError: true)
 			ts4.task = task1
-		}
+		}*/
 	}
 	def destroy = {
 	}

@@ -3,7 +3,7 @@
 <script type="text/javascript">
 function doReset(){
 	if(confirm('Произвести сброс Базы Данных?')){
-		${remoteFunction(action: 'reset', controller: 'service', onSuccess: 'doSuccessReset(data);',);}
+		${remoteFunction(controller: 'service', action: 'reset', onSuccess: 'doSuccessReset(data);')}
 	}
 	return
 }

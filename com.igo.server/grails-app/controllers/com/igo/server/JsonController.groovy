@@ -20,7 +20,7 @@ class JsonController {
 		String lastHash = params.hash
 		log.debug("JsonController.show.hash=" + params.hash)
 
-		def messages = commandService.getMessages();
+		def messages = commandService.getMessages()
 
 		//Check last hash
 		String hash = "";
