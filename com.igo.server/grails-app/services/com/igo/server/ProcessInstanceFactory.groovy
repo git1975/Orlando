@@ -6,10 +6,11 @@ class ProcessInstanceFactory {
 
 		if(item != null){
 			log.debug("ProcessInstanceFactory.createInstance...idprocess=" + item.id)
+			
+			List<Task> tasks = Task.findAll("from Task where process=?", [item])
 
-			Task[] tasks = item.tasks
 			log.debug("ProcessInstanceFactory.createInstance...tasks=" + tasks)
-			tasks.each{t ->
+			for(Task t: tasks){
 				Date startdt = t.startdate
 				Date signaldt = t.signaldate
 				Date enddt = t.enddate

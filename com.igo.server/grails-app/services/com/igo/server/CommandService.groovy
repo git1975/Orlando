@@ -41,10 +41,13 @@ class CommandService {
 		//Проверим, есть-ли в очереди задачи этого процесса с временем старта больше времени старта процесса
 		for(Process item : list){
 			Date nowTime = Utils.shiftDateInPresent(item.startdate);
-
-			List qList = Queue.findAll("from Queue as a where a.idprocess = ? and a.ord = 1 and startdate > ?", [item.id, nowTime])
-			if(qList == null || qList.size() == 0){
-				processStartProcess(item)
+			Date now = new Date()
+			//Проверим, не пора-ли стартовать процесс
+			if(nowTime.before(now)){
+				List qList = Queue.findAll("from Queue as a where a.idprocess = ? and a.ord = 1 and startdate > ?", [item.id, nowTime])
+				if(qList == null || qList.size() == 0){
+					processStartProcess(item)
+				}
 			}
 		}
 	}
@@ -342,9 +345,9 @@ class CommandService {
 
 	def doResetDatabase(){
 		try{
-			Chat.findAll().each { it.delete(flush:true, failOnError:true) }			
+			Chat.findAll().each { it.delete(flush:true, failOnError:true) }
 			Queue.findAll().each { it.delete(flush:true, failOnError:true) }
-			
+
 			return 'OK'
 		} catch (Exception e){
 			return e.getMessage()

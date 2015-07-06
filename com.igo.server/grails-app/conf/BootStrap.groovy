@@ -45,14 +45,14 @@ class BootStrap {
 			
 			SimpleDateFormat sdfTime = new SimpleDateFormat("mm")
 			
-			Task task = new Task(name: 'start', description: 'старт', user: usr1, ord: 1, startdate: sdfTime.parse("00"), signaldate: sdfTime.parse("01"), enddate: sdfTime.parse("01")).save(failOnError: true)
-			proc.addToTasks(task).save(failOnError: true)
-			task = new Task(name: 'prepare', description: 'подготовка', user: usr2, ord: 2, startdate: sdfTime.parse("01"), signaldate: sdfTime.parse("01"), enddate: sdfTime.parse("02")).save(failOnError: true)
-			proc.addToTasks(task).save(failOnError: true)
-			task = new Task(name: 'running', description: 'исполнение', user: usr3, ord: 3, startdate: sdfTime.parse("02"), signaldate: sdfTime.parse("02"), enddate: sdfTime.parse("03")).save(failOnError: true)
-			proc.addToTasks(task).save(failOnError: true)
-			task = new Task(name: 'finish', description: 'завершение', user: usr3, ord: 4, startdate: sdfTime.parse("03"), signaldate: sdfTime.parse("04"), enddate: sdfTime.parse("05")).save(failOnError: true)
-			proc.addToTasks(task).save(failOnError: true)
+			Task task = new Task(name: 'start', description: 'старт', user: usr1, ord: 1, startdate: sdfTime.parse("00"), signaldate: sdfTime.parse("01"), enddate: sdfTime.parse("01"), process: proc).save(failOnError: true)
+			//proc.addToTasks(task).save(failOnError: true)
+			task = new Task(name: 'prepare', description: 'подготовка', user: usr2, ord: 2, startdate: sdfTime.parse("01"), signaldate: sdfTime.parse("01"), enddate: sdfTime.parse("02"), process: proc).save(failOnError: true)
+			//proc.addToTasks(task).save(failOnError: true)
+			task = new Task(name: 'running', description: 'исполнение', user: usr3, ord: 3, startdate: sdfTime.parse("02"), signaldate: sdfTime.parse("02"), enddate: sdfTime.parse("03"), process: proc).save(failOnError: true)
+			//proc.addToTasks(task).save(failOnError: true)
+			task = new Task(name: 'finish', description: 'завершение', user: usr3, ord: 4, startdate: sdfTime.parse("03"), signaldate: sdfTime.parse("04"), enddate: sdfTime.parse("05"), process: proc).save(failOnError: true)
+			//proc.addToTasks(task).save(failOnError: true)
 		}
 		if(!Queue.count) {
 			//Process proc = Process.findByName("production")

@@ -8,8 +8,6 @@ class Process {
 	long repeatevery = 0
 	Date startdate = new Date()
 
-	static hasMany = [tasks: Task]
-
 	static constraints = {
 		name blank: false, unique: true
 	}

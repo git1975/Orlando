@@ -1,6 +1,7 @@
 package com.igo.server
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import grails.transaction.Transactional
 
@@ -146,6 +147,38 @@ class DataService {
 
 	def deleteProcess(long id){
 		def item = Process.get(id)
+		if(item != null){
+			item.delete(flush: true)
+		}
+	}
+	
+	def createTask(String name, String description, String ord, String startdate, String signaldate, String enddate, String process){
+		Process p = Process.find("from Process where name=?", [process])
+		
+		def item = new Task(name: name, description: description, ord: Integer.parseInt(ord), startdate: sdfFull2.parse(startdate),
+			signaldate: sdfFull2.parse(signaldate), enddate: sdfFull2.parse(enddate), process: p)
+		item.save(failOnError: true)
+		item
+	}
+
+	def updateTask(Task item, String name, String description, String ord, String startdate, String signaldate, String enddate, String process){
+		if(item != null){
+			Process p = Process.find("from Process where name=?", [process])
+			
+			item.name = name
+			item.description = description
+			item.ord = Integer.parseInt(ord)
+			item.startdate = sdfFull2.parse(startdate)
+			item.signaldate = sdfFull2.parse(signaldate)
+			item.enddate = sdfFull2.parse(enddate)
+			item.process = p
+			item.save(failOnError: true)
+			item
+		}
+	}
+
+	def deleteTask(long id){
+		def item = Task.get(id)
 		if(item != null){
 			item.delete(flush: true)
 		}

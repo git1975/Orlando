@@ -24,6 +24,10 @@
 				</td>
 			</tr>
 			<tr>
+				<td><g:link controller="task" action="list">Задачи</g:link>
+				</td>
+			</tr>
+			<tr>
 				<td><g:link controller="service" action="index">Сервис</g:link>
 				</td>
 			</tr>

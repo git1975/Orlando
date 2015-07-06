@@ -11,6 +11,7 @@ class Task {
 	Date enddate = new Date()
 	User user
 	int ord = 0
+	Process process
 	 
 	static hasMany = [deviations: Deviation]	
 	
@@ -18,6 +19,7 @@ class Task {
 		name blank: false, unique: true
 		user blank: true
 		ord nullable: true
+		process nullable: false
     }
 	
 	static mapping = {
