@@ -86,7 +86,7 @@ class CommandService {
 		for(MessageCommand mes: messages){
 
 			if(!checkChatExists(mes)){
-				log.println mes as JSON
+				log.debug mes as JSON
 				//this.sendChat("auto", mes.sendTo, mes.body, mes as JSON)
 				Chat item = new Chat()
 
@@ -226,7 +226,7 @@ class CommandService {
 		//Показать красным цветом сообщение, если время текущее больше enddate и статус = TIMEOUT (т.е. пользователь не реагирует на запросы и система перевела статус в TIMEOUT)
 		List<Queue> listGreen = Queue.findAll("from Queue as q where q.type = 'Task' and startdate < ? and signaldate > ? and startdate >= ?", [now, now, processDate])
 		List<Queue> listYellow = Queue.findAll("from Queue as q where q.type = 'Task' and signaldate < ? and enddate > ? and startdate >= ?", [now, now, processDate])
-		List<Queue> listRed = Queue.findAll("from Queue as q where q.type = 'Task' and enddate < ? and q.status = 'INIT' and startdate >= ? and ord != 1 and ord != 4", [now, processDate])
+		List<Queue> listRed = Queue.findAll("from Queue as q where q.type = 'Task' and enddate < ? and q.status = 'INIT' and startdate >= ?", [now, processDate])
 
 		def messages = new ArrayList();
 
@@ -250,32 +250,37 @@ class CommandService {
 		}
 		//Покажем сообщение о просрочке
 		for(Queue q: listRed){
-			def mes = getMessage(q, true)
-			if(mes == null){
-				mes = new MessageCommand()
+			//Показываем сообщение о просрочке только для задач CMD
+			Task task = q.task
+			Taskstatus ts = Taskstatus.find("from Taskstatus where task=?", [task])
+			if(ts.msgtype == "CMD"){
+				def mes = getMessage(q, true)
+				if(mes == null){
+					mes = new MessageCommand()
+					mes.type = "INFO"
+					mes.sendTo = "all"
+					Process p = Process.get(q.idprocess)
+					mes.chatcode = p.name
+				}
+				mes.setQueue(q)
+				mes.body = "Нет ответа по задаче " + q.description
 				mes.type = "INFO"
-				mes.sendTo = "all"
-				//mes.chatcode = 'production'
-			}
-			mes.setQueue(q)
-			mes.body = "Просрочка"
-			mes.type = "INFO"
-			mes.status = "INIT"
-			mes.color = 3
+				mes.status = "INIT"
+				mes.color = 3
 
-			messages.add(mes)
+				messages.add(mes)}
 		}
 
 		return messages;
 	}
 
 	def getMessage(Queue q, boolean isInfoStage){
-		Task t = Task.find("from Task as a where a.id = ?", [q.task.id])
 		Taskstatus ts
+		//println "isInfoStage=" + isInfoStage + "-" + t.id
 		if(isInfoStage){
-			ts = Taskstatus.find("from Taskstatus as a where a.task=? and a.status=? and a.msgtype='INFO' and a.status='INIT'", [t, q.status])
+			ts = Taskstatus.find("from Taskstatus as a where a.task=? and a.msgtype='INFO' and a.status='INIT'", [q.task])
 		} else {
-			ts = Taskstatus.find("from Taskstatus as a where a.task=? and a.status=? and ((a.msgtype!='INFO' and a.status='INIT')or(a.status!='INIT'))", [t, q.status])
+			ts = Taskstatus.find("from Taskstatus as a where a.task=? and a.status=? and ((a.msgtype!='INFO' and a.status='INIT')or(a.status!='INIT'))", [q.task, q.status])
 		}
 		//найден статус задачи, занесенный в шаблон
 		if(ts != null){
@@ -485,7 +490,7 @@ class CommandService {
 			ts4.task = task1
 		}
 	}
-	
+
 	def doResetChatAndQueue(){
 		try{
 			Chat.findAll().each { it.delete(flush:true, failOnError:true) }

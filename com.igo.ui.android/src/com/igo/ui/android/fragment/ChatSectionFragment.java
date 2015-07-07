@@ -67,7 +67,7 @@ public class ChatSectionFragment extends Fragment {
 				command.putParam("body", body);
 				if(chatsItem.isIspersonal()){
 					command.putParam("sendto", chatsItem.getCode());
-					command.putParam("chatcode", chatsItem.getCode() + "-" + login);
+					command.putParam("chatcode", chatsItem.getCode() + "-" + login.getLogin());
 				} else {
 					command.putParam("sendto", "all");
 					command.putParam("chatcode", chatsItem.getCode());

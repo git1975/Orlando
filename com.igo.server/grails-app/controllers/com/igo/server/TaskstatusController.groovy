@@ -10,7 +10,13 @@ class TaskstatusController {
 
 	def add() {
 		if (request.method == 'GET') {
-			return [item: new Taskstatus(), tasks: Task.list()]
+			def users = User.findAll("from User")
+			def allUser = new User();
+			allUser.login = "all"
+			allUser.username = "Все"
+			users.add(allUser)
+			
+			return [item: new Taskstatus(), tasks: Task.list(), users: users]
 		}
 
 		def item = dataService.createTaskStatus(params.item_msgtext, params.msgtype, params.item_status, params.item_lifetime, params.color,
