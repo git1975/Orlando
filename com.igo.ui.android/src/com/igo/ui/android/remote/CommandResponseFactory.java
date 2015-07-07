@@ -24,6 +24,7 @@ public class CommandResponseFactory {
 					Login login = new Login();
 					login.setLogin(jObj.getString("login"));
 					login.setName(jObj.getString("username"));
+					login.setRole(jObj.getString("role"));
 					objResult = login;
 				}
 			} else if (Command.TASK_COMMIT.equals(command)) {

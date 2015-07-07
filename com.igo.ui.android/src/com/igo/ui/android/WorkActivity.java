@@ -21,9 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.TextView;
 
 public class WorkActivity extends ActionBarActivity implements OnCommandEndListener{
 	private String[] mScreenTitles;
@@ -113,7 +111,7 @@ public class WorkActivity extends ActionBarActivity implements OnCommandEndListe
         // Update the main content by replacing fragments
     	DataStorage ds = (DataStorage) getApplicationContext();
 		Login login = (Login) ds.getData("login");
-        Fragment fragment = new ChatSectionFragment(chatsItems[position], login.getLogin());
+        Fragment fragment = new ChatSectionFragment(chatsItems[position], login);
  
         // Insert the fragment by replacing any existing fragment
         if (fragment != null) {

@@ -14,8 +14,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" 
-            >
+            android:orientation="vertical" >
 
             <LinearLayout
                 android:id="@+id/layout_chat"
@@ -32,7 +31,7 @@
                     <FrameLayout
                         android:id="@+id/view_from_img"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/ic_droid2" >
                     </FrameLayout>
                 </FrameLayout>
@@ -46,6 +45,47 @@
                     android:paddingRight="1dp"
                     android:textColor="#000000"
                     android:width="10dp" />
+
+                <LinearLayout
+                    android:id="@+id/layout_chat_cmd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.28"
+                    android:background="@drawable/ic_speech6_2"
+                    android:clickable="false"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/tv_chat_cmd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="fill_parent"
+                        android:maxWidth="300dp"
+                        android:paddingLeft="1dp"
+                        android:paddingRight="1dp"
+                        android:text="123"
+                        android:textColor="#000000" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.46"
+                        android:orientation="horizontal" >
+
+                        <Button
+                            android:id="@+id/chat_btn1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.46"
+                            android:text="@string/str_yes" />
+
+                        <Button
+                            android:id="@+id/chat_btn2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.46"
+                            android:text="@string/str_no" />
+                    </LinearLayout>
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tv_chat_body_2"
@@ -66,33 +106,9 @@
                     android:paddingRight="1dp"
                     android:textColor="#000000"
                     android:width="18dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_chat_cmd"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="false"
-                android:orientation="horizontal" >
-
-                <Button
-                    android:id="@+id/chat_btn1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.46"
-                    android:text="@string/str_yes" />
-
-                <Button
-                    android:id="@+id/chat_btn2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.46"
-                    android:text="@string/str_no" />
             </LinearLayout>
 
         </LinearLayout>
-
     </RelativeLayout>
 
 </LinearLayout>

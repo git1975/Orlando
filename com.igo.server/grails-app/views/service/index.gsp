@@ -7,6 +7,12 @@ function doReset(){
 	}
 	return
 }
+function doResetChat(){
+	if(confirm('Стереть чат и очередь?')){
+		${remoteFunction(controller: 'service', action: 'resetChat', onSuccess: 'doSuccessReset(data);')}
+	}
+	return
+}
 function doSuccessReset(data){
 	alert(data);
 }
@@ -20,7 +26,15 @@ function doSuccessReset(data){
 		<h2>Админка:</h2>
 		<table>
 			<tr>
-				<td><input type="button" onclick="doReset();" value="Сброс"/>
+				<td><input type="button" onclick="doReset();" value="Стереть всё"/>
+				</td>
+			</tr>
+			<tr>
+				<td><input type="button" onclick="doResetChat();" value="Стереть чат и очередь"/>
+				</td>
+			</tr>
+			<tr>
+				<td><a href="/com.igo.server/com.igo.ui.andro.apk">Скачать приложение Android</a>
 				</td>
 			</tr>
 		</table>

@@ -7,7 +7,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/light_shiny_blue"
+        android:background="@drawable/ic_mosaic"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:paddingLeft="50dp"

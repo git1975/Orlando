@@ -72,6 +72,7 @@ public class ChatMessageView extends RelativeLayout implements
 		TextView tvBody2 = (TextView) findViewById(R.id.tv_chat_body_2);
 		String body = tvBody2.getText() + " (" + result.toString() + ")";
 		tvBody2.setText(body);
+		tvBody2.setVisibility(LinearLayout.VISIBLE);
 		
 		getChatMessage().getTask().setReplytext(result.toString());
 		getChatMessage().getTask().setButtons(null);
@@ -115,7 +116,7 @@ public class ChatMessageView extends RelativeLayout implements
 		TextView tvBody2 = (TextView) findViewById(R.id.tv_chat_body_2);
 		TextView tvBody3 = (TextView) findViewById(R.id.tv_chat_body_3);
 		tvBody2.setText(body);
-
+		
 		LinearLayout layoutChat = (LinearLayout) findViewById(R.id.layout_chat);
 		if (item.getFrom().equals(login.getLogin())) {
 			tvBody1.setBackground(getResources().getDrawable(
@@ -181,7 +182,11 @@ public class ChatMessageView extends RelativeLayout implements
 				&& item.getTask().getButtons().length > 0) {
 			com.igo.ui.android.domain.Button[] buttons = item.getTask()
 					.getButtons();
+			tvBody2.setVisibility(LinearLayout.GONE);
 			viewChatCmd.setVisibility(View.VISIBLE);
+			TextView tvBodyCmd = (TextView) findViewById(R.id.tv_chat_cmd);
+			tvBodyCmd.setText(body);
+			
 			int counter = 0;
 			for (com.igo.ui.android.domain.Button btn : buttons) {
 				counter++;

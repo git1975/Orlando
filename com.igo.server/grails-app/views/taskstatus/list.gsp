@@ -57,9 +57,17 @@
 				</tr>
 			</g:each>
 		</table>
-		<g:link controller="taskstatus" action="add">
-			<input type="button" value="Добавить" />
-		</g:link>
+		<table>
+			<tr>
+				<td><g:form method="GET" url="[action:'add']">
+						<p class="submit">
+							<g:link action="add">
+								<g:img file="button-add.png" />
+							</g:link>
+						</p>
+					</g:form></td>
+			</tr>
+		</table>
 	</g:form>
 </body>
 </html>

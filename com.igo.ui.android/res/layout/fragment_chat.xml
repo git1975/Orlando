@@ -1,13 +1,29 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="fill_parent"
-    android:background="@drawable/light_shiny_blue" >
+    android:background="@color/solid_white" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:layout_gravity="fill_vertical"
+        android:background="@drawable/ic_mosaic"
         android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#99111111" >
+
+            <TextView
+                android:id="@+id/tv_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Medium Text"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="@color/solid_white" />
+
+        </LinearLayout>
 
         <ListView
             android:id="@+id/list_chat_view"
@@ -22,15 +38,15 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="66dp"
+            android:layout_height="wrap_content"
+            android:background="#55CCCCCC"
             android:orientation="horizontal" >
 
             <EditText
                 android:id="@+id/et_sendmsg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="#ddffdd"
+                android:layout_weight="0.88"
                 android:ems="10" >
 
                 <requestFocus />

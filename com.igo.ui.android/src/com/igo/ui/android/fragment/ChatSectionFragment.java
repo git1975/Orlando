@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.igo.ui.android.DataStorage;
 import com.igo.ui.android.R;
@@ -29,9 +30,9 @@ public class ChatSectionFragment extends Fragment {
 	private ChatViewAdapter adapter;
 	private View rootView;
 	private ChatsItem chatsItem; 
-	private String login;
+	private Login login;
 	
-	public ChatSectionFragment(ChatsItem chatsItem, String login){
+	public ChatSectionFragment(ChatsItem chatsItem, Login login){
 		this.chatsItem = chatsItem;
 		this.login = login;
 	}
@@ -46,6 +47,9 @@ public class ChatSectionFragment extends Fragment {
 		view = (ListView) rootView.findViewById(R.id.list_chat_view);
 		adapter = new ChatViewAdapter(getActivity().getApplicationContext(), view);
 		view.setAdapter(adapter);
+		
+		TextView tvLogin = (TextView) rootView.findViewById(R.id.tv_login);
+		tvLogin.setText(login.getName() + " (" + login.getRole() + ")");
 
 		Button btnSend = (Button) rootView.findViewById(R.id.btn_sendmsg);
 		btnSend.setOnClickListener(new OnClickListener() {

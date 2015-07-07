@@ -10,4 +10,10 @@ class ServiceController {
 		
 		render res
 	}
+	
+	def resetChat() {
+		def res = commandService.doResetChatAndQueue()
+		
+		render res
+	}
 }

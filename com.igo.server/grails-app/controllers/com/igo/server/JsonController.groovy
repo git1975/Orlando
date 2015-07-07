@@ -90,8 +90,8 @@ class JsonController {
 		if(item != null){
 			print item.username + " login OK"
 		}
-
-		render item as JSON;
+		
+		render "{'login':'" + item.login + "','role':'" + item.role.description + "','username':'" + item.username + "'}"
 	}
 
 	def taskCommit() {

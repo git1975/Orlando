@@ -396,8 +396,8 @@ class CommandService {
 			Role role1 = Role.find("from Role as a where a.name = ?", ['head'])
 			Role role2 = Role.find("from Role as a where a.name = ?", ['mgr'])
 
-			User usr1 = new User(login: 'user1', username: 'Директор Иванов', password: '1', role: role1).save(failOnError: true)
-			User usr2 = new User(login: 'user2', username: 'Управляющий Петров', password: '1', role: role2).save(failOnError: true)
+			User usr1 = new User(login: 'user1', username: 'Иван Иванов', password: '1', role: role1).save(failOnError: true)
+			User usr2 = new User(login: 'user2', username: 'Петр Петров', password: '1', role: role2).save(failOnError: true)
 			User usr3 = new User(login: 'user3', username: 'Жорж Милославский', password: '1', role: role2).save(failOnError: true)
 		}
 		if(!Process.count) {
@@ -457,7 +457,7 @@ class CommandService {
 			ts1.addToButtons(btn1)
 			ts1.addToButtons(btn2)
 			ts1.task = task1
-			ts2 = new Taskstatus(status: 'REPLY_YES', msgtype: 'INFO', sendTo: 'user2', color: 1, msgtext: 'Штатный режим этапа <stage>').save(failOnError: true)
+			ts2 = new Taskstatus(status: 'REPLY_YES', msgtype: 'INFO', sendTo: 'all', color: 1, msgtext: 'Штатный режим этапа <stage>').save(failOnError: true)
 			ts2.task = task1
 			ts3 = new Taskstatus(status: 'REPLY_FINISH', msgtype: 'INFO', sendTo: 'all', color: 1, msgtext: 'Досрочный финиш этапа <stage>').save(failOnError: true)
 			ts3.task = task1
@@ -467,15 +467,15 @@ class CommandService {
 			ts1.addToButtons(btn1)
 			ts1.addToButtons(btn2)
 			ts1.task = task1
-			ts2 = new Taskstatus(status: 'REPLY_YES', msgtype: 'INFO', sendTo: 'user2', color: 1, msgtext: 'Штатный режим этапа <stage>').save(failOnError: true)
+			ts2 = new Taskstatus(status: 'REPLY_YES', msgtype: 'INFO', sendTo: 'all', color: 1, msgtext: 'Штатный режим этапа <stage>').save(failOnError: true)
 			ts2.task = task1
 			ts3 = new Taskstatus(status: 'REPLY_FINISH', msgtype: 'INFO', sendTo: 'all', color: 1, msgtext: 'Досрочный финиш этапа <stage>').save(failOnError: true)
 			ts3.task = task1
 			//finish
 			task1 = Task.find("from Task as a where a.name = ?", ['finish'])
-			ts1 = new Taskstatus(status: 'INIT', msgtype: 'INFO', sendTo: 'user2', color: 1, msgtext: 'Завершается цикл <process>').save(failOnError: true)
+			ts1 = new Taskstatus(status: 'INIT', msgtype: 'INFO', sendTo: 'all', color: 1, msgtext: 'Завершается цикл <process>').save(failOnError: true)
 			ts1.task = task1
-			ts2 = new Taskstatus(status: 'INIT', msgtype: 'CMD', sendTo: 'user2', color: 2, msgtext: 'Оцените исполнение цикла <process>?').save(failOnError: true)
+			ts2 = new Taskstatus(status: 'INIT', msgtype: 'CMD', sendTo: 'user1', color: 2, msgtext: 'Оцените исполнение цикла <process>?').save(failOnError: true)
 			ts2.addToButtons(btn3)
 			ts2.addToButtons(btn4)
 			ts2.task = task1
@@ -483,6 +483,17 @@ class CommandService {
 			ts3.task = task1
 			ts4 = new Taskstatus(status: 'REPLY_2', msgtype: 'INFO', sendTo: 'all', color: 1, msgtext: 'Оценка цикла <process> Плохо').save(failOnError: true)
 			ts4.task = task1
+		}
+	}
+	
+	def doResetChatAndQueue(){
+		try{
+			Chat.findAll().each { it.delete(flush:true, failOnError:true) }
+			Queue.findAll().each { it.delete(flush:true, failOnError:true) }
+
+			return 'OK'
+		} catch (Exception e){
+			return e.getMessage()
 		}
 	}
 }
