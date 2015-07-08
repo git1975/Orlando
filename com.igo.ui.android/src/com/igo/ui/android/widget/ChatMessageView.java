@@ -102,7 +102,7 @@ public class ChatMessageView extends RelativeLayout implements
 			from = item.getFrom();
 		}
 		if ("auto".equals(from)) {
-			from = "Система";
+			from = "Система:";
 		}
 
 		String body = sdf.format(item.getSendDate()) + "-";

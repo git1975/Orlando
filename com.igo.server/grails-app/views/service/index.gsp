@@ -2,8 +2,14 @@
 <head>
 <script type="text/javascript">
 function doReset(){
-	if(confirm('Произвести сброс Базы Данных?')){
+	if(confirm('Произвести сброс к длинному циклу?')){
 		${remoteFunction(controller: 'service', action: 'reset', onSuccess: 'doSuccessReset(data);')}
+	}
+	return
+}
+function doResetDemo(){
+	if(confirm('Произвести сброс к Демо?')){
+		${remoteFunction(controller: 'service', action: 'resetDemo', onSuccess: 'doSuccessReset(data);')}
 	}
 	return
 }
@@ -26,11 +32,15 @@ function doSuccessReset(data){
 		<h2>Админка:</h2>
 		<table>
 			<tr>
-				<td><input type="button" onclick="doReset();" value="Стереть всё"/>
+				<td><input type="button" onclick="doReset();" value="Сброс к длинному циклу"/><br/>
 				</td>
 			</tr>
 			<tr>
-				<td><input type="button" onclick="doResetChat();" value="Стереть чат и очередь"/>
+				<td><input type="button" onclick="doResetDemo();" value="Сброс к демо"/><br/>
+				</td>
+			</tr>
+			<tr>
+				<td><input type="button" onclick="doResetChat();" value="Стереть чат и очередь"/><br/>
 				</td>
 			</tr>
 			<tr>

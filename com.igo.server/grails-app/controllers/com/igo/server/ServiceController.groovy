@@ -11,6 +11,12 @@ class ServiceController {
 		render res
 	}
 	
+	def resetDemo() {
+		def res = commandService.doResetDatabaseDemo()
+		
+		render res
+	}
+	
 	def resetChat() {
 		def res = commandService.doResetChatAndQueue()
 		
