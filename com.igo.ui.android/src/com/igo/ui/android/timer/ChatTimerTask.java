@@ -3,17 +3,21 @@ package com.igo.ui.android.timer;
 import java.util.TimerTask;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 
 import com.igo.ui.android.domain.ChatMessage;
 import com.igo.ui.android.remote.Command;
 import com.igo.ui.android.remote.CommandConnector;
 import com.igo.ui.android.remote.OnCommandEndListener;
+import com.igo.ui.android.service.RemoteBroadcastReceiver;
+import com.igo.ui.android.service.RemoteService;
 
 public class ChatTimerTask extends TimerTask implements OnCommandEndListener {
-	private static ChatTimerTask mt = null;
-	long maxid = 0;
-	long minid = 0;
-	String chatcode;
+	private long maxid = 0;
+	private long minid = 0;
+	private String chatcode;
+	private final RemoteBroadcastReceiver rbr = new RemoteBroadcastReceiver();
 
 	public long getMinid() {
 		return minid;
@@ -26,24 +30,14 @@ public class ChatTimerTask extends TimerTask implements OnCommandEndListener {
 	private OnCommandEndListener onCommandEndListener = null;
 	private Context context = null;
 
-	public static ChatTimerTask getInstance(Context context,
-			OnCommandEndListener onCommandEndListener, String chatcode) {
-		if (mt == null) {
-			mt = new ChatTimerTask(context, onCommandEndListener, chatcode);
-		}
-		return mt;
-	}
-
-	public static ChatTimerTask getInstance() {
-		return mt;
-	}
-
 	public ChatTimerTask(Context context,
 			OnCommandEndListener onCommandEndListener, String chatcode) {
 		super();
 		this.context = context;
 		this.onCommandEndListener = onCommandEndListener;
 		this.chatcode = chatcode;
+		
+		rbr.setCommandEndListener(this);
 	}
 
 	@Override
@@ -54,12 +48,21 @@ public class ChatTimerTask extends TimerTask implements OnCommandEndListener {
 		command.putParam("maxid", maxid + "");
 		command.putParam("minid", minid + "");
 		command.putParam("chatcode", chatcode);
-		CommandConnector con = new CommandConnector(context, command);
-		con.setOnCommandEndListener(this);
-		con.execute("");
+		//CommandConnector con = new CommandConnector(context, command);
+		//con.setOnCommandEndListener(this);
+		//con.execute("");
+		
+		context.registerReceiver(rbr,
+				new IntentFilter(RemoteService.IGO_SERVICE_ACTION));
+		context.startService(
+				new Intent(context, RemoteService.class)
+						.putExtra(Command.PARAM_COMMAND,
+								command.getJson()));
 	}
 
 	public void OnCommandEnd(Command command, Object result) {
+		context.unregisterReceiver(rbr);
+		
 		ChatMessage[] items = (ChatMessage[]) result;
 
 		if (items != null) {
@@ -83,5 +86,12 @@ public class ChatTimerTask extends TimerTask implements OnCommandEndListener {
 
 	public String getLastHash() {
 		return null;
+	}
+
+	@Override
+	public boolean cancel() {
+		context.unregisterReceiver(rbr);
+		
+		return super.cancel();
 	}
 }

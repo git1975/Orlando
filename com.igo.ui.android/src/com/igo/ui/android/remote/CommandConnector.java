@@ -3,9 +3,7 @@ package com.igo.ui.android.remote;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-import java.net.Authenticator;
 import java.net.HttpURLConnection;
-import java.net.PasswordAuthentication;
 import java.net.URL;
 
 import com.igo.ui.android.DataStorage;
@@ -89,14 +87,19 @@ public class CommandConnector extends AsyncTask<String, String, String> {
 		System.out.println("data=" + data);
 		return data;
 	}
+	
+	public void execute(){
+		execute("");
+	}
 
 	@Override
 	protected void onPostExecute(String result) {
 		System.out.println("CommandConnector.onPostExecute.result=" + result);
-		Object objResult = CommandResponseFactory.getCommandResponseObject(
-				command.getCommand(), result);
+		//Object objResult = CommandResponseFactory.getCommandResponseObject(
+		//		command.getCommand(), result);
 
-		doCommandEnd(objResult);
+		//doCommandEnd(objResult);
+		doCommandEnd(result);
 	}
 
 	private void doCommandEnd(Object result) {

@@ -2,16 +2,12 @@ package com.igo.ui.android.widget;
 
 import java.text.SimpleDateFormat;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.igo.ui.android.DataStorage;
 import com.igo.ui.android.R;
 import com.igo.ui.android.domain.ChatMessage;
 import com.igo.ui.android.domain.Login;
 import com.igo.ui.android.remote.Command;
 import com.igo.ui.android.remote.CommandConnector;
-import com.igo.ui.android.remote.CommandResponseFactory;
 import com.igo.ui.android.remote.OnCommandEndListener;
 
 import android.content.Context;
@@ -22,13 +18,10 @@ import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ChatMessageView extends RelativeLayout implements
 		OnCommandEndListener {

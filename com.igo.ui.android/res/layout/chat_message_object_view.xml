@@ -57,9 +57,9 @@
 
                     <TextView
                         android:id="@+id/tv_chat_cmd"
-                        android:layout_width="wrap_content"
-                        android:layout_height="fill_parent"
-                        android:maxWidth="300dp"
+                        android:layout_width="71dp"
+                        android:layout_height="wrap_content"
+                        android:maxLength="250"
                         android:paddingLeft="1dp"
                         android:paddingRight="1dp"
                         android:text="123"
@@ -92,7 +92,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="fill_parent"
                     android:background="@drawable/ic_speech4_2"
-                    android:maxWidth="300dp"
+                    android:maxWidth="200dp"
                     android:paddingLeft="1dp"
                     android:paddingRight="1dp"
                     android:textColor="#000000" />
