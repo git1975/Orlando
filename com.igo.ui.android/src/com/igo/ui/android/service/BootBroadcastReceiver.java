@@ -16,10 +16,10 @@ public class BootBroadcastReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		System.out.println("BootBroadcastReceiver.onReceive->");
 		
-		android.os.Debug.waitForDebugger(); 
+		//android.os.Debug.waitForDebugger(); 
 		
-		Toast.makeText(context, "BootBroadcastReceiver.onReceive",
-				Toast.LENGTH_LONG).show();
+		//Toast.makeText(context, "BootBroadcastReceiver.onReceive",
+		//		Toast.LENGTH_LONG).show();
 		
 		//context.startService(new Intent(context, RemoteService.class));
 		
