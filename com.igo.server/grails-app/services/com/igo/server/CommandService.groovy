@@ -254,7 +254,7 @@ class CommandService {
 			//Показываем сообщение о просрочке только для задач CMD
 			Task task = q.task
 			Taskstatus ts = Taskstatus.find("from Taskstatus where task=?", [task])
-			if(ts.msgtype == "CMD"){
+			if(ts != null && ts.msgtype == "CMD"){
 				def mes = getMessage(q, true)
 				if(mes == null){
 					mes = new MessageCommand()

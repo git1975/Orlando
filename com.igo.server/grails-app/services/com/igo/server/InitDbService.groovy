@@ -24,12 +24,10 @@ class InitDbService {
 			User usr2 = new User(login: 'user2', username: 'Петр Петров', password: '1', role: role2).save(failOnError: true)
 			User usr3 = new User(login: 'user3', username: 'Жорж Милославский', password: '1', role: role2).save(failOnError: true)
 		}
-		if(!Process.count) {
-			//Repeating process
-			Process proc = new Process(name: 'production', description: 'производство', repeatevery: 0)
-			.save(failOnError: true)
+		if(Process.findByName('production') == null){
+				Process proc = new Process(name: 'production', description: 'производство', repeatevery: 0).save(failOnError: true)
 		}
-		if(!Task.count) {
+		if(true) {
 			Process proc = Process.find("from Process as a where a.name = ?", ['production'])
 
 			User usr1 = User.find("from User as a where a.login = ?", ['user1'])
@@ -38,14 +36,10 @@ class InitDbService {
 
 			SimpleDateFormat sdfTime = new SimpleDateFormat("mm")
 
-			Task task = new Task(name: 'start', description: 'старт', user: usr1, ord: 1, startdate: sdfTime.parse("00"), signaldate: sdfTime.parse("01"), enddate: sdfTime.parse("01"), process: proc).save(failOnError: true)
-			//proc.addToTasks(task).save(failOnError: true)
-			task = new Task(name: 'prepare', description: 'подготовка', user: usr2, ord: 2, startdate: sdfTime.parse("01"), signaldate: sdfTime.parse("01"), enddate: sdfTime.parse("02"), process: proc).save(failOnError: true)
-			//proc.addToTasks(task).save(failOnError: true)
-			task = new Task(name: 'running', description: 'исполнение', user: usr3, ord: 3, startdate: sdfTime.parse("02"), signaldate: sdfTime.parse("02"), enddate: sdfTime.parse("03"), process: proc).save(failOnError: true)
-			//proc.addToTasks(task).save(failOnError: true)
-			task = new Task(name: 'finish', description: 'завершение', user: usr3, ord: 4, startdate: sdfTime.parse("03"), signaldate: sdfTime.parse("04"), enddate: sdfTime.parse("05"), process: proc).save(failOnError: true)
-			//proc.addToTasks(task).save(failOnError: true)
+			if(Button.findByName('start') == null)new Task(name: 'start', description: 'старт', user: usr1, ord: 1, startdate: sdfTime.parse("00"), signaldate: sdfTime.parse("01"), enddate: sdfTime.parse("01"), process: proc).save(failOnError: true)
+			if(Button.findByName('prepare') == null)new Task(name: 'prepare', description: 'подготовка', user: usr2, ord: 2, startdate: sdfTime.parse("01"), signaldate: sdfTime.parse("01"), enddate: sdfTime.parse("02"), process: proc).save(failOnError: true)
+			if(Button.findByName('running') == null)new Task(name: 'running', description: 'исполнение', user: usr3, ord: 3, startdate: sdfTime.parse("02"), signaldate: sdfTime.parse("02"), enddate: sdfTime.parse("03"), process: proc).save(failOnError: true)
+			if(Button.findByName('finish') == null)new Task(name: 'finish', description: 'завершение', user: usr3, ord: 4, startdate: sdfTime.parse("03"), signaldate: sdfTime.parse("04"), enddate: sdfTime.parse("05"), process: proc).save(failOnError: true)
 		}
 		if(!Queue.count) {
 			//Process proc = Process.findByName("production")
@@ -55,13 +49,13 @@ class InitDbService {
 		if(!Deviation.count) {
 			new Deviation(name: 'Отказ').save(failOnError: true)
 		}
-		if(!Button.count) {
-			new Button(code: 'YES', name: 'Да', replystatus: 'REPLY_YES').save(failOnError: true)
-			new Button(code: 'NO', name: 'Нет', replystatus: 'REPLY_NO').save(failOnError: true)
-			new Button(code: 'FINISH', name: 'Нет', replystatus: 'REPLY_FINISH').save(failOnError: true)
-			new Button(code: 'HAND', name: 'Ручной режим', replystatus: 'REPLY_HAND').save(failOnError: true)
-			new Button(code: 'BTN_1', name: 'Хорошо', replystatus: 'REPLY_1').save(failOnError: true)
-			new Button(code: 'BTN_2', name: 'Плохо', replystatus: 'REPLY_2').save(failOnError: true)
+		if(true) {
+			if(Button.findByCode('YES') == null) new Button(code: 'YES', name: 'Да', replystatus: 'REPLY_YES').save(failOnError: true)
+			if(Button.findByCode('NO') == null) new Button(code: 'NO', name: 'Нет', replystatus: 'REPLY_NO').save(failOnError: true)
+			if(Button.findByCode('FINISH') == null) new Button(code: 'FINISH', name: 'Нет', replystatus: 'REPLY_FINISH').save(failOnError: true)
+			if(Button.findByCode('HAND') == null) new Button(code: 'HAND', name: 'Ручной режим', replystatus: 'REPLY_HAND').save(failOnError: true)
+			if(Button.findByCode('BTN_1') == null) new Button(code: 'BTN_1', name: 'Хорошо', replystatus: 'REPLY_1').save(failOnError: true)
+			if(Button.findByCode('BTN_2') == null) new Button(code: 'BTN_2', name: 'Плохо', replystatus: 'REPLY_2').save(failOnError: true)
 		}
 		if(!Taskstatus.count) {
 			Button btn1 = Button.find("from Button as a where a.code = ?", ['YES'])
@@ -157,20 +151,20 @@ class InitDbService {
 			Task task1 = Task.find("from Task as a where a.name = ?", ['start_dm'])
 			ts1 = new Taskstatus(status: 'INIT', msgtype: 'INFO', sendTo: 'user1', color: 1, lifetime: 1, msgtext: 'Начинается процедура <process>, ждем когда <user=user2> подтвердит контрольный запрос').save(failOnError: true)
 			ts1.task = task1
-			
+
 			//confirmation_dm
 			task1 = Task.find("from Task as a where a.name = ?", ['confirmation_dm'])
 			ts1 = new Taskstatus(status: 'INIT', msgtype: 'CMD', sendTo: 'user2', color: 1, lifetime: 1, msgtext: '<user=user2>, подтверждаешь, что в <process> все ОК?').save(failOnError: true)
 			ts1.addToButtons(Button.find("from Button as a where a.replystatus = ?", ['REPLY_YES']))
 			ts1.addToButtons(Button.find("from Button as a where a.replystatus = ?", ['REPLY_NO']))
 			ts1.task = task1
-			
+
 			//ts2 = new Taskstatus(status: 'INIT', msgtype: 'INFO', sendTo: 'user1', color: 1, lifetime: 1, msgtext: 'Завершается процедура <process>').save(failOnError: true)
 			//ts2.task = task1
-			
+
 			ts3 = new Taskstatus(status: 'REPLY_YES', msgtype: 'INFO', sendTo: 'user1', color: 1, lifetime: 1, msgtext: 'Демонстрация успешно завершена').save(failOnError: true)
 			ts3.task = task1
-			
+
 			ts4 = new Taskstatus(status: 'REPLY_NO', msgtype: 'INFO', sendTo: 'user1', color: 1, lifetime: 1, msgtext: '<user=user2>, сказал, что в <process> бардак').save(failOnError: true)
 			ts4.task = task1
 		}

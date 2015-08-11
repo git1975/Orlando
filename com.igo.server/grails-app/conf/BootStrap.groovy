@@ -21,7 +21,7 @@ class BootStrap {
 		log.debug("now=" + sdfFull.format(new Date()))
 		log.debug("System.file.encoding=" + System.getProperty("file.encoding"))
 		
-		initDbService.initDatabase()
+		//initDbService.initDatabase()
 	}
 	def destroy = {
 	}
