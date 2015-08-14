@@ -37,23 +37,41 @@ class CommandService {
 		}
 	}
 
+	/**
+	 * Если в очереди нет задач процесса с временем старта больше времени старта процесса, то создать задачи процесса
+	 * @return
+	 */
 	def startProcessByTime() {
-		List list = Process.findAll("from Process as a where a.repeatevery = 0")
+		List process = Process.findAll("from Process as a where a.repeatevery = 0")
 		//Проверим, есть-ли в очереди задачи этого процесса с временем старта больше времени старта процесса
-		for(Process item : list){
+		for(Process item : process){
 			Date nowTime = Utils.shiftDateInPresent(item.startdate);
 			Date now = new Date()
 			//Проверим, не пора-ли стартовать процесс
 			if(nowTime.before(now)){
-				List qList = Queue.findAll("from Queue as a where a.idprocess = ? and a.ord = 1 and startdate > ?", [item.id, nowTime])
-				if(qList == null || qList.size() == 0){
+				List queue = Queue.findAll("from Queue as a where a.idprocess = ? and a.ord = 1 and startdate > ?", [item.id, nowTime])
+				if(queue == null || queue.size() == 0){
 					processStartProcess(item)
 				}
 			}
 		}
 	}
 
+	/**
+	 * Это начальный метод, который вызывает Qurtz каждые 5 сек
+	 * @return
+	 */
 	def processNext() {
+		//Создадим экземпляр процесса
+		startProcessByTime()
+		//Для активного экземпляра таска найдем соответствующие статусу этого таска сообщения (Taskstatus)
+		//и создадим экземпляры сообщений (в Queue)
+		createTaskstatusInstances()
+		//Обработать экземпляры сообщений - создать сообщения чата для активных сообщений, проверить deadline и др. проверки
+		createTaskstatusChat()
+	}
+	
+	def processNextOld() {
 		//log.info(" CommandService.processNext...")
 		List list = Queue.findAll("from Queue as a where a.finished = ?", [false])
 		for(Queue item : list){
@@ -71,6 +89,64 @@ class CommandService {
 		repeatEveryProcess()
 
 		startProcessByTime()
+	}
+	
+	/**
+	 * Для активного экземпляра таска найдем соответствующие статусу этого таска сообщения (Taskstatus) 
+	 * и создадим экземпляры сообщений (в Queue)
+	 * @return
+	 */
+	def createTaskstatusInstances() {
+		List tasks = Queue.findAll("from Queue as a where a.finished = ? and type = 'Task'", [false])
+		for(Queue item : tasks){
+			List taskstatus = Taskstatus.findAll("from Taskstatus where task = ? and status = ?", [item.task, item.status])
+			for(Taskstatus ts : taskstatus){
+				Queue q = Queue.find("from Queue where type = 'Taskstatus' and parent = ? and taskstatus = ?", [item, ts])
+				if(q == null){
+					ProcessInstanceFactory.createTaskstatusInstance(item, ts)
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Отправим сообщения в чат согласно активным экземплярам очереди type = 'Taskstatus'
+	 * сразу завершаем задачи INFO
+	 * Для задач CMD увеличиваем счетчик repeatcount каждый раз при посылке повторного сообщения
+	 * @return
+	 */
+	def createTaskstatusChat(){
+		//Сообщения со статусом 'DEADLINE' уже не рассматриваются
+		List tasks = Queue.findAll("from Queue as a where a.finished = ? and type = 'Taskstatus' and status != 'DEADLINE'", [false])
+		for(Queue item : tasks){
+			MessageCommand mes = getTaskstatusMessage(item)
+			if(mes != null){
+				//mes.buttons.each{b->log.debug(b.name)}
+				//log.debug(mes.type)
+				if(item.taskstatus.msgtype == 'INFO'){
+					sendChatMessage(mes)
+					item.finished = true
+					item.save(failOnError: true)
+				} else if(item.taskstatus.msgtype == 'CMD'){					
+					//Проверим, настало-ли время отправлять повторно
+					int repeatcount = item.repeatcount
+					
+					Date now = new Date()
+					long minutesAgo = Utils.dateMinutesInterval(item.signaldate, now)
+					log.debug('minutesAgo=' + minutesAgo)
+					if(item.taskstatus.repeatevery > 0 && minutesAgo >= item.taskstatus.repeatevery){					
+						item.repeatcount = repeatcount + 1
+						item.signaldate = now						
+						if(item.repeatcount >= item.maxrepeat){
+							item.status = 'DEADLINE'
+						}
+						
+						item.save(failOnError: true)
+					}
+					
+				}
+			}
+		}
 	}
 
 	def autoReply(){
@@ -179,7 +255,15 @@ class CommandService {
 			return null;
 		}
 		queue.status = reply
+		queue.finished = true
 		queue.save(failOnError: true)
+		log.debug("--->>>" + forStatus + "-" + queue.parent.status)
+		if(queue.parent != null){
+			if(queue.parent.status == forStatus){
+				queue.parent.status = reply
+				queue.parent.save(failOnError: true)
+			}
+		}
 
 		return queue
 	}
@@ -195,6 +279,24 @@ class CommandService {
 		return item
 	}
 
+	def Chat sendChatMessage(MessageCommand mes) {
+		Chat item = new Chat()
+
+		Date now = new Date()
+
+		item.senddate = now
+		item.sendtime = now.getTime()
+		item.sendfrom = "auto"
+		item.sendto = mes.sendTo
+		item.body = mes.body
+		item.chatcode = mes.chatcode
+		item.xmlcontent = (mes as JSON)
+		
+		item.save(failOnError: true)
+
+		return item
+	}
+	
 	def Chat sendChat(String from, String to, String body, String chatcode) {
 		Chat item = new Chat()
 
@@ -311,6 +413,33 @@ class CommandService {
 					mes.color = 3
 				}
 			}
+			return mes
+		}
+		return null
+	}
+	
+	def getTaskstatusMessage(Queue q){
+		Taskstatus ts = q.taskstatus
+		//найден статус задачи, занесенный в шаблон
+		if(ts != null){
+			def mes = new MessageCommand()
+			mes.setQueue(q)
+			mes.id = q.id
+			mes.body = ts.msgtext
+			mes.type = ts.msgtype
+			mes.status = q.status
+			mes.forStatus = ts.status
+			mes.color = ts.color
+			mes.sendTo = ts.sendTo
+			Process process = Process.get(q.idprocess)
+			mes.chatcode = process.name
+			mes.buttons = new Button[ts.buttons.size()]
+			for(int i = 0; i < ts.buttons.size(); i++){
+				mes.buttons[i] = ts.buttons[i]
+			}
+
+			mes.body = getMessageBody(q, mes.body)
+
 			return mes
 		}
 		return null

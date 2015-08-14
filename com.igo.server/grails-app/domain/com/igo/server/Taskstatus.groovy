@@ -9,6 +9,8 @@ class Taskstatus {
 	Role role
 	int color = 1
 	int lifetime = 1
+	int maxrepeat = 0
+	int repeatevery = 1
 	List buttons = new ArrayList()
 	
 	static hasMany = [buttons: Button]

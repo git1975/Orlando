@@ -13,7 +13,12 @@ class Queue {
 	int ord
 	User user
 	String status
+	String initstatus
 	Task task
+	Queue parent
+	Taskstatus taskstatus
+	int repeatcount
+	int maxrepeat
 	
 	static constraints = {
 		type blank: false, unique: false

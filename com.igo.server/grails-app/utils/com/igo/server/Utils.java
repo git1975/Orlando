@@ -58,6 +58,12 @@ public class Utils {
 		}
 	}
 	
+	/**
+	 * Возвращает интервал в минутах между двумя датами
+	 * @param dt1
+	 * @param dt2
+	 * @return
+	 */
 	public static long dateMinutesInterval(Date dt1, Date dt2){
 		Date diff = new Date(dt2.getTime() - dt1.getTime());
 		
