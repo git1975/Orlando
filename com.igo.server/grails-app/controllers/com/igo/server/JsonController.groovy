@@ -184,7 +184,7 @@ class JsonController {
 			fullList.add(chatCommand)
 		}
 
-		log.println fullList as JSON
+		log.debug(fullList as JSON)
 
 		render fullList as JSON;
 	}

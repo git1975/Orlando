@@ -10,6 +10,7 @@ import com.igo.ui.android.domain.Button;
 import com.igo.ui.android.domain.ChatMessage;
 import com.igo.ui.android.domain.ChatsItem;
 import com.igo.ui.android.domain.Login;
+import com.igo.ui.android.domain.Register;
 import com.igo.ui.android.domain.Task;
 
 public class CommandResponseFactory {
@@ -60,7 +61,8 @@ public class CommandResponseFactory {
 					item.setChatcode(getJsonValue(jObj, "chatcode"));
 
 					String message = getJsonValue(jObj, "message");
-					if (message != null && !"".equals(message) && !"null".equals(message)) {
+					if (message != null && !"".equals(message)
+							&& !"null".equals(message)) {
 						JSONObject jTask = new JSONObject(message);
 						item.setTask(parseTaskJson(jTask));
 					}
@@ -78,10 +80,10 @@ public class CommandResponseFactory {
 					items[i] = item;
 				}
 				objResult = items;
-			} else if (Command.GET_CHATS.equals(command)){
+			} else if (Command.GET_CHATS.equals(command)) {
 				ChatsItem[] items = null;
 				JSONArray jArr = new JSONArray(result);
-				
+
 				items = new ChatsItem[jArr.length()];
 				for (int i = 0; i < jArr.length(); i++) {
 					JSONObject jObj = jArr.getJSONObject(i);
@@ -89,7 +91,7 @@ public class CommandResponseFactory {
 					item.setCode(getJsonValue(jObj, "code"));
 					item.setName(getJsonValue(jObj, "name"));
 					item.setIspersonal(getJsonBoolean(jObj, "ispersonal"));
-					
+
 					items[i] = item;
 				}
 				objResult = items;
@@ -110,7 +112,7 @@ public class CommandResponseFactory {
 			return "";
 		}
 	}
-	
+
 	public static Boolean getJsonBoolean(JSONObject obj, String name) {
 		try {
 			return obj.getBoolean(name);
@@ -129,16 +131,11 @@ public class CommandResponseFactory {
 
 	public static Task parseTaskJson(JSONObject jObj) throws JSONException {
 		Task task = new Task();
-		if(!"".equals(getJsonValue(jObj, "replytext"))){
+		if (!"".equals(getJsonValue(jObj, "replytext"))) {
 			task.setReplytext(getJsonValue(jObj, "replytext"));
 			return task;
 		}
-		
-		JSONArray jButtons = null;
-		Object jBut = jObj.get("buttons");
-		if (jBut != null && !"null".equals(jBut.toString())) {
-			jButtons = jObj.getJSONArray("buttons");
-		}
+
 		task.setId(getJsonValue(jObj, "id"));
 		task.setName(getJsonValue(jObj, "name"));
 		task.setStartDate(getJsonValue(jObj, "dt1"));
@@ -148,17 +145,37 @@ public class CommandResponseFactory {
 		task.setStatus(getJsonValue(jObj, "status"));
 		task.setForStatus(getJsonValue(jObj, "forStatus"));
 		task.setColor(getJsonInt(jObj, "color"));
-		task.setXmlvalues(getJsonValue(jObj, "xmlvalues"));
+		task.setRegisters(getJsonValue(jObj, "registers"));
+		// Добавляем кнопки
+		JSONArray jButtons = null;
+		Object jBut = jObj.get("buttons");
+		if (jBut != null && !"null".equals(jBut.toString())) {
+			jButtons = jObj.getJSONArray("buttons");
+		}
 		if (jButtons != null) {
-			Button[] b = new Button[jButtons.length()];
+			Button[] arr = new Button[jButtons.length()];
 			for (int k = 0; k < jButtons.length(); k++) {
 				JSONObject jBtn = jButtons.getJSONObject(k);
-				b[k] = new Button();
-				b[k].setCode(getJsonValue(jBtn, "code"));
-				b[k].setName(getJsonValue(jBtn, "name"));
-				b[k].setReplystatus(getJsonValue(jBtn, "replystatus"));
+				arr[k] = new Button();
+				arr[k].setCode(getJsonValue(jBtn, "code"));
+				arr[k].setName(getJsonValue(jBtn, "name"));
+				arr[k].setReplystatus(getJsonValue(jBtn, "replystatus"));
+				// Добавляем значение регистра для кнопки
+				JSONObject jReg = null;
+				try {
+					jReg = jBtn.getJSONObject("register");
+				} catch (JSONException e) {
+					jReg = null;
+				}
+				if (jReg != null && !"null".equals(jReg.toString())) {
+					Register register = new Register();
+					register.setCode(getJsonValue(jReg, "code"));
+					register.setName(getJsonValue(jReg, "name"));
+
+					arr[k].setRegister(register);
+				}
 			}
-			task.setButtons(b);
+			task.setButtons(arr);
 		}
 
 		return task;

@@ -313,6 +313,10 @@ class CommandService {
 		Chat item = new Chat()
 
 		Date now = new Date()
+		String xmlcontent = null
+		JSON.use('deep'){
+			xmlcontent = (mes as JSON)
+		}
 
 		item.senddate = now
 		item.sendtime = now.getTime()
@@ -320,7 +324,7 @@ class CommandService {
 		item.sendto = mes.sendTo
 		item.body = mes.body
 		item.chatcode = mes.chatcode
-		item.xmlcontent = (mes as JSON)
+		item.xmlcontent = xmlcontent
 
 		item.save(failOnError: true)
 
@@ -461,7 +465,7 @@ class CommandService {
 			mes.forStatus = ts.status
 			mes.color = ts.color
 			mes.sendTo = ts.sendTo
-			mes.xmlvalues = ts.xmlvalues
+			mes.registers = ts.registers
 			Process process = Process.get(q.idprocess)
 			mes.chatcode = process.name
 			mes.buttons = new Button[ts.buttons.size()]

@@ -4,6 +4,7 @@ public class Button {
 	private String code;
 	private String name;
 	private String replystatus;
+	private Register register;
 	
 	public String getCode() {
 		return code;
@@ -22,5 +23,11 @@ public class Button {
 	}
 	public void setReplystatus(String replystatus) {
 		this.replystatus = replystatus;
+	}
+	public Register getRegister() {
+		return register;
+	}
+	public void setRegister(Register register) {
+		this.register = register;
 	}
 }

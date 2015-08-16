@@ -12,7 +12,7 @@ public class Task {
 	private Button[] buttons;
 	private int color;
 	private String replytext;
-	private String xmlvalues;
+	private String registers;
 
 	public String getId() {
 		return id;
@@ -102,11 +102,11 @@ public class Task {
 		this.forStatus = forStatus;
 	}
 
-	public String getXmlvalues() {
-		return xmlvalues;
+	public String getRegisters() {
+		return registers;
 	}
 
-	public void setXmlvalues(String xmlvalues) {
-		this.xmlvalues = xmlvalues;
+	public void setRegisters(String registers) {
+		this.registers = registers;
 	}
 }

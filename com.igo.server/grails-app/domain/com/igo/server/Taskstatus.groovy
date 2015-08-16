@@ -12,7 +12,7 @@ class Taskstatus {
 	int maxrepeat = 0
 	int repeatevery = 1
 	List buttons = new ArrayList()
-	String xmlvalues	
+	String registers	
 	
 	static hasMany = [buttons: Button]
 	
@@ -21,7 +21,7 @@ class Taskstatus {
 		}*/
 	
 	static constraints = {
-		xmlvalues size: 1..1000
+		registers size: 1..1000
 	}
 
 	def getButtonsList() {

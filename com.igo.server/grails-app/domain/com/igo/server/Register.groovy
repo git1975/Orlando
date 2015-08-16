@@ -1,12 +1,12 @@
 package com.igo.server
 
-class Button {
+class Register {
 	String code
 	String name
-	String replystatus
-	Register register
+	String description
 
-    static constraints = {
+	static constraints = {
 		code blank: false, unique: true
-    }
+		name blank: false
+	}
 }
