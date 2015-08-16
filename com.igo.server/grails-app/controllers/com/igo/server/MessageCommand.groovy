@@ -19,6 +19,7 @@ public class MessageCommand {
 	Date enddate
 	Button[] buttons
 	int color
+	String xmlvalues
 	
 	def setQueue(Queue q){
 		this.id = q.id

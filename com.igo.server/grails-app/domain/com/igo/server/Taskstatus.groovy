@@ -12,16 +12,18 @@ class Taskstatus {
 	int maxrepeat = 0
 	int repeatevery = 1
 	List buttons = new ArrayList()
+	String xmlvalues	
 	
 	static hasMany = [buttons: Button]
 	
 	/*static mapping = {
 		buttons cascade:"all,delete-orphan"
 		}*/
-
-    static constraints = {
-    }
 	
+	static constraints = {
+		xmlvalues size: 1..1000
+	}
+
 	def getButtonsList() {
 		return LazyList.decorate(
 			  buttons,

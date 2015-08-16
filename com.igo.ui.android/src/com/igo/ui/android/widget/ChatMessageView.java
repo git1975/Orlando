@@ -19,6 +19,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -168,8 +169,10 @@ public class ChatMessageView extends RelativeLayout implements
 
 		Button btnYes = (Button) findViewById(R.id.chat_btn1);
 		Button btnNo = (Button) findViewById(R.id.chat_btn2);
+		EditText etChatReg1 = (EditText) findViewById(R.id.et_chat_reg1);
 		btnYes.setVisibility(View.INVISIBLE);
 		btnNo.setVisibility(View.INVISIBLE);
+		etChatReg1.setVisibility(View.INVISIBLE);
 
 		if (item.getTask() != null && item.getTask().getButtons() != null
 				&& item.getTask().getButtons().length > 0) {
@@ -179,6 +182,10 @@ public class ChatMessageView extends RelativeLayout implements
 			viewChatCmd.setVisibility(View.VISIBLE);
 			TextView tvBodyCmd = (TextView) findViewById(R.id.tv_chat_cmd);
 			tvBodyCmd.setText(body);
+			
+			if(item.getTask().getXmlvalues() != null && !"".equals(item.getTask().getXmlvalues())){
+				etChatReg1.setVisibility(View.VISIBLE);
+			}
 			
 			int counter = 0;
 			for (com.igo.ui.android.domain.Button btn : buttons) {
@@ -201,6 +208,7 @@ public class ChatMessageView extends RelativeLayout implements
 							.getForStatus());
 					btnC.setTag(R.string.tag_parent, this);
 					btnC.setTag(R.string.tag_chatid, item.getId());
+					btnC.setTag(R.string.tag_reg, item.getTask().getXmlvalues());
 					btnC.setOnClickListener(new OnClickListener() {
 						public void onClick(View v) {
 							Command command = new Command(Command.REPLY);
@@ -212,6 +220,8 @@ public class ChatMessageView extends RelativeLayout implements
 									v.getTag(R.string.tag_forStatus).toString());
 							command.putParam("chatid",
 									v.getTag(R.string.tag_chatid).toString());
+							command.putParam("reg1",
+									v.getTag(R.string.tag_reg).toString());
 							CommandConnector con = new CommandConnector(
 									getContext(), command);
 							

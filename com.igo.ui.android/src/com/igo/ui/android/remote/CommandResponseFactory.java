@@ -148,6 +148,7 @@ public class CommandResponseFactory {
 		task.setStatus(getJsonValue(jObj, "status"));
 		task.setForStatus(getJsonValue(jObj, "forStatus"));
 		task.setColor(getJsonInt(jObj, "color"));
+		task.setXmlvalues(getJsonValue(jObj, "xmlvalues"));
 		if (jButtons != null) {
 			Button[] b = new Button[jButtons.length()];
 			for (int k = 0; k < jButtons.length(); k++) {

@@ -41,7 +41,7 @@ class JsonController {
 			}
 		}
 
-		render messages as JSON;
+		render messages as JSON
 	}
 
 	def report() {

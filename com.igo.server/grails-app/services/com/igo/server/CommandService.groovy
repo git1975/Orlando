@@ -62,7 +62,9 @@ class CommandService {
 	 * @return
 	 */
 	def processNext() {
-		//Создадим экземпляр процесса
+		//Завершаем задачи по времени
+		finishTaskByTime()
+		//Создадим экземпляр процесса - таски в очереди
 		startProcessByTime()
 		//Для активного экземпляра таска найдем соответствующие статусу этого таска сообщения (Taskstatus)
 		//и создадим экземпляры сообщений (в Queue)
@@ -70,7 +72,7 @@ class CommandService {
 		//Обработать экземпляры сообщений - создать сообщения чата для активных сообщений, проверить deadline и др. проверки
 		createTaskstatusChat()
 	}
-	
+
 	def processNextOld() {
 		//log.info(" CommandService.processNext...")
 		List list = Queue.findAll("from Queue as a where a.finished = ?", [false])
@@ -90,14 +92,27 @@ class CommandService {
 
 		startProcessByTime()
 	}
-	
+
+	/**
+	 * Завершаем задачи по времени
+	 */
+	def finishTaskByTime(){
+		Date now = new Date()
+		List tasks = Queue.findAll("from Queue where type = 'Task' and finished = ? and enddate < ?", [false, now])
+		for(Queue item : tasks){
+			item.finished = true
+			item.save(failOnError: true)
+		}
+	}
+
 	/**
 	 * Для активного экземпляра таска найдем соответствующие статусу этого таска сообщения (Taskstatus) 
 	 * и создадим экземпляры сообщений (в Queue)
 	 * @return
 	 */
 	def createTaskstatusInstances() {
-		List tasks = Queue.findAll("from Queue as a where a.finished = ? and type = 'Task'", [false])
+		Date now = new Date()
+		List tasks = Queue.findAll("from Queue where type = 'Task' and finished = ? and startdate < ? and enddate > ?", [false, now, now])
 		for(Queue item : tasks){
 			List taskstatus = Taskstatus.findAll("from Taskstatus where task = ? and status = ?", [item.task, item.status])
 			for(Taskstatus ts : taskstatus){
@@ -108,7 +123,7 @@ class CommandService {
 			}
 		}
 	}
-	
+
 	/**
 	 * Отправим сообщения в чат согласно активным экземплярам очереди type = 'Taskstatus'
 	 * сразу завершаем задачи INFO
@@ -125,25 +140,40 @@ class CommandService {
 				//log.debug(mes.type)
 				if(item.taskstatus.msgtype == 'INFO'){
 					sendChatMessage(mes)
+
+					Date now = new Date()
+					item.signaldate = now
 					item.finished = true
 					item.save(failOnError: true)
-				} else if(item.taskstatus.msgtype == 'CMD'){					
+				} else if(item.taskstatus.msgtype == 'CMD'){
 					//Проверим, настало-ли время отправлять повторно
-					int repeatcount = item.repeatcount
-					
+					int repeatcount = item.repeatcount					
+
 					Date now = new Date()
-					long minutesAgo = Utils.dateMinutesInterval(item.signaldate, now)
-					log.debug('minutesAgo=' + minutesAgo)
-					if(item.taskstatus.repeatevery > 0 && minutesAgo >= item.taskstatus.repeatevery){					
-						item.repeatcount = repeatcount + 1
-						item.signaldate = now						
-						if(item.repeatcount >= item.maxrepeat){
-							item.status = 'DEADLINE'
-						}
-						
-						item.save(failOnError: true)
+					Date signal = item.signaldate
+					if(signal == null){
+						signal = now
 					}
-					
+					long minutesAgo = Utils.dateMinutesInterval(signal, now)
+					log.debug('minutesAgo=' + minutesAgo)
+					if(item.taskstatus.repeatevery > 0 && minutesAgo >= item.taskstatus.repeatevery){
+						repeatcount++
+						if(repeatcount > item.maxrepeat){
+							item.status = 'DEADLINE'
+							item.save(failOnError: true)
+						} else {
+							if(repeatcount > 1){
+								mes.body += ' (Повтор)'
+							}
+							sendChatMessage(mes)
+
+							item.repeatcount = repeatcount
+							item.signaldate = now
+
+							item.save(failOnError: true)
+						}
+					}
+
 				}
 			}
 		}
@@ -291,12 +321,12 @@ class CommandService {
 		item.body = mes.body
 		item.chatcode = mes.chatcode
 		item.xmlcontent = (mes as JSON)
-		
+
 		item.save(failOnError: true)
 
 		return item
 	}
-	
+
 	def Chat sendChat(String from, String to, String body, String chatcode) {
 		Chat item = new Chat()
 
@@ -417,7 +447,7 @@ class CommandService {
 		}
 		return null
 	}
-	
+
 	def getTaskstatusMessage(Queue q){
 		Taskstatus ts = q.taskstatus
 		//найден статус задачи, занесенный в шаблон
@@ -431,6 +461,7 @@ class CommandService {
 			mes.forStatus = ts.status
 			mes.color = ts.color
 			mes.sendTo = ts.sendTo
+			mes.xmlvalues = ts.xmlvalues
 			Process process = Process.get(q.idprocess)
 			mes.chatcode = process.name
 			mes.buttons = new Button[ts.buttons.size()]
@@ -521,7 +552,7 @@ class CommandService {
 			return e.getMessage()
 		}
 	}
-	
+
 	def doResetDatabaseDemo(){
 		try{
 			Taskstatus.findAll().each { it.buttons = null; it.save(flush:true, failOnError:true) }

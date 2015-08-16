@@ -19,10 +19,12 @@ class Queue {
 	Taskstatus taskstatus
 	int repeatcount
 	int maxrepeat
+	String xmlvalues
 	
 	static constraints = {
 		type blank: false, unique: false
 		startdate blank: false
+		xmlvalues size: 1..1000
 	}
 	
 	static hasOne = [idprocess:Process]

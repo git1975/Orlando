@@ -12,6 +12,7 @@ public class Task {
 	private Button[] buttons;
 	private int color;
 	private String replytext;
+	private String xmlvalues;
 
 	public String getId() {
 		return id;
@@ -99,5 +100,13 @@ public class Task {
 
 	public void setForStatus(String forStatus) {
 		this.forStatus = forStatus;
+	}
+
+	public String getXmlvalues() {
+		return xmlvalues;
+	}
+
+	public void setXmlvalues(String xmlvalues) {
+		this.xmlvalues = xmlvalues;
 	}
 }
