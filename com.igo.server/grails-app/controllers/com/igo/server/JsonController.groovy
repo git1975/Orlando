@@ -90,7 +90,7 @@ class JsonController {
 		if(item != null){
 			print item.username + " login OK"
 		}
-		
+
 		render "{'login':'" + item.login + "','role':'" + item.role.description + "','username':'" + item.username + "'}"
 	}
 
@@ -110,7 +110,8 @@ class JsonController {
 	def reply() {
 		log.debug("JsonController.reply." + params.id + "." + params.reply + "." + params.forStatus + "." + params.chatid)
 
-		Queue queue = commandService.replyQueue(java.lang.Long.parseLong(params.id), params.reply, params.forStatus)
+		//Ищем элемент очереди с нужным id, на который еще не был дан ответ
+		Queue queue = commandService.replyQueue(java.lang.Long.parseLong(params.id), params)
 
 		def res = null;
 		if(params.chatid != null && params.chatid != ""){
@@ -119,7 +120,7 @@ class JsonController {
 			if(queue != null){
 				Button btn = Button.find("from Button where replystatus=?", [params.reply])
 				if(btn != null){
-					res = "{'result':'" + btn.name + "'}"
+					res = "{'result':'" + btn.name + "'}"					
 				} else {
 					res = "{'result':'OK'}"
 				}
@@ -131,7 +132,7 @@ class JsonController {
 			log.debug(res)
 			render res
 			return
-		}		
+		}
 
 		if(queue != null){
 			log.debug("{'result':'OK'}")
@@ -163,13 +164,13 @@ class JsonController {
 
 		def List<Chat> list;
 		if(minid == 0 && maxid == 0){
-			list = Chat.findAll("from Chat as a where ((chatcode=? and (sendto=? or sendto='all')) or chatcode=? or chatcode=?) order by a.id desc", 
-				[params.chatcode, params.login, params.login + "-" + params.chatcode, params.chatcode + "-" + params.login], [max: 10])
+			list = Chat.findAll("from Chat as a where ((chatcode=? and (sendto=? or sendto='all')) or chatcode=? or chatcode=?) order by a.id desc",
+					[params.chatcode, params.login, params.login + "-" + params.chatcode, params.chatcode + "-" + params.login], [max: 10])
 			list = Utils.reverse(list);
 		} else {
 			//print "JsonController.getchat;maxid=" + maxid + ";minid=" + minid
-			list = Chat.findAll("from Chat as a where (a.id > ? or a.id < ?) and ((chatcode=? and (sendto=? or sendto='all')) or chatcode=? or chatcode=?) order by a.id desc", 
-				[maxid, minid, params.chatcode,  params.login, params.login + "-" + params.chatcode, params.chatcode + "-" + params.login], [max: 10])
+			list = Chat.findAll("from Chat as a where (a.id > ? or a.id < ?) and ((chatcode=? and (sendto=? or sendto='all')) or chatcode=? or chatcode=?) order by a.id desc",
+					[maxid, minid, params.chatcode, params.login, params.login + "-" + params.chatcode, params.chatcode + "-" + params.login], [max: 10])
 		}
 		def List<ChatCommand> fullList = new ArrayList();
 		for(Chat chat: list){
@@ -199,10 +200,10 @@ class JsonController {
 
 		render list as JSON;
 	}
-	
+
 	def getchats() {
 		log.debug("JsonController.getchats." + params.login)
-		
+
 		List<Process> list = Process.findAll()
 		def List<ChatsCommand> fullList = new ArrayList();
 		for(Process item: list){
@@ -210,20 +211,20 @@ class JsonController {
 			cc.code = item.name
 			cc.name = item.description
 			cc.ispersonal = false
-			
+
 			fullList.add(cc)
 		}
-		
+
 		List<User> list2 = User.findAll("from User as a where a.login != ?", [params.login])
 		for(User item: list2){
 			ChatsCommand cc = new ChatsCommand()
 			cc.code = item.login
 			cc.name = item.username
 			cc.ispersonal = true
-			
+
 			fullList.add(cc)
 		}
-		
+
 		render fullList as JSON;
 	}
 

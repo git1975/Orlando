@@ -52,7 +52,7 @@ public class ChatSectionFragment extends Fragment {
 		rootView = inflater.inflate(R.layout.fragment_chat, container, false);
 
 		view = (ListView) rootView.findViewById(R.id.list_chat_view);
-		adapter = new ChatViewAdapter(getActivity().getApplicationContext(),
+		adapter = new ChatViewAdapter(getActivity().getApplicationContext(), getActivity(),
 				view);
 		view.setAdapter(adapter);
 

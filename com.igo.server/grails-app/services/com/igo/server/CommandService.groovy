@@ -1,5 +1,7 @@
 package com.igo.server
 
+import java.util.Iterator;
+
 import java.text.SimpleDateFormat;
 
 import grails.converters.JSON
@@ -278,16 +280,37 @@ class CommandService {
 
 		return queue
 	}
-
-	def Queue replyQueue(long id, String reply, String forStatus) {
+	
+	def Queue replyQueue(long id, Map<Object, Object> params) {
+		String reply = params.reply 
+		String forStatus = params.forStatus 
 		Queue queue = Queue.find("from Queue as q where q.id = ? and q.status=?", [id, forStatus])
 		if(queue == null){
 			return null;
 		}
+		
+		//Если привязан регистр, то найти значение регистра из параметров и записать это новое значение в queue
+		String reg = queue.registers
+		Map<String, String> regMap = Utils.splitToMap(reg)
+		boolean b = false 
+		if(reg != null && reg != ''){			
+			for (Iterator<String> itr = regMap.keySet().iterator(); itr.hasNext();) {
+				String item = itr.next();
+				// Если среди параметров от клиента есть текущий регистр, то перезаписать его новым значением
+				if(params.get(item) != null){
+					regMap.put(item, params.get(item))	
+					b = true
+				}
+			}			
+		}
+		
+		
+		if(b){
+			queue.registers = Utils.mapToString(regMap)
+		}
 		queue.status = reply
 		queue.finished = true
 		queue.save(failOnError: true)
-		log.debug("--->>>" + forStatus + "-" + queue.parent.status)
 		if(queue.parent != null){
 			if(queue.parent.status == forStatus){
 				queue.parent.status = reply
@@ -308,7 +331,7 @@ class CommandService {
 
 		return item
 	}
-
+	
 	def Chat sendChatMessage(MessageCommand mes) {
 		Chat item = new Chat()
 
@@ -471,6 +494,10 @@ class CommandService {
 			mes.buttons = new Button[ts.buttons.size()]
 			for(int i = 0; i < ts.buttons.size(); i++){
 				mes.buttons[i] = ts.buttons[i]
+				if(mes.buttons[i].register != null){
+					Map reg = Utils.splitToMap(q.registers)					
+					mes.buttons[i].register.value = reg.get(mes.buttons[i].register.code)
+				}
 			}
 
 			mes.body = getMessageBody(q, mes.body)

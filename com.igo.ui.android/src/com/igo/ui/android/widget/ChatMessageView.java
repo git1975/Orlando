@@ -2,15 +2,20 @@ package com.igo.ui.android.widget;
 
 import java.text.SimpleDateFormat;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.igo.ui.android.DataStorage;
 import com.igo.ui.android.MainActivity;
 import com.igo.ui.android.R;
 import com.igo.ui.android.domain.ChatMessage;
 import com.igo.ui.android.domain.Login;
+import com.igo.ui.android.domain.Register;
 import com.igo.ui.android.remote.Command;
 import com.igo.ui.android.remote.CommandConnector;
 import com.igo.ui.android.remote.OnCommandEndListener;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -32,9 +37,14 @@ public class ChatMessageView extends RelativeLayout implements
 		OnCommandEndListener {
 	private ChatMessage chatItem = null;
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+	private Activity activity;
+	boolean dialogOk = false;
+	private String dialogValue;
 
-	public ChatMessageView(Context context, ChatMessage item) {
+	public ChatMessageView(Context context, Activity activity, ChatMessage item) {
 		super(context);
+
+		this.activity = activity;
 
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -68,11 +78,21 @@ public class ChatMessageView extends RelativeLayout implements
 		viewChatCmd.setVisibility(LinearLayout.GONE);
 
 		TextView tvBody2 = (TextView) findViewById(R.id.tv_chat_body_2);
-		String body = tvBody2.getText() + " (" + result.toString() + ")";
+		
+		String strResult = null;
+		try {
+			JSONObject jObj = new JSONObject(result.toString());
+			strResult = jObj.getString("result");
+		} catch (JSONException e) {
+			e.printStackTrace();
+			strResult = result.toString();
+		}
+		
+		String body = tvBody2.getText() + " (" + strResult + ")";
 		tvBody2.setText(body);
 		tvBody2.setVisibility(LinearLayout.VISIBLE);
 
-		getChatMessage().getTask().setReplytext(result.toString());
+		getChatMessage().getTask().setReplytext(strResult);
 		getChatMessage().getTask().setButtons(null);
 
 		this.invalidate();
@@ -210,54 +230,82 @@ public class ChatMessageView extends RelativeLayout implements
 					btnC.setTag(R.string.tag_reg, btn.getRegister());
 					btnC.setOnClickListener(new OnClickListener() {
 						public void onClick(View v) {
-							AlertDialog.Builder builder;
-							AlertDialog dialog;
-							Context context = v.getContext();
+							// Если к кнопке привязан регистр, то покажем
+							// модальный диалог редактирования регистра
+							final Register register = (Register) v
+									.getTag(R.string.tag_reg);
+							if (register != null) {
+								AlertDialog.Builder builder;
+								AlertDialog dialog;
+								Context context = v.getContext();
 
-							LayoutInflater inflater = (LayoutInflater) context
-									.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-							final View layout = inflater.inflate(
-									R.layout.fragment_chat_dialog,
-									(LinearLayout) findViewById(R.id.chat_dialog));
+								dialogOk = false;
 
-							builder = new AlertDialog.Builder(context);
-							builder.setView(layout);
-							dialog = builder.create();
-							dialog.setCancelable(true);
-							dialog.setMessage("This is my custom dialog");
+								LayoutInflater inflater = (LayoutInflater) context
+										.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+								final View layout = inflater
+										.inflate(
+												R.layout.fragment_chat_dialog,
+												(LinearLayout) findViewById(R.id.chat_dialog));
 
-							/*dialog.setButton(DialogInterface.BUTTON_POSITIVE,
-									"OK",
-									new DialogInterface.OnClickListener() {
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											EditText txtName = (EditText) layout
-													.findViewById(R.id.et_chat_dialog_register);
-											String name = txtName.getText()
-													.toString();
+								builder = new AlertDialog.Builder(activity);
+								builder.setView(layout);
+								dialog = builder.create();
+								dialog.setCancelable(true);
+								dialog.setMessage(getResources().getString(
+										R.string.str_edit_value));
+								TextView tvCaption = (TextView) layout
+										.findViewById(R.id.tv_chat_dialog);
+								tvCaption.setText(register.getName());
+								EditText txtName = (EditText) layout
+										.findViewById(R.id.et_chat_dialog_register);
+								txtName.setText(register.getValue());
 
-											System.out
-													.println("AlertDialog Negative OK");
-											dialog.dismiss();
-										}
-									});
+								final Command command = new Command(Command.REPLY);
+								command.putParam("id", v
+										.getTag(R.string.tag_id).toString());
+								command.putParam("reply",
+										v.getTag(R.string.tag_reply).toString());
+								command.putParam("forStatus",
+										v.getTag(R.string.tag_forStatus)
+												.toString());
+								command.putParam("chatid",
+										v.getTag(R.string.tag_chatid)
+												.toString());
 
-							dialog.setButton(DialogInterface.BUTTON_NEGATIVE,
-									"Cancel",
-									new DialogInterface.OnClickListener() {
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											System.out
-													.println("AlertDialog Negative Cancel");
-										}
-									});*/
+								dialog.setButton(
+										DialogInterface.BUTTON_POSITIVE,
+										getResources().getString(
+												R.string.str_ok),
+										new DialogInterface.OnClickListener() {
+											public void onClick(
+													DialogInterface dialog,
+													int which) {
+												EditText txtName = (EditText) layout
+														.findViewById(R.id.et_chat_dialog_register);
+												command.putParam(register.getCode(), txtName.getText().toString());
+												sendCommand(command);
 
-							dialog.show();
+												dialog.dismiss();
+											}
+										});
 
-							if (1 == 1)
+								dialog.setButton(
+										DialogInterface.BUTTON_NEGATIVE,
+										getResources().getString(
+												R.string.str_cancel),
+										new DialogInterface.OnClickListener() {
+											public void onClick(
+													DialogInterface dialog,
+													int which) {
+												dialog.cancel();
+											}
+										});
+
+								dialog.show();
+								
 								return;
+							}
 
 							Command command = new Command(Command.REPLY);
 							command.putParam("id", v.getTag(R.string.tag_id)
@@ -268,15 +316,11 @@ public class ChatMessageView extends RelativeLayout implements
 									v.getTag(R.string.tag_forStatus).toString());
 							command.putParam("chatid",
 									v.getTag(R.string.tag_chatid).toString());
-							// command.putParam("reg1",
-							// v.getTag(R.string.tag_reg).toString());
-							CommandConnector con = new CommandConnector(
-									getContext(), command);
-
-							con.setOnCommandEndListener((OnCommandEndListener) v
-									.getTag(R.string.tag_parent));
-
-							con.execute("");
+							if (register != null) {
+								command.putParam(register.getCode(),
+										dialogValue);
+							}
+							sendCommand(command);
 						}
 					});
 				}
@@ -284,6 +328,12 @@ public class ChatMessageView extends RelativeLayout implements
 		} else {
 			viewChatCmd.setVisibility(LinearLayout.GONE);
 		}
+	}
+
+	private void sendCommand(Command command) {
+		CommandConnector con = new CommandConnector(getContext(), command);
+		con.setOnCommandEndListener(this);
+		con.execute("");
 	}
 
 	public String getLastHash() {

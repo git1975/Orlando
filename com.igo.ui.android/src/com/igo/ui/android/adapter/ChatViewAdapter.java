@@ -13,6 +13,7 @@ import com.igo.ui.android.remote.OnCommandEndListener;
 import com.igo.ui.android.timer.ChatTimerTask;
 import com.igo.ui.android.widget.ChatMessageView;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import android.widget.ListView;
 public class ChatViewAdapter extends BaseAdapter implements ListAdapter,
 		OnCommandEndListener, OnScrollListener {
 	private Context context;
+	private Activity activity;
 	private ListView listView;
 	private List<ChatMessage> items = new ArrayList<ChatMessage>(0);
 
@@ -32,8 +34,9 @@ public class ChatViewAdapter extends BaseAdapter implements ListAdapter,
 		return context;
 	}
 
-	public ChatViewAdapter(Context c, ListView listView) {
+	public ChatViewAdapter(Context c, Activity activity, ListView listView) {
 		this.context = c;
+		this.activity = activity;
 		this.listView = listView;
 
 		//ChatTimerTask task = ChatTimerTask.getInstance(context, this);
@@ -62,7 +65,7 @@ public class ChatViewAdapter extends BaseAdapter implements ListAdapter,
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
-		ChatMessageView view = new ChatMessageView(context, items.get(position));
+		ChatMessageView view = new ChatMessageView(context, activity, items.get(position));
 
 		return view;
 	}

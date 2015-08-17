@@ -171,6 +171,7 @@ public class CommandResponseFactory {
 					Register register = new Register();
 					register.setCode(getJsonValue(jReg, "code"));
 					register.setName(getJsonValue(jReg, "name"));
+					register.setValue(getJsonValue(jReg, "value"));
 
 					arr[k].setRegister(register);
 				}
