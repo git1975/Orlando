@@ -95,6 +95,9 @@ public class CommandResponseFactory {
 					items[i] = item;
 				}
 				objResult = items;
+			} else if (Command.GET_CHATSTATUS.equals(command)) {
+				JSONObject jObj = new JSONObject(result);
+				objResult = getJsonValue(jObj, "status");
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();

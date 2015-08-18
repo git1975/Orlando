@@ -19,8 +19,8 @@ class TaskstatusController {
 			return [item: new Taskstatus(), tasks: Task.list(), users: users]
 		}
 
-		def item = dataService.createTaskStatus(params.item_msgtext, params.msgtype, params.item_status, params.item_lifetime, params.color,
-				params.taskSelect)
+		def item = dataService.createTaskStatus(params.item_msgtext, params.msgtype, params.item_status, params.item_lifetime, params.item_maxrepeat, params.item_repeatevery, 
+			params.color, params.item_registers, params.taskSelect)
 
 		if (item.hasErrors()) {
 			render view: 'add', model: [item: item]
@@ -71,7 +71,7 @@ class TaskstatusController {
 		session["buttons"] = btns
 		
 		def item = dataService.updateTaskStatus(Taskstatus.get(params.id), params.item_msgtext, params.msgtype, params.item_status,
-				params.item_lifetime, params.color, params.taskSelect, session["buttons"], params.sendTo)
+				params.item_lifetime, params.item_maxrepeat, params.item_repeatevery, params.color, params.item_registers, params.taskSelect, session["buttons"], params.sendTo)
 
 		session["buttons"] = null
 

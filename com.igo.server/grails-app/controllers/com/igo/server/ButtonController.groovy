@@ -13,7 +13,7 @@ class ButtonController {
 			return [item: new Button()]
 		}
 
-		def item = dataService.createButton(params.item_code, params.item_name, params.item_replystatus)
+		def item = dataService.createButton(params.item_code, params.item_name, params.item_replystatus, params.registerSelect)
 
 		if (item.hasErrors()) {
 			return [item: item]
@@ -30,9 +30,9 @@ class ButtonController {
 				redirect action: 'list'
 			}
 			log.debug("Edit Button: " + item)
-			return [item: item]
+			return [item: item, register: Register.list()]
 		} else {
-			def item = dataService.updateButton(Button.get(params.id), params.item_code, params.item_name, params.item_replystatus)
+			def item = dataService.updateButton(Button.get(params.id), params.item_code, params.item_name, params.item_replystatus, params.registerSelect)
 			if (item.hasErrors()) {
 				render view: 'edit', model: [user: item]
 				return

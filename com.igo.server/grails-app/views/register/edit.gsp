@@ -1,15 +1,14 @@
 <html>
 <head>
 <meta name="layout" content="main">
-<title>Добавить кнопку</title>
+<title>Регистр</title>
 </head>
 
-<body id="add">
-	<h2>
-		Добавить кнопку:
-	</h2>
+<body id="edit">
+	<h2>Регистр:</h2>
 
-	<g:form action="add" id="${item.id}">
+	<g:form action="edit">
+		<input type="hidden" name="id" value="${item.id}">
 		<table>
 			<tr>
 				<th><g:render template="/common/formField"
@@ -23,13 +22,7 @@
 			</tr>
 			<tr>
 				<th><g:render template="/common/formField"
-						model="[name:'item', bean:item, field:'replystatus', label:'Код ответа']" />
-				</th>
-			</tr>
-			<tr>
-				<th>Регистр: <br /> <g:select name="registerSelect" from="${register}" noSelection="${['null':'Нет...']}"
-						optionKey="code" optionValue="name"
-						value="${ item.register ? item.register.code : '1'}" />
+						model="[name:'item', bean:item, field:'description', label:'Описание']" />
 				</th>
 			</tr>
 			<tr>
@@ -41,7 +34,7 @@
 									<input type="submit" value="Сохранить" />
 								</p>
 							</td>
-							<td><g:link controller="button" action="list">
+							<td><g:link controller="register" action="list">
 									<input type="button" value="Отмена" />
 								</g:link></td>
 						</tr>

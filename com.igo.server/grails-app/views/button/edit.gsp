@@ -26,6 +26,12 @@
 				</th>
 			</tr>
 			<tr>
+				<th>Регистр: <br /> <g:select name="registerSelect" from="${register}" noSelection="${['null':'Нет...']}"
+						optionKey="code" optionValue="name"
+						value="${ item.register ? item.register.code : '1'}" />
+				</th>
+			</tr>
+			<tr>
 				<td>
 					<table>
 						<tr>

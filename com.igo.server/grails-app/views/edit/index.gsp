@@ -16,6 +16,10 @@
 				</td>
 			</tr>
 			<tr>
+				<td><g:link controller="register" action="list">Регистры</g:link>
+				</td>
+			</tr>
+			<tr>
 				<td><g:link controller="taskstatus" action="list">Статусы задач</g:link>
 				</td>
 			</tr>

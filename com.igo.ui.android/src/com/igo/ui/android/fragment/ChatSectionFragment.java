@@ -2,6 +2,10 @@ package com.igo.ui.android.fragment;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -16,21 +20,26 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.igo.ui.android.DataStorage;
 import com.igo.ui.android.R;
 import com.igo.ui.android.adapter.ChatViewAdapter;
+import com.igo.ui.android.domain.ChatMessage;
 import com.igo.ui.android.domain.ChatsItem;
 import com.igo.ui.android.domain.Login;
 import com.igo.ui.android.remote.Command;
 import com.igo.ui.android.remote.CommandConnector;
+import com.igo.ui.android.remote.OnCommandEndListener;
 import com.igo.ui.android.service.RemoteBroadcastReceiver;
 import com.igo.ui.android.service.RemoteService;
+import com.igo.ui.android.timer.ChatStatusTimerTask;
 import com.igo.ui.android.timer.ChatTimerTask;
 
-public class ChatSectionFragment extends Fragment {
+public class ChatSectionFragment extends Fragment implements OnCommandEndListener{
 	final Timer timer = new Timer("ChatTimer");
 	private ListView view;
 	private ChatViewAdapter adapter;
@@ -38,6 +47,7 @@ public class ChatSectionFragment extends Fragment {
 	private ChatsItem chatsItem;
 	private Login login;
 	private final RemoteBroadcastReceiver rbr = new RemoteBroadcastReceiver();
+	private final RemoteBroadcastReceiver rbrStatus = new RemoteBroadcastReceiver();
 
 	public ChatSectionFragment(ChatsItem chatsItem, Login login) {
 		this.chatsItem = chatsItem;
@@ -52,8 +62,8 @@ public class ChatSectionFragment extends Fragment {
 		rootView = inflater.inflate(R.layout.fragment_chat, container, false);
 
 		view = (ListView) rootView.findViewById(R.id.list_chat_view);
-		adapter = new ChatViewAdapter(getActivity().getApplicationContext(), getActivity(),
-				view);
+		adapter = new ChatViewAdapter(getActivity().getApplicationContext(),
+				getActivity(), view);
 		view.setAdapter(adapter);
 
 		TextView tvLogin = (TextView) rootView.findViewById(R.id.tv_login);
@@ -100,11 +110,43 @@ public class ChatSectionFragment extends Fragment {
 		rbr.setCommandEndListener(adapter);
 		getActivity().registerReceiver(rbr,
 				new IntentFilter(RemoteService.IGO_SERVICE_ACTION));
+		rbrStatus.setCommandEndListener(this);
+		getActivity().registerReceiver(rbrStatus,
+				new IntentFilter(RemoteService.IGO_SERVICE_ACTION));
 
+		// Создадим расписание для задачи обновления списка чата
 		timer.schedule(new ChatTimerTask(getActivity().getApplicationContext(),
+				adapter, chatsItem.getCode()), 0, 5000);
+		// Создадим расписание для задачи обновления статуса чата
+		timer.schedule(new ChatStatusTimerTask(getActivity().getApplicationContext(), 
 				adapter, chatsItem.getCode()), 0, 5000);
 
 		return rootView;
+	}
+	
+	public void OnCommandEnd(Command command, Object result) {
+		if (result == null) {
+			return;
+		}
+		if (Command.GET_CHATSTATUS.equals(command.getCommand())) {
+			ImageView ivGreen2 = (ImageView) rootView
+					.findViewById(R.id.iv_green2);
+			ImageView ivYellow2 = (ImageView) rootView
+					.findViewById(R.id.iv_yellow2);
+			ImageView ivRed2 = (ImageView) rootView
+					.findViewById(R.id.iv_red2);
+			
+			ivGreen2.setVisibility(View.GONE);
+			ivYellow2.setVisibility(View.GONE);
+			ivRed2.setVisibility(View.GONE);
+			if("1".equals(result.toString())){
+				ivGreen2.setVisibility(View.VISIBLE);
+			} else if("2".equals(result.toString())){
+				ivYellow2.setVisibility(View.VISIBLE);
+			} else {
+				ivRed2.setVisibility(View.VISIBLE);
+			} 
+		}
 	}
 
 	@Override
@@ -114,7 +156,13 @@ public class ChatSectionFragment extends Fragment {
 			timer.purge();
 		}
 		getActivity().unregisterReceiver(rbr);
+		getActivity().unregisterReceiver(rbrStatus);
 		super.onDestroyView();
+	}
+
+	public String getLastHash() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

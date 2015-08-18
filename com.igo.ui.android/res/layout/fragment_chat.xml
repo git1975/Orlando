@@ -23,6 +23,30 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/solid_white" />
 
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:gravity="right" >
+
+                <ImageView
+                    android:id="@+id/iv_green2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_green2" />
+                <ImageView
+                    android:id="@+id/iv_yellow2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_yellow2" />
+                <ImageView
+                    android:id="@+id/iv_red2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_red2" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <ListView

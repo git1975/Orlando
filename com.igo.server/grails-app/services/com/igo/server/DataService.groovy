@@ -36,17 +36,18 @@ class DataService {
 		}
 	}
 
-	def createButton(String code, String name, String replystatus){
-		def item = new Button(code: code, name: name, replystatus: replystatus)
+	def createButton(String code, String name, String replystatus, String register){
+		def item = new Button(code: code, name: name, replystatus: replystatus, Register.findByCode(register))
 		item.save(failOnError: true)
 		item
 	}
 
-	def updateButton(Button item, String code, String name, String replystatus){
+	def updateButton(Button item, String code, String name, String replystatus, String register){
 		if(item != null){
 			item.code = code
 			item.name = name
 			item.replystatus = replystatus
+			item.register = Register.findByCode(register)
 			item.save(failOnError: true)
 			item
 		}
@@ -59,18 +60,18 @@ class DataService {
 		}
 	}
 
-	def createTaskStatus(String msgtext, String msgtype, String status, String lifetime, String color, String task){
+	def createTaskStatus(String msgtext, String msgtype, String status, String lifetime, String maxrepeat, String repeatevery, String color, String registers, String task){
 		Task r = Task.find("from Task where name=?", [task])
 
 		log.debug("createTaskStatus-" + msgtext+'-'+msgtype+'-'+status+'-'+lifetime+'-'+color+'-'+task)
 
 		def item = new Taskstatus(msgtext: msgtext, msgtype: msgtype, status: status, lifetime: Integer.parseInt(lifetime),
-		color: Integer.parseInt(color), task: r)
+			color: Integer.parseInt(color), registers: registers, task: r, maxrepeat: maxrepeat, repeatevery: repeatevery)
 		item.save(failOnError: true)
 		item
 	}
 
-	def updateTaskStatus(Taskstatus item, String msgtext, String msgtype, String status, String lifetime, String color, String task, List buttons, String sendTo){
+	def updateTaskStatus(Taskstatus item, String msgtext, String msgtype, String status, String lifetime, String maxrepeat, String repeatevery, String color, String registers, String task, List buttons, String sendTo){
 		if(item != null){
 			Task r = Task.find("from Task where name=?", [task])
 
@@ -79,8 +80,11 @@ class DataService {
 			item.msgtext = msgtext
 			item.msgtype = msgtype
 			item.status = status
+			item.maxrepeat = Integer.parseInt(maxrepeat)
+			item.repeatevery = Integer.parseInt(repeatevery)
 			item.lifetime = Integer.parseInt(lifetime)
 			item.color = Integer.parseInt(color)
+			item.registers = registers
 			item.sendTo = sendTo
 			item.task = r
 			//Buttons
@@ -179,6 +183,29 @@ class DataService {
 
 	def deleteTask(long id){
 		def item = Task.get(id)
+		if(item != null){
+			item.delete(flush: true)
+		}
+	}
+	
+	def createRegister(String code, String name, String description){
+		def item = new Register(code: code, name: name, description: description)
+		item.save(failOnError: true)
+		item
+	}
+
+	def updateRegister(Register item, String code, String name, String description){
+		if(item != null){
+			item.code = code
+			item.name = name
+			item.description = description
+			item.save(failOnError: true)
+			item
+		}
+	}
+
+	def deleteRegister(long id){
+		def item = Register.get(id)
 		if(item != null){
 			item.delete(flush: true)
 		}

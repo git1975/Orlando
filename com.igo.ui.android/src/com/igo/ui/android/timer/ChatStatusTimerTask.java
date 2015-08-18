@@ -8,29 +8,17 @@ import android.content.IntentFilter;
 
 import com.igo.ui.android.domain.ChatMessage;
 import com.igo.ui.android.remote.Command;
-import com.igo.ui.android.remote.CommandConnector;
 import com.igo.ui.android.remote.OnCommandEndListener;
 import com.igo.ui.android.service.RemoteBroadcastReceiver;
 import com.igo.ui.android.service.RemoteService;
 
-public class ChatTimerTask extends TimerTask implements OnCommandEndListener {
-	private long maxid = 0;
-	private long minid = 0;
+public class ChatStatusTimerTask extends TimerTask implements OnCommandEndListener {
 	private String chatcode;
 	private final RemoteBroadcastReceiver rbr = new RemoteBroadcastReceiver();
-
-	public long getMinid() {
-		return minid;
-	}
-
-	public void setMinid(long minid) {
-		this.minid = minid;
-	}
-
 	private OnCommandEndListener onCommandEndListener = null;
 	private Context context = null;
 
-	public ChatTimerTask(Context context,
+	public ChatStatusTimerTask(Context context,
 			OnCommandEndListener onCommandEndListener, String chatcode) {
 		super();
 		this.context = context;
@@ -42,15 +30,10 @@ public class ChatTimerTask extends TimerTask implements OnCommandEndListener {
 
 	@Override
 	public void run() {
-		System.out.println("ChatTimerTask.run");
+		System.out.println("ChatStatusTimerTask.run");
 
-		Command command = new Command(Command.GET_CHAT);
-		command.putParam("maxid", maxid + "");
-		command.putParam("minid", minid + "");
+		Command command = new Command(Command.GET_CHATSTATUS);
 		command.putParam("chatcode", chatcode);
-		//CommandConnector con = new CommandConnector(context, command);
-		//con.setOnCommandEndListener(this);
-		//con.execute("");
 		
 		context.registerReceiver(rbr,
 				new IntentFilter(RemoteService.IGO_SERVICE_ACTION));
@@ -63,27 +46,13 @@ public class ChatTimerTask extends TimerTask implements OnCommandEndListener {
 	public void OnCommandEnd(Command command, Object result) {
 		context.unregisterReceiver(rbr);
 		
-		if(!Command.GET_CHAT.equals(command.getCommand())){
+		if(!Command.GET_CHATSTATUS.equals(command.getCommand())){
 			return;
 		}
-		ChatMessage[] items = (ChatMessage[]) result;
-
-		if (items != null) {
-			long id = 0;
-			for (ChatMessage item : items) {
-				try {
-					id = Long.parseLong(item.getId());
-				} catch (Exception e) {
-				}
-
-				if (id > maxid) {
-					maxid = id;
-				}
-			}
-		}
+		String status = result.toString();		
 
 		if (onCommandEndListener != null) {
-			onCommandEndListener.OnCommandEnd(command, result);
+			onCommandEndListener.OnCommandEnd(command, status);
 		}
 	}
 

@@ -187,7 +187,32 @@ class JsonController {
 
 		log.debug(fullList as JSON)
 
-		render fullList as JSON;
+		render fullList as JSON
+	}
+	
+	def getchatstatus() {
+		ChatStatus chatStatus = new ChatStatus(chatcode: params.chatcode, status: '1')
+		
+		Process process = Process.find("from Process where name=?", [params.chatcode])
+		if(process == null){
+			render chatStatus as JSON
+		}
+		Queue queueTask = Queue.find("from Queue where idprocess=? and type='Task' and finished=0", [process.id])
+		if(queueTask == null){
+			render chatStatus as JSON
+		}
+		List<Queue> queue = Queue.findAll("from Queue where parent=? and type='Taskstatus'", [queueTask])
+		for(Queue q: queue){
+			if(q.status == 'DEADLINE'){
+				chatStatus.status = '3'
+				break
+			}
+			if(q.status == q.initstatus && q.taskstatus.msgtype == "CMD" && !q.finished  && q.repeatcount > 0){
+				chatStatus.status = '2'
+			}
+		}
+		
+		render chatStatus as JSON
 	}
 
 	def sendchat() {

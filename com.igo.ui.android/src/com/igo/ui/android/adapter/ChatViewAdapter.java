@@ -10,7 +10,6 @@ import com.igo.ui.android.R;
 import com.igo.ui.android.domain.ChatMessage;
 import com.igo.ui.android.remote.Command;
 import com.igo.ui.android.remote.OnCommandEndListener;
-import com.igo.ui.android.timer.ChatTimerTask;
 import com.igo.ui.android.widget.ChatMessageView;
 
 import android.app.Activity;
@@ -22,6 +21,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class ChatViewAdapter extends BaseAdapter implements ListAdapter,
 		OnCommandEndListener, OnScrollListener {
@@ -38,9 +38,6 @@ public class ChatViewAdapter extends BaseAdapter implements ListAdapter,
 		this.context = c;
 		this.activity = activity;
 		this.listView = listView;
-
-		//ChatTimerTask task = ChatTimerTask.getInstance(context, this);
-		//task.run();
 
 		this.listView.setOnScrollListener(this);
 	}
@@ -65,7 +62,8 @@ public class ChatViewAdapter extends BaseAdapter implements ListAdapter,
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
-		ChatMessageView view = new ChatMessageView(context, activity, items.get(position));
+		ChatMessageView view = new ChatMessageView(context, activity,
+				items.get(position));
 
 		return view;
 	}
@@ -83,31 +81,34 @@ public class ChatViewAdapter extends BaseAdapter implements ListAdapter,
 		if (result == null) {
 			return;
 		}
-		ChatMessage[] newItems = (ChatMessage[]) result;
-		List<ChatMessage> newList = Arrays.asList(newItems);
-		boolean hasNew = false;
-		for (ChatMessage item : newList) {
-			if (!contains(item)) {
-				items.add(item);
-				hasNew = true;
-			}
-		}
-
-		if (hasNew) {
-			Collections.sort(items, new Comparator<ChatMessage>() {
-				public int compare(final ChatMessage item1, ChatMessage item2) {
-					if (item1.getIdLong() > item2.getIdLong()) {
-						return 1;
-					} else if (item1.getIdLong() < item2.getIdLong()) {
-						return -1;
-					} else {
-						return 0;
-					}
+		if (Command.GET_CHAT.equals(command.getCommand())) {
+			ChatMessage[] newItems = (ChatMessage[]) result;
+			List<ChatMessage> newList = Arrays.asList(newItems);
+			boolean hasNew = false;
+			for (ChatMessage item : newList) {
+				if (!contains(item)) {
+					items.add(item);
+					hasNew = true;
 				}
-			});
+			}
 
-			this.notifyDataSetChanged();
-			listView.setSelection(getCount() - 1);  
+			if (hasNew) {
+				Collections.sort(items, new Comparator<ChatMessage>() {
+					public int compare(final ChatMessage item1,
+							ChatMessage item2) {
+						if (item1.getIdLong() > item2.getIdLong()) {
+							return 1;
+						} else if (item1.getIdLong() < item2.getIdLong()) {
+							return -1;
+						} else {
+							return 0;
+						}
+					}
+				});
+
+				this.notifyDataSetChanged();
+				listView.setSelection(getCount() - 1);
+			}
 		}
 	}
 
@@ -117,13 +118,12 @@ public class ChatViewAdapter extends BaseAdapter implements ListAdapter,
 	}
 
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		/*if (view.getFirstVisiblePosition() == 0 || view.getLastVisiblePosition() == items.size() - 1) {
-			ChatTimerTask task = ChatTimerTask.getInstance(context, this);
-			if (items.size() > 0) {
-				task.setMinid(items.get(0).getIdLong());
-			}
-			task.run();
-		}*/
+		/*
+		 * if (view.getFirstVisiblePosition() == 0 ||
+		 * view.getLastVisiblePosition() == items.size() - 1) { ChatTimerTask
+		 * task = ChatTimerTask.getInstance(context, this); if (items.size() >
+		 * 0) { task.setMinid(items.get(0).getIdLong()); } task.run(); }
+		 */
 	}
 
 	public String getLastHash() {

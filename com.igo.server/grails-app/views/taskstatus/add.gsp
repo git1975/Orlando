@@ -32,6 +32,21 @@
 				</th>
 			</tr>
 			<tr>
+				<th><g:render template="/common/formField"
+						model="[name:'item', bean:item, field:'maxrepeat', label:'Повторять не больше чем']" />
+				</th>
+			</tr>
+			<tr>
+				<th><g:render template="/common/formField"
+						model="[name:'item', bean:item, field:'repeatevery', label:'Повторять каждые N минут']" />
+				</th>
+			</tr>
+			<tr>
+				<th><g:render template="/common/formField"
+						model="[name:'item', bean:item, field:'registers', label:'Значение регистра по умолчанию']" />
+				</th>
+			</tr>
+			<tr>
 				<th>Светофор: <br /> <g:select name="color" from="${['1': 'зеленый', '2': 'желтый', '3': 'красный']}"
 						optionKey="key" optionValue="value" value="${ item.color }"/>
 				</th>
