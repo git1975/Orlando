@@ -1,35 +1,41 @@
 package com.igo.server
 
 class ProcessInstanceFactory {
+	def static createParentInstance(long idprocess, Process parent){
+		Queue process = createInstance(idprocess)
+		if(process != null){
+			process(parent: parent)
+			process.save(failOnError: true)
+		}
+	}
 	/**
 	 * Создает экземпляры тасков в таблице Queue. Начальный статус всегда 'INIT'
 	 * @param idprocess
 	 * @return
 	 */
-	def createInstance(long idprocess){
+	def static Queue createInstance(long idprocess){
+		Queue process = null
 		Process item = Process.find("from Process as p where p.id = ? and p.active = 1", [idprocess])
-
 		if(item != null){
-			log.debug("ProcessInstanceFactory.createInstance...idprocess=" + item.id)
-
+			//Создадим экземпляр процесса
+			process = new Queue(type: 'Process', finished: false, description: item.description, idprocess: item.id, 
+				startdate: new Date()).save(failOnError: true)
+			
 			List<Task> tasks = Task.findAll("from Task where process=?", [item])
-
-			log.debug("ProcessInstanceFactory.createInstance...tasks=" + tasks)
 			for(Task t: tasks){
 				Date startdt = t.startdate
 				Date signaldt = t.signaldate
 				Date enddt = t.enddate
-				//if(item.repeatevery > 0){
 				Date now = new Date();
 				startdt = Utils.addMinutes(now, t.startdate)
 				signaldt = Utils.addMinutes(now, t.signaldate)
 				enddt = Utils.addMinutes(now, t.enddate)
-				//}
-				Queue msg = new Queue(type: 'Task', finished: false, description: t.description, idprocess: idprocess, ord: t.ord, user: t.getUser(), task: t, status: 'INIT',
+				Queue msg = new Queue(type: 'Task', finished: false, parent: process, description: t.description, idprocess: idprocess, ord: t.ord, user: t.getUser(), task: t, status: 'INIT',
 				startdate: startdt, signaldate: signaldt, enddate: enddt)
 				.save(failOnError: true)
 			}
 		}
+		return process
 	}
 
 	def static createTaskstatusInstance(Queue parent, Taskstatus ts){

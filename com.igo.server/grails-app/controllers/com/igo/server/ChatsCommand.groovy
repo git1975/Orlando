@@ -7,4 +7,5 @@ public class ChatsCommand {
 	String code
 	String name
 	boolean ispersonal = false
+	boolean ischild = false
 }

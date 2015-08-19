@@ -44,19 +44,29 @@ class CommandService {
 	 * @return
 	 */
 	def startProcessByTime() {
-		List process = Process.findAll("from Process as a where a.repeatevery = 0")
+		List process = Process.findAll("from Process as a where a.repeatevery = 0 and startdate is not null")
 		//Проверим, есть-ли в очереди задачи этого процесса с временем старта больше времени старта процесса
 		for(Process item : process){
 			Date nowTime = Utils.shiftDateInPresent(item.startdate);
 			Date now = new Date()
 			//Проверим, не пора-ли стартовать процесс
 			if(nowTime.before(now)){
-				List queue = Queue.findAll("from Queue as a where a.idprocess = ? and a.ord = 1 and startdate > ?", [item.id, nowTime])
+				List queue = Queue.findAll("from Queue where type='Task' and idprocess=? and ord=1 and startdate>?", [item.id, nowTime])
 				if(queue == null || queue.size() == 0){
-					processStartProcess(item)
+					ProcessInstanceFactory.createInstance(item.id)
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Стартовать процесс в контексте целевого чата
+	 * @param idprocess
+	 * @param idparent
+	 * @return
+	 */
+	def startChildProcess(long idprocess, String chatcode) {
+		//ProcessInstanceFactory.createParentInstance(idprocess, Process parent){
 	}
 
 	/**
@@ -97,6 +107,7 @@ class CommandService {
 
 	/**
 	 * Завершаем задачи по времени
+	 * и отправляем отчеты, настроенные на отправку по завершению задачи
 	 */
 	def finishTaskByTime(){
 		Date now = new Date()
@@ -104,6 +115,9 @@ class CommandService {
 		for(Queue item : tasks){
 			item.finished = true
 			item.save(failOnError: true)
+			
+			//Необходимо отправить отчеты по завершению задачи
+			createTaskstatusInstance(item, 'END_TASK')
 		}
 	}
 
@@ -116,12 +130,23 @@ class CommandService {
 		Date now = new Date()
 		List tasks = Queue.findAll("from Queue where type = 'Task' and finished = ? and startdate < ? and enddate > ?", [false, now, now])
 		for(Queue item : tasks){
-			List taskstatus = Taskstatus.findAll("from Taskstatus where task = ? and status = ?", [item.task, item.status])
-			for(Taskstatus ts : taskstatus){
-				Queue q = Queue.find("from Queue where type = 'Taskstatus' and parent = ? and taskstatus = ?", [item, ts])
-				if(q == null){
-					ProcessInstanceFactory.createTaskstatusInstance(item, ts)
-				}
+			createTaskstatusInstance(item, null)
+		}
+	}
+	
+	/**
+	 * Физически создает экземпляры таскстатусов для таска с проверкой, что они не созданы
+	 * @param item
+	 */
+	private void createTaskstatusInstance(Queue item, String status) {
+		if(status == null || "".equals(status)){
+			status = item.status
+		}
+		List taskstatus = Taskstatus.findAll("from Taskstatus where task = ? and status = ?", [item.task, status])
+		for(Taskstatus ts : taskstatus){
+			Queue q = Queue.find("from Queue where type = 'Taskstatus' and parent = ? and taskstatus = ?", [item, ts])
+			if(q == null){
+				ProcessInstanceFactory.createTaskstatusInstance(item, ts)
 			}
 		}
 	}
@@ -141,6 +166,13 @@ class CommandService {
 				//mes.buttons.each{b->log.debug(b.name)}
 				//log.debug(mes.type)
 				if(item.taskstatus.msgtype == 'INFO'){
+					sendChatMessage(mes)
+
+					Date now = new Date()
+					item.signaldate = now
+					item.finished = true
+					item.save(failOnError: true)
+				} else if(item.taskstatus.msgtype == 'REPORT'){
 					sendChatMessage(mes)
 
 					Date now = new Date()
@@ -245,8 +277,8 @@ class CommandService {
 	def processStartProcess(Process item) {
 		//log.info("CommandService.processStartProcess." + item.id + "." + item.name)
 
-		(new ProcessInstanceFactory()).createInstance(item.id)
-		item.save(failOnError: true)
+		ProcessInstanceFactory.createInstance(item.id)
+		//item.save(failOnError: true)
 	}
 
 	def processTask(Queue item) {
@@ -303,8 +335,7 @@ class CommandService {
 				}
 			}			
 		}
-		
-		
+		// Регистр был
 		if(b){
 			queue.registers = Utils.mapToString(regMap)
 		}
@@ -313,7 +344,9 @@ class CommandService {
 		queue.save(failOnError: true)
 		if(queue.parent != null){
 			if(queue.parent.status == forStatus){
-				queue.parent.status = reply
+				queue.status = reply
+				//TODO Смержить значения регистров
+				queue.parent.registers = queue.registers
 				queue.parent.save(failOnError: true)
 			}
 		}
@@ -532,6 +565,34 @@ class CommandService {
 				} else {
 					s = "?"
 				}
+			} else if(s.indexOf('<reg=') >= 0){
+				// получить значение регистра
+				int ix = s.indexOf('=');
+				def code = s.substring(ix + 1, s.length() - 1)
+				// ищем значение регистра у родительского таска				
+				s = Utils.getValueFromPair(q.parent.registers, code)
+			} else if(s.indexOf('<bonus=') >= 0){
+				// Вычислить бонус
+				int bonus = 0
+				int ix = s.indexOf('=');
+				def login = s.substring(ix + 1, s.length() - 1)
+				User user = User.find("from User as a where a.login = ?", [login])
+				// ищем значение repeatcount среди всех сообщений CMD для пользователя
+				List<Queue> list = Queue.findAll("from Queue where type='Taskstatus' and parent=? and taskstatus.msgtype='CMD' and user=?", [q.parent, user])
+				for(Queue item: list){
+					// Проверим, совпадает-ли значение регистра в Taskstatus и в Queue
+					if(item.registers == item.taskstatus.registers){
+						bonus++
+					} else {
+						bonus--
+					}
+					// Проверим число повторений
+					if(item.maxrepeat > 0 && item.repeatcount > 1){
+						bonus -= (item.repeatcount - 1)
+					}
+				}
+				
+				s = bonus.toString()
 			}
 
 			result += s

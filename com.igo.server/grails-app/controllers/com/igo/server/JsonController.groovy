@@ -110,7 +110,8 @@ class JsonController {
 	def reply() {
 		log.debug("JsonController.reply." + params.id + "." + params.reply + "." + params.forStatus + "." + params.chatid)
 
-		//Ищем элемент очереди с нужным id, на который еще не был дан ответ
+		// Ищем элемент очереди с нужным id, на который еще не был дан ответ
+		// обновляем его
 		Queue queue = commandService.replyQueue(java.lang.Long.parseLong(params.id), params)
 
 		def res = null;
@@ -229,28 +230,29 @@ class JsonController {
 	def getchats() {
 		log.debug("JsonController.getchats." + params.login)
 
-		List<Process> list = Process.findAll()
 		def List<ChatsCommand> fullList = new ArrayList();
+		
+		List<Process> list = Process.findAll("from Process where startdate is not null")
 		for(Process item: list){
-			ChatsCommand cc = new ChatsCommand()
-			cc.code = item.name
-			cc.name = item.description
-			cc.ispersonal = false
-
-			fullList.add(cc)
+			fullList.add(new ChatsCommand(code: item.name, name: item.description, ispersonal: false))
+		}
+		
+		list = Process.findAll("from Process where startdate is null")
+		for(Process item: list){
+			fullList.add(new ChatsCommand(code: item.name, name: item.description, ispersonal: false, ischild: true))
 		}
 
 		List<User> list2 = User.findAll("from User as a where a.login != ?", [params.login])
 		for(User item: list2){
-			ChatsCommand cc = new ChatsCommand()
-			cc.code = item.login
-			cc.name = item.username
-			cc.ispersonal = true
-
-			fullList.add(cc)
+			fullList.add(new ChatsCommand(code: item.name, name: item.description, ispersonal: true))
 		}
 
 		render fullList as JSON;
 	}
 
+	def startchildprocess() {
+		log.debug("JsonController.startchildprocess." + params.login + ".process=" + params.process + ".chatcode=" + params.chatcode)
+		
+		//commandService.sendChat(params.login, params.sendto, params.body, params.chatcode)
+	}
 }

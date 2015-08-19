@@ -126,4 +126,13 @@ public class Utils {
 		}
 		return result;
 	}
+	
+	public static String getValueFromPair(String pair, String name) {
+		String result = "?";
+		Map<String, String> map = splitToMap(pair);
+		if(map != null && map.get(name) != null){
+			result = map.get(name);
+		}
+		return result;
+	}
 }
