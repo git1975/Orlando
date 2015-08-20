@@ -17,7 +17,7 @@
 				</th>
 			</tr>
 			<tr>
-				<th>Тип: <br /> <g:select name="msgtype" from="${['INFO': 'INFO', 'CMD': 'CMD']}"
+				<th>Тип: <br /> <g:select name="msgtype" from="${['INFO': 'INFO', 'CMD': 'CMD', 'REPORT': 'REPORT']}"
 						optionKey="key" optionValue="value" value="${ item.msgtype }"/>
 				</th>
 			</tr>
