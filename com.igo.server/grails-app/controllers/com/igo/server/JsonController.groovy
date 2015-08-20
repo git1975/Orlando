@@ -197,6 +197,7 @@ class JsonController {
 		Process process = Process.find("from Process where name=?", [params.chatcode])
 		if(process == null){
 			render chatStatus as JSON
+			return
 		}
 		Queue queueTask = Queue.find("from Queue where idprocess=? and type='Task' and finished=0", [process.id])
 		if(queueTask == null){

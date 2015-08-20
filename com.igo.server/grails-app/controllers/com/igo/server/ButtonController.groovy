@@ -10,9 +10,9 @@ class ButtonController {
 
 	def add() {
 		if (request.method == 'GET') {
-			return [item: new Button()]
+			return [item: new Button(), register: Register.list()]
 		}
-
+log.debug('--->>>' + params.registerSelect)
 		def item = dataService.createButton(params.item_code, params.item_name, params.item_replystatus, params.registerSelect)
 
 		if (item.hasErrors()) {

@@ -37,7 +37,7 @@ class DataService {
 	}
 
 	def createButton(String code, String name, String replystatus, String register){
-		def item = new Button(code: code, name: name, replystatus: replystatus, Register.findByCode(register))
+		def item = new Button(code: code, name: name, replystatus: replystatus, register: Register.findByCode(register))
 		item.save(failOnError: true)
 		item
 	}

@@ -34,7 +34,7 @@ class TaskstatusController {
 			log.debug("edit GET")
 
 			def Taskstatus item = Taskstatus.get(params.id)
-			def allbuttons = Button.findAll("from Button where code is not null")
+			List<Button> allbuttons = Button.findAll("from Button where code is not null")
 			def users = User.findAll("from User")
 			def allUser = new User();
 			allUser.login = "all"
@@ -43,6 +43,10 @@ class TaskstatusController {
 
 			if(item == null){
 				redirect action: 'list'
+			}
+			
+			for(Button b: allbuttons){
+				b.name = b.name + '-' + b.code
 			}
 
 			List btns = session["buttons"]
