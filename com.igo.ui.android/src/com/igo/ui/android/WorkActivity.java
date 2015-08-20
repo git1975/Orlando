@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class WorkActivity extends ActionBarActivity implements
 		OnCommandEndListener {
@@ -36,6 +37,7 @@ public class WorkActivity extends ActionBarActivity implements
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ChatsItem[] chatsItems;
+	private int lastChatItem = 0;
 
 	private final BroadcastReceiver rbr = new RemoteBroadcastReceiver(this);
 
@@ -54,12 +56,13 @@ public class WorkActivity extends ActionBarActivity implements
 		mScreenTitles = new String[0];// getResources().getStringArray(R.array.screen_array);
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-		mDrawerList = (ListView) findViewById(R.id.left_drawer);
 		// Set the adapter for the list view
 		// mDrawerList.setAdapter(new ArrayAdapter<String>(this,
 		// R.layout.drawer_list_item, mScreenTitles));
 
 		// Set the list's click listener
+		mDrawerList = (ListView) findViewById(R.id.left_drawer);
+		mDrawerList.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 		mDrawerList.setBackgroundResource(R.drawable.ic_abstract);
 
@@ -113,10 +116,19 @@ public class WorkActivity extends ActionBarActivity implements
 
 		Command command = new Command(Command.GET_CHATS);
 		command.putParam("login", login.getLogin());
-		// CommandConnector con = new CommandConnector(getApplicationContext(),
-		// command);
-		// con.setOnCommandEndListener(this);
-		// con.execute("");
+
+		startService(new Intent(this, RemoteService.class).putExtra(
+				Command.PARAM_COMMAND, command.getJson()));
+	}
+
+	private void startSubСase(String code, String parentchat) {
+		DataStorage ds = (DataStorage) getApplicationContext();
+		Login login = (Login) ds.getData("login");
+
+		Command command = new Command(Command.STARTSUBCASE);
+		command.putParam("login", login.getLogin());
+		command.putParam("process", code);
+		command.putParam("parentchat", parentchat);
 
 		startService(new Intent(this, RemoteService.class).putExtra(
 				Command.PARAM_COMMAND, command.getJson()));
@@ -131,9 +143,16 @@ public class WorkActivity extends ActionBarActivity implements
 		}
 	}
 
-	/** Swaps fragments in the main content view */
+	/* Swaps fragments in the main content view */
 	private void selectItem(int position) {
 		if (position > mScreenTitles.length - 1) {
+			return;
+		}
+		// Если выбран элемент Старт подпроцесса, то отправить команду на старт подпроцесса
+		if(chatsItems[position].isIschild()){			
+			startSubСase(chatsItems[position].getCode(), chatsItems[lastChatItem].getCode());
+			mDrawerList.setItemChecked(lastChatItem, true);
+			mDrawerLayout.closeDrawer(mDrawerList);
 			return;
 		}
 		// Update the main content by replacing fragments
@@ -153,6 +172,7 @@ public class WorkActivity extends ActionBarActivity implements
 			setTitle(mScreenTitles[position]);
 			mDrawerLayout.closeDrawer(mDrawerList);
 		}
+		lastChatItem = position;
 	}
 
 	@Override
@@ -228,15 +248,25 @@ public class WorkActivity extends ActionBarActivity implements
 
 			navDrawerItems = new ArrayList<NavDrawerItem>(chatsItems.length);
 			for (int i = 0; i < chatsItems.length; i++) {
+				int type = NavDrawerItem.TYPE_PROCESS;
+				if (chatsItems[i].isIspersonal()) {
+					type = NavDrawerItem.TYPE_PERSONAL;
+				}
+				if (chatsItems[i].isIschild()) {
+					type = NavDrawerItem.TYPE_CHILD;
+				}
 				navDrawerItems.add(new NavDrawerItem(chatsItems[i].getName(),
-						chatsItems[i].isIspersonal() ? R.drawable.ic_user
-								: R.drawable.ic_process, false, "333"));
+						type, false, "333"));
 			}
 
 			mDrawerList.setAdapter(new NavDrawerListAdapter(this,
 					navDrawerItems));
 
 			selectItem(0);
+		}
+		if (Command.STARTSUBCASE.equals(command.getCommand())) {
+			Toast.makeText(getApplicationContext(), result.toString(),
+					Toast.LENGTH_SHORT).show();
 		}
 	}
 

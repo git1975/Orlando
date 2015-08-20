@@ -1,33 +1,40 @@
 package com.igo.ui.android.domain;
 
 public class NavDrawerItem {
+	public static final int TYPE_PROCESS = 1;
+	public static final int TYPE_PERSONAL = 2;
+	public static final int TYPE_CHILD = 3;
     
     private String title;
-    private int icon;
-    private String count = "0";
+    private int type;
+    public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	private String count = "0";
     // boolean to set visiblity of the counter
     private boolean isCounterVisible = false;
      
     public NavDrawerItem(){}
  
-    public NavDrawerItem(String title, int icon){
+    public NavDrawerItem(String title, int type){
         this.title = title;
-        this.icon = icon;
+        this.type = type;
     }
      
-    public NavDrawerItem(String title, int icon, boolean isCounterVisible, String count){
+    public NavDrawerItem(String title, int type, boolean isCounterVisible, String count){
         this.title = title;
-        this.icon = icon;
+        this.type = type;
         this.isCounterVisible = isCounterVisible;
         this.count = count;
     }
      
     public String getTitle(){
         return this.title;
-    }
-     
-    public int getIcon(){
-        return this.icon;
     }
      
     public String getCount(){
@@ -40,10 +47,6 @@ public class NavDrawerItem {
      
     public void setTitle(String title){
         this.title = title;
-    }
-     
-    public void setIcon(int icon){
-        this.icon = icon;
     }
      
     public void setCount(String count){

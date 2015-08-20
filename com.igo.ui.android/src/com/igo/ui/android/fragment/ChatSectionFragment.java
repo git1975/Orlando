@@ -128,6 +128,7 @@ public class ChatSectionFragment extends Fragment implements OnCommandEndListene
 		if (result == null) {
 			return;
 		}
+		// рисуем светофор
 		if (Command.GET_CHATSTATUS.equals(command.getCommand())) {
 			ImageView ivGreen2 = (ImageView) rootView
 					.findViewById(R.id.iv_green2);

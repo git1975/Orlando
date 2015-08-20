@@ -4,7 +4,14 @@ public class ChatsItem {
 	private String code;
 	private String name;
 	private boolean ispersonal;
+	private boolean ischild;
 	
+	public boolean isIschild() {
+		return ischild;
+	}
+	public void setIschild(boolean ischild) {
+		this.ischild = ischild;
+	}
 	public String getCode() {
 		return code;
 	}

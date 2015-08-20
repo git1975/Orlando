@@ -91,11 +91,15 @@ public class CommandResponseFactory {
 					item.setCode(getJsonValue(jObj, "code"));
 					item.setName(getJsonValue(jObj, "name"));
 					item.setIspersonal(getJsonBoolean(jObj, "ispersonal"));
+					item.setIschild(getJsonBoolean(jObj, "ischild"));
 
 					items[i] = item;
 				}
 				objResult = items;
 			} else if (Command.GET_CHATSTATUS.equals(command)) {
+				JSONObject jObj = new JSONObject(result);
+				objResult = getJsonValue(jObj, "status");
+			} else if (Command.STARTSUBCASE.equals(command)) {
 				JSONObject jObj = new JSONObject(result);
 				objResult = getJsonValue(jObj, "status");
 			}

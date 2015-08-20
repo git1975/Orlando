@@ -224,7 +224,7 @@ class JsonController {
 		def List<Chat> list = new ArrayList();
 		list.add(item)
 
-		render list as JSON;
+		render list as JSON
 	}
 
 	def getchats() {
@@ -244,15 +244,19 @@ class JsonController {
 
 		List<User> list2 = User.findAll("from User as a where a.login != ?", [params.login])
 		for(User item: list2){
-			fullList.add(new ChatsCommand(code: item.name, name: item.description, ispersonal: true))
+			fullList.add(new ChatsCommand(code: item.login, name: item.username, ispersonal: true))
 		}
 
-		render fullList as JSON;
+		render fullList as JSON
 	}
 
-	def startchildprocess() {
-		log.debug("JsonController.startchildprocess." + params.login + ".process=" + params.process + ".chatcode=" + params.chatcode)
+	def startsubcase() {
+		log.debug("JsonController.startsubcase." + params.login + ".process=" + params.process + ".parentchat=" + params.parentchat)
 		
-		//commandService.sendChat(params.login, params.sendto, params.body, params.chatcode)
+		commandService.startChildProcess(params.process, params.parentchat)
+		
+		ChatStatus chatStatus = new ChatStatus(chatcode: params.parentchat, status: 'Create ' + params.process + " in " + params.parentchat)
+		
+		render chatStatus as JSON
 	}
 }

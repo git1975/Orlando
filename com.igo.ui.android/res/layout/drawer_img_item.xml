@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="48dp">
+    android:layout_height="48dp"
+        android:background="?android:attr/activatedBackgroundIndicator">
  
     <ImageView
         android:id="@+id/icon"
@@ -23,7 +24,8 @@
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
         android:textColor="@color/solid_white"
         android:gravity="center_vertical"
-        android:paddingRight="40dp"/>
+        android:paddingRight="40dp"
+        />
      
     <TextView android:id="@+id/counter"
         android:layout_width="wrap_content"

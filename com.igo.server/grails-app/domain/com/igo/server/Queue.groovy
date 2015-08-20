@@ -20,6 +20,7 @@ class Queue {
 	int repeatcount
 	int maxrepeat
 	String registers
+	String parentchat
 	
 	static constraints = {
 		type blank: false, unique: false

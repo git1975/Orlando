@@ -65,8 +65,9 @@ class CommandService {
 	 * @param idparent
 	 * @return
 	 */
-	def startChildProcess(long idprocess, String chatcode) {
-		//ProcessInstanceFactory.createParentInstance(idprocess, Process parent){
+	def startChildProcess(String process, String parentchat) {
+		Process p = Process.find("from Process where name=?", [process])
+		ProcessInstanceFactory.createParentInstance(p.id, parentchat)
 	}
 
 	/**
@@ -522,8 +523,12 @@ class CommandService {
 			mes.color = ts.color
 			mes.sendTo = ts.sendTo
 			mes.registers = ts.registers
-			Process process = Process.get(q.idprocess)
-			mes.chatcode = process.name
+			if(q.parentchat == null || "".equals(q.parentchat)){
+				Process process = Process.get(q.idprocess)
+				mes.chatcode = process.name
+			} else {
+				mes.chatcode = q.parentchat
+			}
 			mes.buttons = new Button[ts.buttons.size()]
 			for(int i = 0; i < ts.buttons.size(); i++){
 				mes.buttons[i] = ts.buttons[i]

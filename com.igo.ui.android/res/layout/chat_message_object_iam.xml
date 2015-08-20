@@ -23,32 +23,6 @@
                 android:clickable="false"
                 android:orientation="horizontal" >
 
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:padding="10dp" >
-
-                    <FrameLayout
-                        android:id="@+id/view_from_img"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/ic_social" >
-                    </FrameLayout>
-                </FrameLayout>
-
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp" >
-
-                    <FrameLayout
-                        android:id="@+id/view_from_other"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/ic_user" >
-                    </FrameLayout>
-                </FrameLayout>
-
                 <LinearLayout
                     android:id="@+id/layout_chat_cmd"
                     android:layout_width="wrap_content"
@@ -60,7 +34,7 @@
 
                     <TextView
                         android:id="@+id/tv_chat_cmd"
-                        android:layout_width="wrap_content"
+                        android:layout_width="232dp"
                         android:layout_height="wrap_content"
                         android:maxLength="250"
                         android:paddingLeft="1dp"
@@ -69,7 +43,6 @@
                         android:textColor="#000000" />
 
                     <LinearLayout
-                        android:id="@+id/task_buttons"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.46"
@@ -93,17 +66,19 @@
 
                 <FrameLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:padding="10dp" >
 
                     <FrameLayout
-                        android:id="@+id/view_from_iam"
+                        android:id="@+id/view_from_img"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@drawable/ic_user" >
                     </FrameLayout>
                 </FrameLayout>
+
             </LinearLayout>
+
         </LinearLayout>
     </RelativeLayout>
 

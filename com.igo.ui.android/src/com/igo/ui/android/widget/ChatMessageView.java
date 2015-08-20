@@ -19,14 +19,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -40,11 +36,13 @@ public class ChatMessageView extends RelativeLayout implements
 	private Activity activity;
 	boolean dialogOk = false;
 	private String dialogValue;
+	private Login login;
 
 	public ChatMessageView(Context context, Activity activity, ChatMessage item) {
 		super(context);
-
 		this.activity = activity;
+		DataStorage ds = (DataStorage) getContext();
+		login = (Login) ds.getData("login");
 
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -75,9 +73,9 @@ public class ChatMessageView extends RelativeLayout implements
 
 	public void OnCommandEnd(Command command, Object result) {
 		View viewChatCmd = findViewById(R.id.layout_chat_cmd);
-		viewChatCmd.setVisibility(LinearLayout.GONE);
+		viewChatCmd.setVisibility(LinearLayout.VISIBLE);
 
-		TextView tvBody2 = (TextView) findViewById(R.id.tv_chat_body_2);
+		TextView tvChatCmd = (TextView) findViewById(R.id.tv_chat_cmd);
 		
 		String strResult = null;
 		try {
@@ -88,14 +86,15 @@ public class ChatMessageView extends RelativeLayout implements
 			strResult = result.toString();
 		}
 		
-		String body = tvBody2.getText() + " (" + strResult + ")";
-		tvBody2.setText(body);
-		tvBody2.setVisibility(LinearLayout.VISIBLE);
+		String body = tvChatCmd.getText() + " (" + strResult + ")";
+		tvChatCmd.setText(body);
+		tvChatCmd.setVisibility(LinearLayout.VISIBLE);
 
 		getChatMessage().getTask().setReplytext(strResult);
 		getChatMessage().getTask().setButtons(null);
 
-		this.invalidate();
+		//this.invalidate();
+		setChatMessage(getChatMessage());
 
 		// Toast.makeText(getContext(), result.toString(), Toast.LENGTH_LONG)
 		// .show();
@@ -111,8 +110,6 @@ public class ChatMessageView extends RelativeLayout implements
 			return;
 		}
 
-		DataStorage ds = (DataStorage) getContext();
-		Login login = (Login) ds.getData("login");
 		String from;
 		if (item.getFrom().equals(login.getLogin())) {
 			from = getResources().getString(R.string.str_iam);
@@ -131,80 +128,55 @@ public class ChatMessageView extends RelativeLayout implements
 			body += " (" + item.getTask().getReplytext() + ")";
 		}
 
-		TextView tvBody1 = (TextView) findViewById(R.id.tv_chat_body_1);
-		TextView tvBody2 = (TextView) findViewById(R.id.tv_chat_body_2);
-		TextView tvBody3 = (TextView) findViewById(R.id.tv_chat_body_3);
-		tvBody2.setText(body);
+		//TextView tvBody1 = (TextView) findViewById(R.id.tv_chat_body_1);
+		//TextView tvBody2 = (TextView) findViewById(R.id.tv_chat_body_2);
+		//TextView tvBody3 = (TextView) findViewById(R.id.tv_chat_body_3);
+		//tvBody2.setText(body);
 
 		LinearLayout layoutChat = (LinearLayout) findViewById(R.id.layout_chat);
-		if (item.getFrom().equals(login.getLogin())) {
-			tvBody1.setBackground(getResources().getDrawable(
-					R.drawable.ic_speech4_3));
-			tvBody2.setBackground(getResources().getDrawable(
-					R.drawable.ic_speech4_2));
-			tvBody3.setBackground(getResources().getDrawable(
-					R.drawable.ic_speech4_1));
-			layoutChat.setGravity(Gravity.RIGHT);
-
-			tvBody1.setWidth(12);
-			tvBody3.setWidth(18);
-		} else if (item.getFrom().equals("auto")) {
-			tvBody1.setBackground(getResources().getDrawable(
-					R.drawable.ic_speech6_1));
-			tvBody2.setBackground(getResources().getDrawable(
-					R.drawable.ic_speech6_2));
-			tvBody3.setBackground(getResources().getDrawable(
-					R.drawable.ic_speech6_3));
-			layoutChat.setGravity(Gravity.LEFT);
-
-			tvBody1.setWidth(18);
-			tvBody3.setWidth(18);
-		} else {
-			tvBody1.setBackground(getResources().getDrawable(
-					R.drawable.ic_speech5_3));
-			tvBody2.setBackground(getResources().getDrawable(
-					R.drawable.ic_speech5_2));
-			tvBody3.setBackground(getResources().getDrawable(
-					R.drawable.ic_speech5_1));
-			layoutChat.setGravity(Gravity.LEFT);
-
-			tvBody1.setWidth(18);
-			tvBody3.setWidth(12);
-		}
-
-		if (tvBody2.getTypeface() == null) {
-			Typeface tf = Typeface.createFromAsset(getContext().getAssets(),
-					"fonts/TAHOMA.TTF");
-			tvBody2.setTypeface(tf);
-		}
-
-		Canvas canvas = new Canvas();
-		canvas.translate(20, 20);
-		Paint paint = new Paint();
-		paint.setColor(Color.rgb(0, 0, 0));
-		canvas.drawLine(0, 0, 20, 20, paint);
-		tvBody2.draw(canvas);
-
+		LinearLayout layoutChatCmd = (LinearLayout) findViewById(R.id.layout_chat_cmd);
 		View viewFromImg = findViewById(R.id.view_from_img);
-		if (!"auto".equals(item.getFrom())) {
-			viewFromImg.setVisibility(LinearLayout.GONE);
+		View viewFromIam = findViewById(R.id.view_from_iam);
+		View viewFromOther = findViewById(R.id.view_from_other);
+		viewFromImg.setVisibility(LinearLayout.GONE);
+		viewFromIam.setVisibility(LinearLayout.GONE);
+		viewFromOther.setVisibility(LinearLayout.GONE);
+		if (item.getFrom().equals(login.getLogin())) {
+			layoutChatCmd.setBackground(getResources().getDrawable(
+					R.drawable.rounded_rect2));
+			layoutChat.setGravity(Gravity.RIGHT);
+			viewFromIam.setVisibility(LinearLayout.VISIBLE);
+		} else if (item.getFrom().equals("auto")) {
+			layoutChatCmd.setBackground(getResources().getDrawable(
+					R.drawable.rounded_rect));
+			layoutChat.setGravity(Gravity.LEFT);
+			viewFromImg.setVisibility(LinearLayout.VISIBLE);
+		} else {
+			layoutChatCmd.setBackground(getResources().getDrawable(
+					R.drawable.rounded_rect3));
+			layoutChat.setGravity(Gravity.LEFT);
+			viewFromOther.setVisibility(LinearLayout.VISIBLE);
 		}
-
-		View viewChatCmd = findViewById(R.id.layout_chat_cmd);
 
 		Button btnYes = (Button) findViewById(R.id.chat_btn1);
 		Button btnNo = (Button) findViewById(R.id.chat_btn2);
-		btnYes.setVisibility(View.INVISIBLE);
-		btnNo.setVisibility(View.INVISIBLE);
+		btnYes.setVisibility(View.GONE);
+		btnNo.setVisibility(View.GONE);
 
+		TextView tvBodyCmd = (TextView) findViewById(R.id.tv_chat_cmd);
+		if (tvBodyCmd.getTypeface() == null) {
+			Typeface tf = Typeface.createFromAsset(getContext().getAssets(),
+					"fonts/TAHOMA.TTF");
+			tvBodyCmd.setTypeface(tf);
+		}
+		tvBodyCmd.setText(body);
+			
 		if (item.getTask() != null && item.getTask().getButtons() != null
 				&& item.getTask().getButtons().length > 0) {
 			com.igo.ui.android.domain.Button[] buttons = item.getTask()
 					.getButtons();
-			tvBody2.setVisibility(LinearLayout.GONE);
-			viewChatCmd.setVisibility(View.VISIBLE);
-			TextView tvBodyCmd = (TextView) findViewById(R.id.tv_chat_cmd);
-			tvBodyCmd.setText(body);
+			//tvBody2.setVisibility(LinearLayout.GONE);
+			layoutChatCmd.setVisibility(View.VISIBLE);
 
 			int counter = 0;
 			for (com.igo.ui.android.domain.Button btn : buttons) {
@@ -326,7 +298,7 @@ public class ChatMessageView extends RelativeLayout implements
 				}
 			}
 		} else {
-			viewChatCmd.setVisibility(LinearLayout.GONE);
+			layoutChatCmd.setVisibility(LinearLayout.VISIBLE);
 		}
 	}
 

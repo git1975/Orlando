@@ -16,6 +16,7 @@ public class Command {
 	public static final String SEND_CHAT = "sendchat";
 	public static final String GET_CHATS = "getchats";
 	public static final String GET_CHATSTATUS = "getchatstatus";
+	public static final String STARTSUBCASE = "startsubcase";
 	
 	public static final String PARAM_COMMAND = "command";
 	public static final String PARAM_PARAMS = "params";
