@@ -7,7 +7,6 @@
         android:id="@+id/chat_msg_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:clickable="false"
         android:orientation="vertical" >
 
@@ -90,19 +89,6 @@
                             android:text="@string/str_no" />
                     </LinearLayout>
                 </LinearLayout>
-
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp" >
-
-                    <FrameLayout
-                        android:id="@+id/view_from_iam"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/ic_user" >
-                    </FrameLayout>
-                </FrameLayout>
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

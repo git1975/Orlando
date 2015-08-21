@@ -322,7 +322,7 @@ class CommandService {
 			return null;
 		}
 		
-		//Если привязан регистр, то найти значение регистра из параметров и записать это новое значение в queue
+		/*Если привязан регистр, то найти значение регистра из параметров и записать это новое значение в queue
 		String reg = queue.registers
 		Map<String, String> regMap = Utils.splitToMap(reg)
 		boolean b = false 
@@ -340,6 +340,7 @@ class CommandService {
 		if(b){
 			queue.registers = Utils.mapToString(regMap)
 		}
+		
 		queue.status = reply
 		queue.finished = true
 		queue.save(failOnError: true)
@@ -350,7 +351,12 @@ class CommandService {
 				queue.parent.registers = queue.registers
 				queue.parent.save(failOnError: true)
 			}
-		}
+		}*/
+		Queue parent = Queue.setRegisterValue(queue, params)
+		queue.status = reply
+		queue.finished = true
+		queue.save(failOnError: true)
+		parent.save(failOnError: true)
 
 		return queue
 	}
@@ -574,8 +580,8 @@ class CommandService {
 				// получить значение регистра
 				int ix = s.indexOf('=');
 				def code = s.substring(ix + 1, s.length() - 1)
-				// ищем значение регистра у родительского таска				
-				s = Utils.getValueFromPair(q.parent.registers, code)
+				// ищем значение регистра у родительского экземпляра процесса
+				s = Queue.getRegisterValue(q, code)				
 			} else if(s.indexOf('<bonus=') >= 0){
 				// Вычислить бонус
 				int bonus = 0

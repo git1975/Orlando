@@ -136,16 +136,16 @@ public class ChatMessageView extends RelativeLayout implements
 		LinearLayout layoutChat = (LinearLayout) findViewById(R.id.layout_chat);
 		LinearLayout layoutChatCmd = (LinearLayout) findViewById(R.id.layout_chat_cmd);
 		View viewFromImg = findViewById(R.id.view_from_img);
-		View viewFromIam = findViewById(R.id.view_from_iam);
+		//View viewFromIam = findViewById(R.id.view_from_iam);
 		View viewFromOther = findViewById(R.id.view_from_other);
 		viewFromImg.setVisibility(LinearLayout.GONE);
-		viewFromIam.setVisibility(LinearLayout.GONE);
+		//viewFromIam.setVisibility(LinearLayout.GONE);
 		viewFromOther.setVisibility(LinearLayout.GONE);
 		if (item.getFrom().equals(login.getLogin())) {
 			layoutChatCmd.setBackground(getResources().getDrawable(
 					R.drawable.rounded_rect2));
 			layoutChat.setGravity(Gravity.RIGHT);
-			viewFromIam.setVisibility(LinearLayout.VISIBLE);
+			//viewFromIam.setVisibility(LinearLayout.VISIBLE);
 		} else if (item.getFrom().equals("auto")) {
 			layoutChatCmd.setBackground(getResources().getDrawable(
 					R.drawable.rounded_rect));

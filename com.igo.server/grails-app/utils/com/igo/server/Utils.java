@@ -106,11 +106,11 @@ public class Utils {
 	}
 
 	public static Map<String, String> splitToMap(String str) {
+		Map<String, String> map = new HashMap<String, String>();
 		if (str == null) {
-			return null;
+			return map;
 		}
 		String[] tokens = str.split(";|=");
-		Map<String, String> map = new HashMap<String, String>();
 		for (int i = 0; i < tokens.length - 1;){
 			map.put(tokens[i++], tokens[i++]);
 		}
