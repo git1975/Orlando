@@ -138,6 +138,7 @@ class CommandService {
 	/**
 	 * Физически создает экземпляры таскстатусов для таска с проверкой, что они не созданы
 	 * @param item
+	 * @param status создаются только с этим статусом
 	 */
 	private void createTaskstatusInstance(Queue item, String status) {
 		if(status == null || "".equals(status)){
@@ -357,7 +358,12 @@ class CommandService {
 		queue.finished = true
 		queue.save(failOnError: true)
 		parent.save(failOnError: true)
-
+		// Также записать значение регистра у экземляра процесса 
+		/*if(queue.parent != null && queue.parent.parent != null && queue.parent.parent.type == 'Process'){
+			//TODO Смержить значения регистров
+			queue.parent.parent.registers = queue.registers
+			queue.parent.parent.save(failOnError: true)
+		}*/
 		return queue
 	}
 

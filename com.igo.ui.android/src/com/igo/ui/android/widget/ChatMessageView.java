@@ -120,7 +120,8 @@ public class ChatMessageView extends RelativeLayout implements
 			from = "Система:";
 		}
 
-		String body = sdf.format(item.getSendDate()) + "-";
+		String time = sdf.format(item.getSendDate());
+		String body = "";
 		body += from + "\r\n";
 		body += item.getBody();
 		if (item.getTask() != null && item.getTask().getReplytext() != null
@@ -137,25 +138,37 @@ public class ChatMessageView extends RelativeLayout implements
 		LinearLayout layoutChatCmd = (LinearLayout) findViewById(R.id.layout_chat_cmd);
 		View viewFromImg = findViewById(R.id.view_from_img);
 		//View viewFromIam = findViewById(R.id.view_from_iam);
-		View viewFromOther = findViewById(R.id.view_from_other);
+		//View viewFromOther = findViewById(R.id.view_from_other);
 		viewFromImg.setVisibility(LinearLayout.GONE);
 		//viewFromIam.setVisibility(LinearLayout.GONE);
-		viewFromOther.setVisibility(LinearLayout.GONE);
+		//viewFromOther.setVisibility(LinearLayout.GONE);
 		if (item.getFrom().equals(login.getLogin())) {
 			layoutChatCmd.setBackground(getResources().getDrawable(
 					R.drawable.rounded_rect2));
 			layoutChat.setGravity(Gravity.RIGHT);
-			//viewFromIam.setVisibility(LinearLayout.VISIBLE);
+			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+			lp.setMargins(20, 0, 0, 0);
+			layoutChatCmd.setLayoutParams(lp);
 		} else if (item.getFrom().equals("auto")) {
 			layoutChatCmd.setBackground(getResources().getDrawable(
 					R.drawable.rounded_rect));
 			layoutChat.setGravity(Gravity.LEFT);
 			viewFromImg.setVisibility(LinearLayout.VISIBLE);
+			viewFromImg.setBackground(getResources().getDrawable(
+					R.drawable.ic_social));
+			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+			lp.setMargins(0, 0, 20, 0);
+			layoutChatCmd.setLayoutParams(lp);
 		} else {
 			layoutChatCmd.setBackground(getResources().getDrawable(
 					R.drawable.rounded_rect3));
 			layoutChat.setGravity(Gravity.LEFT);
-			viewFromOther.setVisibility(LinearLayout.VISIBLE);
+			viewFromImg.setVisibility(LinearLayout.VISIBLE);
+			viewFromImg.setBackground(getResources().getDrawable(
+					R.drawable.ic_user));
+			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+			lp.setMargins(0, 0, 20, 0);
+			layoutChatCmd.setLayoutParams(lp);
 		}
 
 		Button btnYes = (Button) findViewById(R.id.chat_btn1);
@@ -164,12 +177,15 @@ public class ChatMessageView extends RelativeLayout implements
 		btnNo.setVisibility(View.GONE);
 
 		TextView tvBodyCmd = (TextView) findViewById(R.id.tv_chat_cmd);
+		TextView tvChatTime = (TextView) findViewById(R.id.tv_chat_time);
 		if (tvBodyCmd.getTypeface() == null) {
 			Typeface tf = Typeface.createFromAsset(getContext().getAssets(),
 					"fonts/TAHOMA.TTF");
 			tvBodyCmd.setTypeface(tf);
+			tvChatTime.setTypeface(tf);
 		}
 		tvBodyCmd.setText(body);
+		tvChatTime.setText(time);
 			
 		if (item.getTask() != null && item.getTask().getButtons() != null
 				&& item.getTask().getButtons().length > 0) {
@@ -220,7 +236,7 @@ public class ChatMessageView extends RelativeLayout implements
 												R.layout.fragment_chat_dialog,
 												(LinearLayout) findViewById(R.id.chat_dialog));
 
-								builder = new AlertDialog.Builder(activity);
+								builder = new AlertDialog.Builder(activity, AlertDialog.THEME_HOLO_DARK);
 								builder.setView(layout);
 								dialog = builder.create();
 								dialog.setCancelable(true);

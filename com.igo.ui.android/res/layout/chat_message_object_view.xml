@@ -22,31 +22,28 @@
                 android:clickable="false"
                 android:orientation="horizontal" >
 
-                <FrameLayout
-                    android:layout_width="48dp"
-                    android:layout_height="match_parent"
-                    android:padding="10dp" >
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:padding="10dp" 
+                    android:orientation="vertical">
 
                     <FrameLayout
                         android:id="@+id/view_from_img"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:background="@drawable/ic_social" >
-                    </FrameLayout>
-                </FrameLayout>
-
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp" >
-
-                    <FrameLayout
-                        android:id="@+id/view_from_other"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/ic_user" >
+                        android:background="@drawable/ic_social" >
                     </FrameLayout>
-                </FrameLayout>
+                    <TextView
+                        android:id="@+id/tv_chat_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLength="250"
+                        android:paddingLeft="1dp"
+                        android:paddingRight="1dp"
+                        android:text="12:30" />
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/layout_chat_cmd"
@@ -55,7 +52,9 @@
                     android:layout_weight="0.28"
                     android:background="@drawable/rounded_rect"
                     android:clickable="false"
-                    android:orientation="vertical" >
+                    android:orientation="vertical" 
+                    android:layout_marginRight="20dp"
+                    >
 
                     <TextView
                         android:id="@+id/tv_chat_cmd"
