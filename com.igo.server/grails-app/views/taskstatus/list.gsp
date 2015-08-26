@@ -41,7 +41,7 @@
 						${item.sendTo}
 					</td>
 					<td>
-					${ item.task ? item.task.description : '?'}
+					${ item.task ? item.task.process.description + '.' + item.task.description: '?'}
 					</td>
 					<td>
 						<g:form method="GET" url="[action:'edit', id:item.id]">
