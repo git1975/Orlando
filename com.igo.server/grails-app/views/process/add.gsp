@@ -13,11 +13,11 @@
 		<table>
 			<tr>
 				<th><g:render template="/common/formField"
-						model="[name:'item', bean:item, field:'name', label:'Код']" /></th>
+						model="[name:'item', bean:item, field:'name', label:'Код', required: true]" /></th>
 			</tr>
 			<tr>
 				<th><g:render template="/common/formField"
-						model="[name:'item', bean:item, field:'description', label:'Наименование']" />
+						model="[name:'item', bean:item, field:'description', label:'Наименование', required: true]" />
 				</th>
 			</tr>
 			<tr>
@@ -43,8 +43,8 @@
 				</th>
 			</tr>
 			<tr>
-				<th>Группа доступа: <br /> <g:select name="accessgroupSelect" from="${accessgroup}"
-						optionKey="code" optionValue="name" />
+				<th>Группа доступа: <br /> <g:select name="accessgroupSelect" from="${accessgroup}" noSelection="${['null':'Нет...']}"
+						optionKey="code" optionValue="name" value="${ item.accessgroup ? item.accessgroup.name : ''}"/>
 				</th>
 			</tr>
 			<tr>

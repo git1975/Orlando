@@ -11,7 +11,7 @@ class DataService {
 	def createUser(String login, String username, String password, String role, String accessgroup){
 		Role r = Role.find("from Role where name=?", [role])
 
-		def user = new User(login: login, username: username, password: password, role: Role.findByName(role), accessgroup: Accessgroup.findByCode(accessgroup))
+		def user = new User(login: login, username: username, password: password, role: Role.findByCode(role), accessgroup: Accessgroup.findByCode(accessgroup))
 		user.save(failOnError: true)
 		user
 	}
@@ -21,7 +21,7 @@ class DataService {
 			user.login = login
 			user.username = username
 			user.password = password
-			user.role = Role.findByName(role)
+			user.role = Role.findByCode(role)
 			user.accessgroup = Accessgroup.findByCode(accessgroup)
 			user.save(failOnError: true)
 			user
@@ -127,18 +127,32 @@ class DataService {
 
 	//2015-06-04 12:05:22.0
 	static SimpleDateFormat sdfFull2 = new SimpleDateFormat("yyyy-dd-MM HH:mm:ss")
+	
+	def static parseDate(String dt){
+		try{
+			(dt!=null)?sdfFull2.parse(dt):null
+		} catch (Exception e) {
+			null
+		}
+	}
 
 	def createProcess(String name, String description, String active, String autostart, String repeatevery, String startdate, String accessgroup){
 		def item = new Process(name: name, description: description, active: Boolean.parseBoolean(active),
-		autostart: Boolean.parseBoolean(autostart), repeatevery: repeatevery, startdate: sdfFull2.parse(startdate), accessgroup: Accessgroup.findByCode(accessgroup))
+		autostart: Boolean.parseBoolean(autostart), repeatevery: Long.decode(repeatevery), startdate: parseDate(startdate), 
+		accessgroup: Accessgroup.findByCode(accessgroup))
 		item.save(failOnError: true)
 		item
 	}
 
 	def updateProcess(Process item, String name, String description, String active, String autostart, String repeatevery, String startdate, String accessgroup){
 		if(item != null){
-			item(name: name, description: description, active: Boolean.parseBoolean(active),
-			autostart: Boolean.parseBoolean(autostart), repeatevery: repeatevery, startdate: sdfFull2.parse(startdate), accessgroup: Accessgroup.findByCode(accessgroup))
+			item.name = name
+			item.description = description
+			item.active = Boolean.parseBoolean(active)
+			item.autostart = Boolean.parseBoolean(autostart)
+			item.repeatevery = Long.decode(repeatevery)
+			item.startdate = parseDate(startdate)
+			item.accessgroup = Accessgroup.findByCode(accessgroup)
 
 			item.save(failOnError: true)
 			item
@@ -220,4 +234,26 @@ class DataService {
 		}
 	}
 
+	def createRole(String code, String name, String description){
+		def item = new Role(code: code, name: name, description: description)
+		item.save(failOnError: true)
+		item
+	}
+
+	def updateRole(Role item, String code, String name, String description){
+		if(item != null){
+			item.code = code
+			item.name = name
+			item.description = description
+			item.save(failOnError: true)
+			item
+		}
+	}
+
+	def deleteRole(long id){
+		def item = Role.get(id)
+		if(item != null){
+			item.delete(flush: true)
+		}
+	}
 }

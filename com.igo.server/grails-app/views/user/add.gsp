@@ -28,7 +28,7 @@
 			</tr>
 			<tr>
 				<th>Роль: <br /> <g:select name="roleSelect" from="${roles}"
-						optionKey="name" optionValue="description" />
+						optionKey="code" optionValue="name" />
 				</th>
 			</tr>
 			<tr>

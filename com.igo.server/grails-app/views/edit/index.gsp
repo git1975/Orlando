@@ -12,6 +12,10 @@
 				</td>
 			</tr>
 			<tr>
+				<td><g:link controller="role" action="list">Роли</g:link>
+				</td>
+			</tr>
+			<tr>
 				<td><g:link controller="user" action="list">Пользователи</g:link>
 				</td>
 			</tr>

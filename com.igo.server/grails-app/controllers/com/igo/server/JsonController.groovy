@@ -91,7 +91,7 @@ class JsonController {
 			print item.username + " login OK"
 		}
 
-		render "{'login':'" + item.login + "','role':'" + item.role.description + "','username':'" + item.username + "'}"
+		render "{'login':'" + item.login + "','role':'" + item.role.name + "','username':'" + item.username + "'}"
 	}
 
 	def taskCommit() {
@@ -230,20 +230,22 @@ class JsonController {
 
 	def getchats() {
 		log.debug("JsonController.getchats." + params.login)
+		
+		def user = User.findByLogin(params.login)
 
 		def List<ChatsCommand> fullList = new ArrayList();
 		
-		List<Process> list = Process.findAll("from Process where startdate is not null")
+		List<Process> list = Process.findAll("from Process where startdate is not null and accessgroup=?", [user.accessgroup])
 		for(Process item: list){
 			fullList.add(new ChatsCommand(code: item.name, name: item.description, ispersonal: false))
 		}
 		
-		list = Process.findAll("from Process where startdate is null")
+		list = Process.findAll("from Process where startdate is null and accessgroup=?", [user.accessgroup])
 		for(Process item: list){
 			fullList.add(new ChatsCommand(code: item.name, name: item.description, ispersonal: false, ischild: true))
 		}
 
-		List<User> list2 = User.findAll("from User as a where a.login != ?", [params.login])
+		List<User> list2 = User.findAll("from User as a where a.login!=? and accessgroup=?", [params.login, user.accessgroup])
 		for(User item: list2){
 			fullList.add(new ChatsCommand(code: item.login, name: item.username, ispersonal: true))
 		}

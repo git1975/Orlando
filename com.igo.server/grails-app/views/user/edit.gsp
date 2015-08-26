@@ -27,13 +27,13 @@
 			</tr>
 			<tr>
 				<th>Роль: <br /> <g:select name="roleSelect" from="${roles}" noSelection="${['null':'Нет...']}"
-						optionKey="name" optionValue="description"
-						value="${ item.role ? item.role.name : ''}" />
+						optionKey="code" optionValue="name"
+						value="${ item.role ? item.role.code : ''}" />
 				</th>
 			</tr>
 			<tr>
 				<th>Группа доступа: <br /> <g:select name="accessgroupSelect" from="${accessgroup}" noSelection="${['null':'Нет...']}"
-						optionKey="code" optionValue="name" value="${ item.accessgroup ? item.accessgroup.name : ''}"/>
+						optionKey="code" optionValue="name" value="${ item.accessgroup ? item.accessgroup.code : ''}"/>
 				</th>
 			</tr>
 			<tr>

@@ -26,7 +26,7 @@
 						${item.username}
 					</td>
 					<td>
-						${ item.role ? item.role.description : '?'}
+						${ item.role ? item.role.name : '?'}
 					</td>
 					<td>
 						${ item.accessgroup ? item.accessgroup.name : '?'}
