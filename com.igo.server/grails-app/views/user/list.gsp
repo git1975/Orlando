@@ -13,6 +13,7 @@
 					<th>Логин</th>
 					<th>Имя</th>
 					<th>Роль</th>
+					<th>Группа доступа</th>
 					<th></th>
 				</tr>
 			</thead>
@@ -26,6 +27,9 @@
 					</td>
 					<td>
 						${ item.role ? item.role.description : '?'}
+					</td>
+					<td>
+						${ item.accessgroup ? item.accessgroup.name : '?'}
 					</td>
 					<td><g:form method="GET" url="[action:'edit', id:item.id]">
 							<p class="submit">

@@ -3,4 +3,4 @@ ${label}:
 
 <br/>
 <g:textField name="${name + '_' + field}"
-             value="${fieldValue(bean:bean, field:field)}" />
+             value="${fieldValue(bean:bean, field:field)}" required="${required}" />

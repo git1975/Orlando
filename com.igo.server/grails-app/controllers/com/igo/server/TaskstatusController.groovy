@@ -5,7 +5,7 @@ class TaskstatusController {
 	def dataService
 
 	def list() {
-		return [items: Taskstatus.list()]
+		return [items: Taskstatus.findAll("from Taskstatus order by task, status, sendTo")]
 	}
 
 	def add() {

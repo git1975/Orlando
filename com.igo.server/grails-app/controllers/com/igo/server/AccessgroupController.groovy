@@ -1,19 +1,18 @@
 package com.igo.server
 
-class RegisterController {
+class AccessgroupController {
 
 	def dataService
 
 	def list() {
-		return [items: Register.list()]
+		return [items: Accessgroup.list()]
 	}
 
 	def add() {
 		if (request.method == 'GET') {
-			return [item: new Register()]
+			return [item: new Accessgroup()]
 		}
-
-		def item = dataService.createRegister(params.item_code, params.item_name, params.item_description)
+		def item = dataService.createAccessgroup(params.item_code, params.item_name, params.item_description)
 
 		if (item.hasErrors()) {
 			return [item: item]
@@ -24,15 +23,14 @@ class RegisterController {
 
 	def edit() {
 		if (request.method == 'GET') {
-			def item = Register.get(params.id)
+			def Accessgroup item = Accessgroup.get(params.id)
 
 			if(item == null){
 				redirect action: 'list'
 			}
-			log.debug("Edit Register: " + item)
 			return [item: item]
 		} else {
-			def item = dataService.updateRegister(Register.get(params.id), params.item_code, params.item_name, params.item_description)
+			def item = dataService.updateAccessgroup(Accessgroup.get(params.id), params.item_code, params.item_name, params.item_description)
 			if (item.hasErrors()) {
 				render view: 'edit'
 				return
@@ -42,8 +40,8 @@ class RegisterController {
 	}
 
 	def delete() {
-		def item = Register.get(params.id)
-		dataService.deleteRegister(item.id);
+		def Accessgroup item = Accessgroup.get(params.id)
+		dataService.deleteAccessgroup(item.id);
 		
 		redirect action: 'list'
 	}

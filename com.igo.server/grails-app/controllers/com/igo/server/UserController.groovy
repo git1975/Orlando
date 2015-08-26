@@ -1,5 +1,7 @@
 package com.igo.server
 
+import grails.converters.JSON
+
 class UserController {
 
 	def dataService
@@ -10,10 +12,10 @@ class UserController {
 
 	def add() {
 		if (request.method == 'GET') {
-			return [item: new User(), roles: Role.list()]
+			return [item: new User(), roles: Role.list(), accessgroup: Accessgroup.list()]
 		}
 
-		def user = dataService.createUser(params.item_login, params.item_username, params.item_password, params.roleSelect)
+		def user = dataService.createUser(params.item_login, params.item_username, params.item_password, params.roleSelect, params.accessgroupSelect)
 
 		if (user.hasErrors()) {
 			return [userBean: user]
@@ -23,11 +25,6 @@ class UserController {
 	}
 
 	def edit() {
-		/*for(Iterator itr = params.iterator(); itr.hasNext();){
-			String key = itr.next();
-			println "->" + key
-		}*/
-		
 		if (request.method == 'GET') {
 			def User item = User.get(params.id)
 			
@@ -35,12 +32,12 @@ class UserController {
 				redirect action: 'list'
 			}
 			log.debug("Edit: " + item)
-			return [item: item, roles: Role.list()]
+			return [item: item, roles: Role.list(), accessgroup: Accessgroup.list()]
 		} else {
 			def item = dataService.updateUser(User.get(params.id), params.item_login, params.item_username,
-					params.item_password, params.roleSelect)
+					params.item_password, params.roleSelect, params.accessgroupSelect)
 			if (item.hasErrors()) {
-				render view: 'edit', model: [user: item]
+				render view: 'edit'
 				return
 			}
 			redirect action: 'list'

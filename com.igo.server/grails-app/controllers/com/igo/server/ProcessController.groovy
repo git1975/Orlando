@@ -14,11 +14,11 @@ class ProcessController {
 
 	def add() {
 		if (request.method == 'GET') {
-			return [item: new Process()]
+			return [item: new Process(), accessgroup: Accessgroup.list()]
 		}
 
 		def item = dataService.createProcess(params.item_name, params.item_description, params.active, params.autostart, 
-				params.item_repeatevery, params.item_startdate)
+				params.item_repeatevery, params.item_startdate, params.accessgroupSelect)
 
 		if (item.hasErrors()) {
 			return [item: item]
@@ -35,14 +35,14 @@ class ProcessController {
 				redirect action: 'list'
 			}
 			log.debug("Edit: " + item)
-			return [item: item]
+			return [item: item, accessgroup: Accessgroup.list()]
 		} else {
 			String active = params.active
 			
 			log.debug("params.active=" + active)
 			
 			def item = dataService.updateProcess(Process.get(params.id), params.item_name, params.item_description, params.active, params.autostart, 
-				params.item_repeatevery, params.item_startdate)
+				params.item_repeatevery, params.item_startdate, params.accessgroupSelect)
 			if (item.hasErrors()) {
 				render view: 'edit', model: [item: item]
 				return

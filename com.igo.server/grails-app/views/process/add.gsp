@@ -43,6 +43,11 @@
 				</th>
 			</tr>
 			<tr>
+				<th>Группа доступа: <br /> <g:select name="accessgroupSelect" from="${accessgroup}"
+						optionKey="code" optionValue="name" />
+				</th>
+			</tr>
+			<tr>
 				<td>
 					<table>
 						<tr>

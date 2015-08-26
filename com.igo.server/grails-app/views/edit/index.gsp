@@ -8,6 +8,10 @@
 		<h2>Админка:</h2>
 		<table>
 			<tr>
+				<td><g:link controller="accessgroup" action="list">Группы доступа</g:link>
+				</td>
+			</tr>
+			<tr>
 				<td><g:link controller="user" action="list">Пользователи</g:link>
 				</td>
 			</tr>

@@ -12,12 +12,12 @@
 		<table>
 			<tr>
 				<th><g:render template="/common/formField"
-						model="[name:'item', bean:item, field:'login', label:'Логин']" />
+						model="[name:'item', bean:item, field:'login', label:'Логин', required: true]" />
 				</th>
 			</tr>
 			<tr>
 				<th><g:render template="/common/formField"
-						model="[name:'item', bean:item, field:'username', label:'Имя']" />
+						model="[name:'item', bean:item, field:'username', label:'Имя', required: true]" />
 				</th>
 			</tr>
 			<tr>
@@ -26,9 +26,14 @@
 				</th>
 			</tr>
 			<tr>
-				<th>Роль: <br /> <g:select name="roleSelect" from="${roles}"
+				<th>Роль: <br /> <g:select name="roleSelect" from="${roles}" noSelection="${['null':'Нет...']}"
 						optionKey="name" optionValue="description"
-						value="${ item.role ? item.role.name : 'mgr'}" />
+						value="${ item.role ? item.role.name : ''}" />
+				</th>
+			</tr>
+			<tr>
+				<th>Группа доступа: <br /> <g:select name="accessgroupSelect" from="${accessgroup}" noSelection="${['null':'Нет...']}"
+						optionKey="code" optionValue="name" value="${ item.accessgroup ? item.accessgroup.name : ''}"/>
 				</th>
 			</tr>
 			<tr>

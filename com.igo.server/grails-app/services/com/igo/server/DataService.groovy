@@ -8,22 +8,21 @@ import grails.transaction.Transactional
 @Transactional
 class DataService {
 
-	def createUser(String login, String username, String password, String role){
+	def createUser(String login, String username, String password, String role, String accessgroup){
 		Role r = Role.find("from Role where name=?", [role])
 
-		def user = new User(login: login, username: username, password: password, role: r)
+		def user = new User(login: login, username: username, password: password, role: Role.findByName(role), accessgroup: Accessgroup.findByCode(accessgroup))
 		user.save(failOnError: true)
 		user
 	}
 
-	def updateUser(User user, String login, String username, String password, String role){
+	def updateUser(User user, String login, String username, String password, String role, String accessgroup){
 		if(user != null){
-			Role r = Role.find("from Role where name=?", [role])
-
 			user.login = login
 			user.username = username
 			user.password = password
-			user.role = r
+			user.role = Role.findByName(role)
+			user.accessgroup = Accessgroup.findByCode(accessgroup)
 			user.save(failOnError: true)
 			user
 		}
@@ -66,7 +65,7 @@ class DataService {
 		log.debug("createTaskStatus-" + msgtext+'-'+msgtype+'-'+status+'-'+lifetime+'-'+color+'-'+task)
 
 		def item = new Taskstatus(msgtext: msgtext, msgtype: msgtype, status: status, lifetime: Integer.parseInt(lifetime),
-			color: Integer.parseInt(color), registers: registers, task: r, maxrepeat: maxrepeat, repeatevery: repeatevery)
+		color: Integer.parseInt(color), registers: registers, task: r, maxrepeat: maxrepeat, repeatevery: repeatevery)
 		item.save(failOnError: true)
 		item
 	}
@@ -125,25 +124,22 @@ class DataService {
 			}
 		}
 	}
-	
+
 	//2015-06-04 12:05:22.0
 	static SimpleDateFormat sdfFull2 = new SimpleDateFormat("yyyy-dd-MM HH:mm:ss")
-	
-	def createProcess(String name, String description, String active, String autostart, String repeatevery, String startdate){
-		def item = new Process(name: name, description: description, active: Boolean.parseBoolean(active), 
-			autostart: Boolean.parseBoolean(autostart), repeatevery: repeatevery, startdate: sdfFull2.parse(startdate))
+
+	def createProcess(String name, String description, String active, String autostart, String repeatevery, String startdate, String accessgroup){
+		def item = new Process(name: name, description: description, active: Boolean.parseBoolean(active),
+		autostart: Boolean.parseBoolean(autostart), repeatevery: repeatevery, startdate: sdfFull2.parse(startdate), accessgroup: Accessgroup.findByCode(accessgroup))
 		item.save(failOnError: true)
 		item
 	}
 
-	def updateProcess(Process item, String name, String description, String active, String autostart, String repeatevery, String startdate){
+	def updateProcess(Process item, String name, String description, String active, String autostart, String repeatevery, String startdate, String accessgroup){
 		if(item != null){
-			item.name = name
-			item.description = description
-			item.active = Boolean.parseBoolean(active)
-			item.autostart = Boolean.parseBoolean(autostart)
-			item.repeatevery = Long.parseLong(repeatevery)
-			item.startdate = sdfFull2.parse(startdate)
+			item(name: name, description: description, active: Boolean.parseBoolean(active),
+			autostart: Boolean.parseBoolean(autostart), repeatevery: repeatevery, startdate: sdfFull2.parse(startdate), accessgroup: Accessgroup.findByCode(accessgroup))
+
 			item.save(failOnError: true)
 			item
 		}
@@ -155,28 +151,18 @@ class DataService {
 			item.delete(flush: true)
 		}
 	}
-	
+
 	def createTask(String name, String description, String ord, String startdate, String signaldate, String enddate, String process){
-		Process p = Process.find("from Process where name=?", [process])
-		
 		def item = new Task(name: name, description: description, ord: Integer.parseInt(ord), startdate: sdfFull2.parse(startdate),
-			signaldate: sdfFull2.parse(signaldate), enddate: sdfFull2.parse(enddate), process: p)
+		signaldate: sdfFull2.parse(signaldate), enddate: sdfFull2.parse(enddate), process: Process.findByName(process))
 		item.save(failOnError: true)
 		item
 	}
 
 	def updateTask(Task item, String name, String description, String ord, String startdate, String signaldate, String enddate, String process){
 		if(item != null){
-			Process p = Process.find("from Process where name=?", [process])
-			
-			item.name = name
-			item.description = description
-			item.ord = Integer.parseInt(ord)
-			item.startdate = sdfFull2.parse(startdate)
-			item.signaldate = sdfFull2.parse(signaldate)
-			item.enddate = sdfFull2.parse(enddate)
-			item.process = p
-			item.save(failOnError: true)
+			item(name: name, description: description, ord: Integer.parseInt(ord), startdate: sdfFull2.parse(startdate),
+			signaldate: sdfFull2.parse(signaldate), enddate: sdfFull2.parse(enddate), process: Process.findByName(process))save(failOnError: true)
 			item
 		}
 	}
@@ -187,7 +173,7 @@ class DataService {
 			item.delete(flush: true)
 		}
 	}
-	
+
 	def createRegister(String code, String name, String description){
 		def item = new Register(code: code, name: name, description: description)
 		item.save(failOnError: true)
@@ -210,4 +196,28 @@ class DataService {
 			item.delete(flush: true)
 		}
 	}
+
+	def createAccessgroup(String code, String name, String description){
+		def item = new Accessgroup(code: code, name: name, description: description)
+		item.save(failOnError: true)
+		item
+	}
+
+	def updateAccessgroup(Accessgroup item, String code, String name, String description){
+		if(item != null){
+			item.code = code
+			item.name = name
+			item.description = description
+			item.save(failOnError: true)
+			item
+		}
+	}
+
+	def deleteAccessgroup(long id){
+		def item = Accessgroup.get(id)
+		if(item != null){
+			item.delete(flush: true)
+		}
+	}
+
 }

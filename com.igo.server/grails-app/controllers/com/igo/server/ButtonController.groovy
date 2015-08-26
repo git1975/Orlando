@@ -34,7 +34,7 @@ log.debug('--->>>' + params.registerSelect)
 		} else {
 			def item = dataService.updateButton(Button.get(params.id), params.item_code, params.item_name, params.item_replystatus, params.registerSelect)
 			if (item.hasErrors()) {
-				render view: 'edit', model: [user: item]
+				render view: 'edit'
 				return
 			}
 			redirect action: 'list'

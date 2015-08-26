@@ -7,9 +7,11 @@ class Process {
 	boolean active = true
 	long repeatevery = 0
 	Date startdate = new Date()
+	Accessgroup accessgroup
 
 	static constraints = {
 		name blank: false, unique: true
+		accessgroup blank: false
 	}
 
 	static mapping = {
