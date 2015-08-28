@@ -38,7 +38,7 @@
         </activity>
 
         <receiver
-            android:name=".service.BootBroadcastReceiver"
+            android:name="com.igo.ui.android.service.BootBroadcastReceiver"
             android:enabled="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED" >
             <intent-filter>

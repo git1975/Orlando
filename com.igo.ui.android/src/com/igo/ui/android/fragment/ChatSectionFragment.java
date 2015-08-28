@@ -2,15 +2,8 @@ package com.igo.ui.android.fragment;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -19,22 +12,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.igo.ui.android.DataStorage;
 import com.igo.ui.android.R;
 import com.igo.ui.android.adapter.ChatViewAdapter;
-import com.igo.ui.android.domain.ChatMessage;
 import com.igo.ui.android.domain.ChatsItem;
 import com.igo.ui.android.domain.Login;
 import com.igo.ui.android.remote.Command;
-import com.igo.ui.android.remote.CommandConnector;
 import com.igo.ui.android.remote.OnCommandEndListener;
 import com.igo.ui.android.service.RemoteBroadcastReceiver;
 import com.igo.ui.android.service.RemoteService;
@@ -98,11 +86,6 @@ public class ChatSectionFragment extends Fragment implements OnCommandEndListene
 					command.putParam("sendto", "all");
 					command.putParam("chatcode", chatsItem.getCode());
 				}
-
-				// CommandConnector con = new CommandConnector(getActivity()
-				// .getApplicationContext(), command);
-				// con.setOnCommandEndListener(adapter);
-				// con.execute("");
 
 				getActivity().startService(
 						new Intent(getActivity(), RemoteService.class)

@@ -8,7 +8,6 @@ import android.content.IntentFilter;
 
 import com.igo.ui.android.domain.ChatMessage;
 import com.igo.ui.android.remote.Command;
-import com.igo.ui.android.remote.CommandConnector;
 import com.igo.ui.android.remote.OnCommandEndListener;
 import com.igo.ui.android.service.RemoteBroadcastReceiver;
 import com.igo.ui.android.service.RemoteService;
@@ -48,9 +47,6 @@ public class ChatTimerTask extends TimerTask implements OnCommandEndListener {
 		command.putParam("maxid", maxid + "");
 		command.putParam("minid", minid + "");
 		command.putParam("chatcode", chatcode);
-		//CommandConnector con = new CommandConnector(context, command);
-		//con.setOnCommandEndListener(this);
-		//con.execute("");
 		
 		context.registerReceiver(rbr,
 				new IntentFilter(RemoteService.IGO_SERVICE_ACTION));
