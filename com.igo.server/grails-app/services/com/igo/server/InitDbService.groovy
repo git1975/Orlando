@@ -105,21 +105,28 @@ class InitDbService {
 	}
 
 	def initDatabaseDemo(){
+		if(!Accessgroup.count) {
+			new Accessgroup(code: 'work', name: 'Работа', description: 'Работа').save(failOnError: true)
+			new Accessgroup(code: 'home', name: 'Дом', description: 'Дом').save(failOnError: true)
+		}
 		if(!Role.count) {
-			Role role1 = new com.igo.server.Role(name: 'head', description: 'Директор').save(failOnError: true)
-			Role role2 = new com.igo.server.Role(name: 'mgr', description: 'Управляющий').save(failOnError: true)
+			new Role(code: 'head', name: 'Директор', description: 'Директор').save(failOnError: true)
+			new Role(code: 'mgr', name: 'Управляющий', description: 'Управляющий').save(failOnError: true)
 		}
 		if(!User.count) {
-			Role role1 = Role.find("from Role as a where a.name = ?", ['head'])
-			Role role2 = Role.find("from Role as a where a.name = ?", ['mgr'])
-
-			User usr1 = new User(login: 'user1', username: 'Иван Иванов', password: '1', role: role1).save(failOnError: true)
-			User usr2 = new User(login: 'user2', username: 'Петр Петров', password: '1', role: role2).save(failOnError: true)
-			User usr3 = new User(login: 'user3', username: 'Владимир Владимиров', password: '1', role: role2).save(failOnError: true)
+			User usr1 = new User(login: 'user1', username: 'Иван Иванов', password: '1', 
+				role: Role.findByCode('head'), accessgroup: Accessgroup.findByCode('work')).save(failOnError: true)
+			User usr2 = new User(login: 'user2', username: 'Петр Петров', password: '1', 
+				role: Role.findByCode('mgr'), accessgroup: Accessgroup.findByCode('work')).save(failOnError: true)
+			User usr3 = new User(login: 'user3', username: 'Владимир Владимиров', password: '1', 
+				role: Role.findByCode('mgr'), accessgroup: Accessgroup.findByCode('work')).save(failOnError: true)
 		}
 		if(!Process.count) {
-			Process proc = new Process(name: 'demo', description: 'демоверсия', repeatevery: 0)
-			.save(failOnError: true)
+			SimpleDateFormat sdfTime = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss")
+			
+			new Process(name: 'demo', description: 'запрос в команде demo', active: 1, repeatevery: 0, 
+				startdate: sdfTime.parse("20150801T06:00:00"), accessgroup: Accessgroup.findByCode('work')).save(failOnError: true)
+			new Process(name: 'demo2', description: 'запрос клиенту demo', active: 1, repeatevery: 0, accessgroup: Accessgroup.findByCode('work')).save(failOnError: true)
 		}
 		if(!Task.count) {
 			Process proc = Process.find("from Process as a where a.name = ?", ['demo'])

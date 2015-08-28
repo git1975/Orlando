@@ -35,7 +35,7 @@
 									<input type="submit" value="Сохранить" />
 								</p>
 							</td>
-							<td><g:link controller="accessgroup" action="list">
+							<td><g:link controller="role" action="list">
 									<input type="button" value="Отмена" />
 								</g:link></td>
 						</tr>
