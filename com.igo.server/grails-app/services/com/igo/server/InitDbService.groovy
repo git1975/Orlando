@@ -131,14 +131,16 @@ class InitDbService {
 		if(!Task.count) {
 			Process proc = Process.find("from Process as a where a.name = ?", ['demo'])
 
-			User usr1 = User.find("from User as a where a.login = ?", ['user1'])
-			User usr2 = User.find("from User as a where a.login = ?", ['user2'])
-			User usr3 = User.find("from User as a where a.login = ?", ['user3'])
+			User usr1 = User.findByLogin('user1')
+			User usr2 = User.findByLogin('user2')
+			User usr3 = User.findByLogin('user3')
 
 			SimpleDateFormat sdfTime = new SimpleDateFormat("mm")
 
-			Task task = new Task(name: 'start_dm', description: 'начало_демо', user: usr1, ord: 1, startdate: sdfTime.parse("00"), signaldate: sdfTime.parse("01"), enddate: sdfTime.parse("01"), process: proc).save(failOnError: true)
-			task = new Task(name: 'confirmation_dm', description: 'подтверждение_демо', user: usr2, ord: 2, startdate: sdfTime.parse("01"), signaldate: sdfTime.parse("01"), enddate: sdfTime.parse("02"), process: proc).save(failOnError: true)
+			Task task = new Task(name: 'start_dm', description: 'начало_демо', user: User.findByLogin('user1'), ord: 1, startdate: sdfTime.parse("00"), 
+				signaldate: sdfTime.parse("01"), enddate: sdfTime.parse("01"), process: proc).save(failOnError: true)
+			task = new Task(name: 'confirmation_dm', description: 'подтверждение_демо', user: usr2, ord: 2, startdate: sdfTime.parse("01"), 
+				signaldate: sdfTime.parse("01"), enddate: sdfTime.parse("02"), process: proc).save(failOnError: true)
 		}
 		if(!Deviation.count) {
 			new Deviation(name: 'Отказ').save(failOnError: true)
