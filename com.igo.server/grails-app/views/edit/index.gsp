@@ -20,23 +20,23 @@
 				</td>
 			</tr>
 			<tr>
-				<td><g:link controller="button" action="list">Кнопки</g:link>
-				</td>
-			</tr>
-			<tr>
 				<td><g:link controller="register" action="list">Регистры</g:link>
 				</td>
 			</tr>
 			<tr>
-				<td><g:link controller="taskstatus" action="list">Статусы задач</g:link>
+				<td><g:link controller="button" action="list">Кнопки</g:link>
 				</td>
 			</tr>
 			<tr>
-				<td><g:link controller="process" action="list">Циклы</g:link>
+				<td><g:link controller="process" action="list">Кейсы</g:link>
 				</td>
 			</tr>
 			<tr>
 				<td><g:link controller="task" action="list">Задачи</g:link>
+				</td>
+			</tr>
+			<tr>
+				<td><g:link controller="taskstatus" action="list">Статусы задач</g:link>
 				</td>
 			</tr>
 			<tr>

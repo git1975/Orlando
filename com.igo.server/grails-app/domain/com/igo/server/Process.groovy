@@ -6,7 +6,7 @@ class Process {
 	boolean autostart
 	boolean active = true
 	long repeatevery = 0
-	Date startdate = new Date()
+	Date startdate = null
 	Accessgroup accessgroup
 
 	static constraints = {

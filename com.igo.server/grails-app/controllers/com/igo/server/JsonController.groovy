@@ -258,7 +258,7 @@ class JsonController {
 		
 		commandService.startChildProcess(params.process, params.parentchat)
 		
-		ChatStatus chatStatus = new ChatStatus(chatcode: params.parentchat, status: 'Create ' + params.process + " in " + params.parentchat)
+		ChatStatus chatStatus = new ChatStatus(chatcode: params.parentchat, status: 'Начат ' + Process.findByName(params.process).description)
 		
 		render chatStatus as JSON
 	}

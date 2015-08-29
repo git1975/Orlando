@@ -78,14 +78,23 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.46"
-                            android:text="@string/str_yes" />
+                            android:text="@string/str_yes" 
+                            android:textSize="14sp" />
 
                         <Button
                             android:id="@+id/chat_btn2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="0.46"
-                            android:text="@string/str_no" />
+                            android:text="@string/str_no" 
+                            android:textSize="14sp" />
+                        <Button
+                            android:id="@+id/chat_btn3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.46"
+                            android:text="@string/str_no" 
+                            android:textSize="14sp" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>

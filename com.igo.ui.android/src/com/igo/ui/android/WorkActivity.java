@@ -266,7 +266,7 @@ public class WorkActivity extends ActionBarActivity implements
 		}
 		if (Command.STARTSUBCASE.equals(command.getCommand())) {
 			Toast.makeText(getApplicationContext(), result.toString(),
-					Toast.LENGTH_SHORT).show();
+					Toast.LENGTH_LONG).show();
 		}
 	}
 

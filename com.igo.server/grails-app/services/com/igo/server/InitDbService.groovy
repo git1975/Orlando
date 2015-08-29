@@ -25,7 +25,7 @@ class InitDbService {
 			User usr3 = new User(login: 'user3', username: 'Жорж Милославский', password: '1', role: role2).save(failOnError: true)
 		}
 		if(Process.findByName('production') == null){
-				Process proc = new Process(name: 'production', description: 'производство', repeatevery: 0).save(failOnError: true)
+			Process proc = new Process(name: 'production', description: 'производство', repeatevery: 0).save(failOnError: true)
 		}
 		if(true) {
 			Process proc = Process.find("from Process as a where a.name = ?", ['production'])
@@ -114,68 +114,68 @@ class InitDbService {
 			new Role(code: 'mgr', name: 'Управляющий', description: 'Управляющий').save(failOnError: true)
 		}
 		if(!User.count) {
-			User usr1 = new User(login: 'user1', username: 'Иван Иванов', password: '1', 
-				role: Role.findByCode('head'), accessgroup: Accessgroup.findByCode('work')).save(failOnError: true)
-			User usr2 = new User(login: 'user2', username: 'Петр Петров', password: '1', 
-				role: Role.findByCode('mgr'), accessgroup: Accessgroup.findByCode('work')).save(failOnError: true)
-			User usr3 = new User(login: 'user3', username: 'Владимир Владимиров', password: '1', 
-				role: Role.findByCode('mgr'), accessgroup: Accessgroup.findByCode('work')).save(failOnError: true)
+			new User(login: 'user1', username: 'Иван Иванов', password: '1',
+			role: Role.findByCode('head'), accessgroup: Accessgroup.findByCode('work')).save(failOnError: true)
+			new User(login: 'user2', username: 'Петр Петров', password: '1',
+			role: Role.findByCode('mgr'), accessgroup: Accessgroup.findByCode('work')).save(failOnError: true)
+			new User(login: 'user3', username: 'Владимир Владимиров', password: '1',
+			role: Role.findByCode('mgr'), accessgroup: Accessgroup.findByCode('work')).save(failOnError: true)
 		}
 		if(!Process.count) {
 			SimpleDateFormat sdfTime = new SimpleDateFormat("yyyyMMdd'T'HH:mm:ss")
-			
-			new Process(name: 'demo', description: 'запрос в команде demo', active: 1, repeatevery: 0, 
-				startdate: sdfTime.parse("20150801T06:00:00"), accessgroup: Accessgroup.findByCode('work')).save(failOnError: true)
-			new Process(name: 'demo2', description: 'запрос клиенту demo', active: 1, repeatevery: 0, accessgroup: Accessgroup.findByCode('work')).save(failOnError: true)
+
+			new Process(name: 'demo', description: 'запрос в команде demo', active: 1, repeatevery: 0,
+			startdate: sdfTime.parse("20150801T06:00:00"), accessgroup: Accessgroup.findByCode('work')).save(failOnError: true)
+			new Process(name: 'demo_ibr', description: 'запрос клиенту demo', active: 1, repeatevery: 0, accessgroup: Accessgroup.findByCode('work')).save(failOnError: true)
 		}
 		if(!Task.count) {
-			Process proc = Process.find("from Process as a where a.name = ?", ['demo'])
-
-			User usr1 = User.findByLogin('user1')
-			User usr2 = User.findByLogin('user2')
-			User usr3 = User.findByLogin('user3')
-
 			SimpleDateFormat sdfTime = new SimpleDateFormat("mm")
 
-			Task task = new Task(name: 'start_dm', description: 'начало_демо', user: User.findByLogin('user1'), ord: 1, startdate: sdfTime.parse("00"), 
-				signaldate: sdfTime.parse("01"), enddate: sdfTime.parse("01"), process: proc).save(failOnError: true)
-			task = new Task(name: 'confirmation_dm', description: 'подтверждение_демо', user: usr2, ord: 2, startdate: sdfTime.parse("01"), 
-				signaldate: sdfTime.parse("01"), enddate: sdfTime.parse("02"), process: proc).save(failOnError: true)
+			new Task(name: 'notify', description: 'Информирование', ord: 1, process: Process.findByName('demo'),
+			startdate: sdfTime.parse("00"), signaldate: sdfTime.parse("00"), enddate: sdfTime.parse("01")).save(failOnError: true)
+			new Task(name: 'confirm', description: 'Контроль', ord: 2, process: Process.findByName('demo'),
+			startdate: sdfTime.parse("01"), signaldate: sdfTime.parse("01"), enddate: sdfTime.parse("05")).save(failOnError: true)
+			new Task(name: 'finish', description: 'Отчет', ord: 3,  process: Process.findByName('demo'),
+			startdate: sdfTime.parse("05"), signaldate: sdfTime.parse("05"), enddate: sdfTime.parse("06")).save(failOnError: true)
+
+			new Task(name: 'request', description: 'Запрос', ord: 1,  process: Process.findByName('demo_ibr'),
+			startdate: sdfTime.parse("00"), signaldate: sdfTime.parse("00"), enddate: sdfTime.parse("01")).save(failOnError: true)
 		}
-		if(!Deviation.count) {
-			new Deviation(name: 'Отказ').save(failOnError: true)
+		if(!Register.count) {
+			new Register(code: 'time', name: 'Время', description: 'Время').save(failOnError: true)
 		}
 		if(!Button.count) {
 			new Button(code: 'YES', name: 'Да', replystatus: 'REPLY_YES').save(failOnError: true)
 			new Button(code: 'NO', name: 'Нет', replystatus: 'REPLY_NO').save(failOnError: true)
-			new Button(code: 'FINISH', name: 'Нет', replystatus: 'REPLY_FINISH').save(failOnError: true)
-			new Button(code: 'HAND', name: 'Ручной режим', replystatus: 'REPLY_HAND').save(failOnError: true)
-			new Button(code: 'BTN_1', name: 'Хорошо', replystatus: 'REPLY_1').save(failOnError: true)
-			new Button(code: 'BTN_2', name: 'Плохо', replystatus: 'REPLY_2').save(failOnError: true)
+			new Button(code: 'OK', name: 'Подтверждаю', replystatus: 'OK').save(failOnError: true)
+			new Button(code: 'POSTPONE', name: 'Перенос', replystatus: 'POSTPONE', register: Register.findByCode('time')).save(failOnError: true)
 		}
 		if(!Taskstatus.count) {
-			Taskstatus ts1, ts2, ts3, ts4
-
-			//start_dm
-			Task task1 = Task.find("from Task as a where a.name = ?", ['start_dm'])
-			ts1 = new Taskstatus(status: 'INIT', msgtype: 'INFO', sendTo: 'user1', color: 1, lifetime: 1, msgtext: 'Начинается процедура <process>, ждем когда <user=user2> подтвердит контрольный запрос').save(failOnError: true)
-			ts1.task = task1
-
-			//confirmation_dm
-			task1 = Task.find("from Task as a where a.name = ?", ['confirmation_dm'])
-			ts1 = new Taskstatus(status: 'INIT', msgtype: 'CMD', sendTo: 'user2', color: 1, lifetime: 1, msgtext: '<user=user2>, подтверждаешь, что в <process> все ОК?').save(failOnError: true)
-			ts1.addToButtons(Button.find("from Button as a where a.replystatus = ?", ['REPLY_YES']))
-			ts1.addToButtons(Button.find("from Button as a where a.replystatus = ?", ['REPLY_NO']))
-			ts1.task = task1
-
-			//ts2 = new Taskstatus(status: 'INIT', msgtype: 'INFO', sendTo: 'user1', color: 1, lifetime: 1, msgtext: 'Завершается процедура <process>').save(failOnError: true)
-			//ts2.task = task1
-
-			ts3 = new Taskstatus(status: 'REPLY_YES', msgtype: 'INFO', sendTo: 'user1', color: 1, lifetime: 1, msgtext: 'Демонстрация успешно завершена').save(failOnError: true)
-			ts3.task = task1
-
-			ts4 = new Taskstatus(status: 'REPLY_NO', msgtype: 'INFO', sendTo: 'user1', color: 1, lifetime: 1, msgtext: '<user=user2>, сказал, что в <process> бардак').save(failOnError: true)
-			ts4.task = task1
+			new Taskstatus(status: 'INIT', msgtype: 'INFO', sendTo: 'all', color: 1, lifetime: 1, 
+				msgtext: 'Начинается процедура <process>', task: Task.findByName('notify')).save(failOnError: true)
+			new Taskstatus(status: 'INIT', msgtype: 'INFO', sendTo: 'user1', color: 1, lifetime: 1, 
+				msgtext: '<user=user1>, ожидаем ответа от <user=user2> на запрос о начале работы цеха сегодня в 9:00. Время на ответ 1 минута', task: Task.findByName('confirm')).save(failOnError: true)
+			Taskstatus ts1 = new Taskstatus(status: 'INIT', msgtype: 'CMD', sendTo: 'user2', color: 1, lifetime: 1,
+				msgtext: '<user=user2>, подтверди полную готовность начала работы цеха с <reg=time>. Прошу ответить в течении 1 минуты', task: Task.findByName('confirm'), 
+				registers: 'time=9:00;', maxrepeat: 3, repeatevery: 1).save(failOnError: true)
+			new Taskstatus(status: 'OK', msgtype: 'INFO', sendTo: 'all', color: 1, lifetime: 1,
+				msgtext: '<user=user2> подтвердил готовность цеха к <reg=time>', task: Task.findByName('confirm')).save(failOnError: true)
+			new Taskstatus(status: 'POSTPONE', msgtype: 'INFO', sendTo: 'all', color: 1, lifetime: 1,
+				msgtext: '<user=user2> перенес готовность цеха на <reg=time>', task: Task.findByName('confirm')).save(failOnError: true)
+			Taskstatus ts2 = new Taskstatus(status: 'OK', msgtype: 'CMD', sendTo: 'user1', color: 1, lifetime: 1,
+				msgtext: 'Подтверди получение сообщения о готовности от <user=user2>', task: Task.findByName('confirm'), maxrepeat: 3, repeatevery: 1).save(failOnError: true)
+			new Taskstatus(status: 'END_TASK', msgtype: 'REPORT', sendTo: 'user1', color: 1, lifetime: 1,
+				msgtext: 'Итоги. Производство начинает работу в <reg=time>. Взято на контроль. Бонус <user=user2>=<bonus=user2>', task: Task.findByName('confirm')).save(failOnError: true)
+			new Taskstatus(status: 'INIT', msgtype: 'INFO', sendTo: 'all', color: 1, lifetime: 1,
+				msgtext: 'Демонстрация завершена', task: Task.findByName('finish')).save(failOnError: true)				
+	
+			ts1.addToButtons(Button.findByCode('OK'))
+			ts1.addToButtons(Button.findByCode('POSTPONE'))
+			ts2.addToButtons(Button.findByCode('YES'))
+			ts2.addToButtons(Button.findByCode('NO'))
+			
+			new Taskstatus(status: 'INIT', msgtype: 'INFO', sendTo: 'all', color: 1, lifetime: 1,
+				msgtext: 'запрос клиенту demo', task: Task.findByName('request')).save(failOnError: true)
 		}
 	}
 }

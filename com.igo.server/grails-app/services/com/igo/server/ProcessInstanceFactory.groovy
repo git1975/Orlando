@@ -44,9 +44,11 @@ class ProcessInstanceFactory {
 		enddt = Utils.addMinutes(now, ts.task.enddate)
 		User user = User.findByLogin(ts.sendTo)
 
-		Queue msg = new Queue(type: 'Taskstatus', finished: false, description: ts.task.description + ' <' + ts.msgtype + '>', 
+		Queue q = new Queue(type: 'Taskstatus', finished: false, description: ts.task.description + ' <' + ts.msgtype + '>', 
 			idprocess: ts.task.process.id, ord: 0, user: user, task: ts.task, status: ts.status,
 			startdate: new Date(), signaldate: new Date(), enddate: null, parent: parent, taskstatus: ts, 
 			maxrepeat: ts.maxrepeat, initstatus: ts.status, registers: ts.registers, parentchat: parent.parentchat).save(failOnError: true)
+		
+		return q
 	}
 }

@@ -32,10 +32,6 @@ function doSuccessReset(data){
 		<h2>Админка:</h2>
 		<table>
 			<tr>
-				<td><input type="button" onclick="doReset();" value="Сброс к длинному циклу"/><br/>
-				</td>
-			</tr>
-			<tr>
 				<td><input type="button" onclick="doResetDemo();" value="Сброс к демо"/><br/>
 				</td>
 			</tr>

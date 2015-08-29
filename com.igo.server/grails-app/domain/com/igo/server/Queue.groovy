@@ -74,7 +74,7 @@ class Queue {
 		if(p == null){
 			p = q
 		}
-		//Разложим текущие значения из поля registers в мэп
+		//Разложим текущие значения из поля registers предка в мэп
 		Map<String, String> regMap = Utils.splitToMap(p.registers)
 		def registers = Register.list()
 		// Сохраним только параметры, которые есть регистры

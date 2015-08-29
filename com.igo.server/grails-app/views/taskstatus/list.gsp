@@ -13,8 +13,6 @@
 					<th>Текст</th>
 					<th>Тип</th>
 					<th>Статус</th>
-					<th>Время жизни</th>
-					<th>Светофор</th>
 					<th>Кому</th>
 					<th>Задача</th>
 					<th></th>
@@ -30,12 +28,6 @@
 					</td>
 					<td>
 						${item.status}
-					</td>
-					<td>
-						${item.lifetime}
-					</td>
-					<td>
-						${item.color}
 					</td>
 					<td>
 						${item.sendTo}

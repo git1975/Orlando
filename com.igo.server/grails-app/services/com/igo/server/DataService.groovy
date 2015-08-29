@@ -175,8 +175,14 @@ class DataService {
 
 	def updateTask(Task item, String name, String description, String ord, String startdate, String signaldate, String enddate, String process){
 		if(item != null){
-			item(name: name, description: description, ord: Integer.parseInt(ord), startdate: sdfFull2.parse(startdate),
-			signaldate: sdfFull2.parse(signaldate), enddate: sdfFull2.parse(enddate), process: Process.findByName(process))save(failOnError: true)
+			item.name = name
+			item.description = description
+			item.ord = Integer.parseInt(ord)
+			item.startdate = sdfFull2.parse(startdate)
+			item.signaldate = sdfFull2.parse(signaldate)
+			item.enddate = sdfFull2.parse(enddate)
+			item.process = Process.findByName(process)
+			item.save(failOnError: true)
 			item
 		}
 	}

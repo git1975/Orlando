@@ -171,10 +171,12 @@ public class ChatMessageView extends RelativeLayout implements
 			layoutChatCmd.setLayoutParams(lp);
 		}
 
-		Button btnYes = (Button) findViewById(R.id.chat_btn1);
-		Button btnNo = (Button) findViewById(R.id.chat_btn2);
-		btnYes.setVisibility(View.GONE);
-		btnNo.setVisibility(View.GONE);
+		Button btn1 = (Button) findViewById(R.id.chat_btn1);
+		Button btn2 = (Button) findViewById(R.id.chat_btn2);
+		Button btn3 = (Button) findViewById(R.id.chat_btn3);
+		btn1.setVisibility(View.GONE);
+		btn2.setVisibility(View.GONE);
+		btn3.setVisibility(View.GONE);
 
 		TextView tvBodyCmd = (TextView) findViewById(R.id.tv_chat_cmd);
 		TextView tvChatTime = (TextView) findViewById(R.id.tv_chat_time);
@@ -198,13 +200,16 @@ public class ChatMessageView extends RelativeLayout implements
 			for (com.igo.ui.android.domain.Button btn : buttons) {
 				counter++;
 				if (btn != null) {
-					Button btnC = btnYes;
+					Button btnC = btn1;
 					switch (counter) {
 					case 1:
-						btnC = btnYes;
+						btnC = btn1;
 						break;
 					case 2:
-						btnC = btnNo;
+						btnC = btn2;
+						break;
+					case 3:
+						btnC = btn3;
 						break;
 					}
 					btnC.setVisibility(View.VISIBLE);

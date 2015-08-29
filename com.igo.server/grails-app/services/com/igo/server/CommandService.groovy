@@ -66,8 +66,7 @@ class CommandService {
 	 * @return
 	 */
 	def startChildProcess(String process, String parentchat) {
-		Process p = Process.find("from Process where name=?", [process])
-		ProcessInstanceFactory.createParentInstance(p.id, parentchat)
+		ProcessInstanceFactory.createParentInstance(Process.findByName(process).id, parentchat)
 	}
 
 	/**
@@ -130,8 +129,8 @@ class CommandService {
 	def createTaskstatusInstances() {
 		Date now = new Date()
 		List tasks = Queue.findAll("from Queue where type = 'Task' and finished = ? and startdate < ? and enddate > ?", [false, now, now])
-		for(Queue item : tasks){
-			createTaskstatusInstance(item, null)
+		for(Queue task : tasks){
+			createTaskstatusInstance(task, null)
 		}
 	}
 	
@@ -148,7 +147,9 @@ class CommandService {
 		for(Taskstatus ts : taskstatus){
 			Queue q = Queue.find("from Queue where type = 'Taskstatus' and parent = ? and taskstatus = ?", [item, ts])
 			if(q == null){
-				ProcessInstanceFactory.createTaskstatusInstance(item, ts)
+				q = ProcessInstanceFactory.createTaskstatusInstance(item, ts)
+				// Транслируем значения регистров из Taskstatus в родителей
+				Queue.setRegisterValue(q, Utils.splitToMap(q.registers))
 			}
 		}
 	}
@@ -192,7 +193,7 @@ class CommandService {
 					}
 					long minutesAgo = Utils.dateMinutesInterval(signal, now)
 					log.debug('minutesAgo=' + minutesAgo)
-					if(item.taskstatus.repeatevery > 0 && minutesAgo >= item.taskstatus.repeatevery){
+					if((item.taskstatus.repeatevery > 0 && minutesAgo >= item.taskstatus.repeatevery) || item.repeatcount == 0){
 						repeatcount++
 						if(repeatcount > item.maxrepeat){
 							item.status = 'DEADLINE'
@@ -323,47 +324,15 @@ class CommandService {
 			return null;
 		}
 		
-		/*Если привязан регистр, то найти значение регистра из параметров и записать это новое значение в queue
-		String reg = queue.registers
-		Map<String, String> regMap = Utils.splitToMap(reg)
-		boolean b = false 
-		if(reg != null && reg != ''){			
-			for (Iterator<String> itr = regMap.keySet().iterator(); itr.hasNext();) {
-				String item = itr.next();
-				// Если среди параметров от клиента есть текущий регистр, то перезаписать его новым значением
-				if(params.get(item) != null){
-					regMap.put(item, params.get(item))	
-					b = true
-				}
-			}			
-		}
-		// Регистр был
-		if(b){
-			queue.registers = Utils.mapToString(regMap)
-		}
-		
-		queue.status = reply
-		queue.finished = true
-		queue.save(failOnError: true)
-		if(queue.parent != null){
-			if(queue.parent.status == forStatus){
-				queue.status = reply
-				//TODO Смержить значения регистров
-				queue.parent.registers = queue.registers
-				queue.parent.save(failOnError: true)
-			}
-		}*/
 		Queue parent = Queue.setRegisterValue(queue, params)
 		queue.status = reply
+		if(queue.parent.type == 'Task'){
+			queue.parent.status = reply
+		}		
 		queue.finished = true
 		queue.save(failOnError: true)
 		parent.save(failOnError: true)
-		// Также записать значение регистра у экземляра процесса 
-		/*if(queue.parent != null && queue.parent.parent != null && queue.parent.parent.type == 'Process'){
-			//TODO Смержить значения регистров
-			queue.parent.parent.registers = queue.registers
-			queue.parent.parent.save(failOnError: true)
-		}*/
+		
 		return queue
 	}
 
@@ -593,9 +562,8 @@ class CommandService {
 				int bonus = 0
 				int ix = s.indexOf('=');
 				def login = s.substring(ix + 1, s.length() - 1)
-				User user = User.find("from User as a where a.login = ?", [login])
 				// ищем значение repeatcount среди всех сообщений CMD для пользователя
-				List<Queue> list = Queue.findAll("from Queue where type='Taskstatus' and parent=? and taskstatus.msgtype='CMD' and user=?", [q.parent, user])
+				List<Queue> list = Queue.findAll("from Queue where type='Taskstatus' and parent=? and taskstatus.msgtype='CMD' and user=?", [q.parent, User.findByLogin(login)])
 				for(Queue item: list){
 					// Проверим, совпадает-ли значение регистра в Taskstatus и в Queue
 					if(item.registers == item.taskstatus.registers){
@@ -605,7 +573,11 @@ class CommandService {
 					}
 					// Проверим число повторений
 					if(item.maxrepeat > 0 && item.repeatcount > 1){
-						bonus -= (item.repeatcount - 1)
+						bonus -= item.repeatcount - 1
+					}
+					// Проверим число просрочек ответа
+					if(item.status == 'DEADLINE'){
+						bonus--
 					}
 				}
 				
@@ -654,6 +626,8 @@ class CommandService {
 			Process.findAll().each { it.delete(flush:true, failOnError:true) }
 			User.findAll().each { it.delete(flush:true, failOnError:true) }
 			Role.findAll().each { it.delete(flush:true, failOnError:true) }
+			Register.findAll().each { it.delete(flush:true, failOnError:true) }
+			Accessgroup.findAll().each { it.delete(flush:true, failOnError:true) }
 
 			initDbService.initDatabase()
 			return 'OK'
@@ -664,16 +638,21 @@ class CommandService {
 
 	def doResetDatabaseDemo(){
 		try{
+			Chat.findAll().each { it.delete(flush:true, failOnError:true) }
+			Queue.findAll().each { if(it.type=='Taskstatus')it.delete(flush:true, failOnError:true) }
+			Queue.findAll().each { if(it.type=='Task')it.delete(flush:true, failOnError:true) }
+			Queue.findAll().each { if(it.type=='Process')it.delete(flush:true, failOnError:true) }
 			Taskstatus.findAll().each { it.buttons = null; it.save(flush:true, failOnError:true) }
 			Taskstatus.findAll().each { it.delete(flush:true, failOnError:true) }
 			Button.findAll().each { it.delete(flush:true, failOnError:true) }
+			Register.findAll().each { it.delete(flush:true, failOnError:true) }
 			Deviation.findAll().each { it.delete(flush:true, failOnError:true) }
-			Chat.findAll().each { it.delete(flush:true, failOnError:true) }
-			Queue.findAll().each { it.delete(flush:true, failOnError:true) }
 			Task.findAll().each { it.delete(flush:true, failOnError:true) }
 			Process.findAll().each { it.delete(flush:true, failOnError:true) }
 			User.findAll().each { it.delete(flush:true, failOnError:true) }
 			Role.findAll().each { it.delete(flush:true, failOnError:true) }
+			Register.findAll().each { it.delete(flush:true, failOnError:true) }
+			Accessgroup.findAll().each { it.delete(flush:true, failOnError:true) }
 
 			initDbService.initDatabaseDemo()
 			return 'OK'
@@ -685,7 +664,9 @@ class CommandService {
 	def doResetChatAndQueue(){
 		try{
 			Chat.findAll().each { it.delete(flush:true, failOnError:true) }
-			Queue.findAll().each { it.delete(flush:true, failOnError:true) }
+			Queue.findAll().each { if(it.type=='Taskstatus')it.delete(flush:true, failOnError:true) }
+			Queue.findAll().each { if(it.type=='Task')it.delete(flush:true, failOnError:true) }
+			Queue.findAll().each { if(it.type=='Process')it.delete(flush:true, failOnError:true) }
 
 			return 'OK'
 		} catch (Exception e){
