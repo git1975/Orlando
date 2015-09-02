@@ -8,7 +8,7 @@
 		<h2>Админка:</h2>
 		<table>
 			<tr>
-				<td><g:link controller="accessgroup" action="list">Группы доступа</g:link>
+				<td><g:link controller="accessgroup" action="list">Линия коммуникации (управления)</g:link>
 				</td>
 			</tr>
 			<tr>

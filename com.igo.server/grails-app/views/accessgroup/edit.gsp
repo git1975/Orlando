@@ -1,11 +1,11 @@
 <html>
 <head>
 <meta name="layout" content="main">
-<title>Группа доступа</title>
+<title>Линия коммуникации</title>
 </head>
 
 <body id="edit">
-	<h2>Группа доступа:</h2>
+	<h2>Линия коммуникации:</h2>
 
 	<g:form action="edit">
 		<input type="hidden" name="id" value="${item.id}">

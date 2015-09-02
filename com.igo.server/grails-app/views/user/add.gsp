@@ -32,7 +32,7 @@
 				</th>
 			</tr>
 			<tr>
-				<th>Группа доступа: <br /> <g:select name="accessgroupSelect" from="${accessgroup}" noSelection="${['null':'Нет...']}"
+				<th>Линия коммуникации: <br /> <g:select name="accessgroupSelect" from="${accessgroup}" noSelection="${['null':'Нет...']}"
 						optionKey="code" optionValue="name" value="${ item.accessgroup ? item.accessgroup.name : ''}"/>
 				</th>
 			</tr>

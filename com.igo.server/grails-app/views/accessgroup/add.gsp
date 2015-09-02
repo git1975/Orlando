@@ -1,12 +1,12 @@
 <html>
 <head>
 <meta name="layout" content="main">
-<title>Добавить Группу доступа</title>
+<title>Добавить Линию коммуникации</title>
 </head>
 
 <body id="add">
 	<h2>
-		Добавить Группу доступа:
+		Добавить Линию коммуникации:
 	</h2>
 
 	<g:form action="add" id="${item.id}">

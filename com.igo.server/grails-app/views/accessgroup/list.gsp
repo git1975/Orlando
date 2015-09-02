@@ -1,11 +1,11 @@
 <html>
 <head>
 <meta name="layout" content="main">
-<title>Группы доступа</title>
+<title>Линия коммуникации</title>
 </head>
 <body id="accessgroup">
 	<g:form action='delete'>
-		<h2>Группы доступа:</h2>
+		<h2>Линия коммуникации:</h2>
 
 		<table>
 			<thead>
