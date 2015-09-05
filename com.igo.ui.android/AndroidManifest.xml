@@ -12,9 +12,9 @@
     <application
         android:name=".MainApplication"
         android:hardwareAccelerated="true"
-        android:icon="@drawable/solity128"
+        android:icon="@drawable/logo_solity_64"
         android:label="@string/app_name"
-        android:logo="@drawable/solity128"
+        android:logo="@drawable/logo_solity_64"
         android:theme="@style/Theme.MainApp" >
         <activity
             android:name=".MainActivity"

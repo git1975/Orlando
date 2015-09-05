@@ -155,7 +155,7 @@ public class ChatMessageView extends RelativeLayout implements
 			layoutChat.setGravity(Gravity.LEFT);
 			viewFromImg.setVisibility(LinearLayout.VISIBLE);
 			viewFromImg.setBackground(getResources().getDrawable(
-					R.drawable.ic_social));
+					R.drawable.brain_solity_64));
 			LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 			lp.setMargins(0, 0, 20, 0);
 			layoutChatCmd.setLayoutParams(lp);
